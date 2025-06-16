@@ -1,0 +1,2 @@
+sap.ui.define(["sap/ui/core/mvc/Controller"],e=>{"use strict";return e.extend("treasuryui.controller.App",{onInit(){},onAfterRendering(){const e=this.getView().byId("sideNavigation");e.setExpanded(false)},onSideNavButtonPress:function(){const e=this.getView().byId("sideNavigation");const t=e.getExpanded();e.setExpanded(!t)},onItemSelect:function(e){const t=e?.getSource()?.getSelectedKey();this.getOwnerComponent().getRouter().navTo(t)}})});
+//# sourceMappingURL=App.controller.js.map
