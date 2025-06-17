@@ -46,10 +46,10 @@
           ]
       },
       {
-        "name": "Checker",
+        "name": "ContentChecker",
         "description": "ContentChecker",
         "scope-references": [
-            "$XSAPPNAME.Checker"
+            "$XSAPPNAME.ContentChecker"
         ]
     }
   ]
@@ -73,7 +73,7 @@
         "name": "Treasury_ContentChecker",
         "description": "Content Checker access",
         "role-template-references": [
-            "$XSAPPNAME.Checker"
+            "$XSAPPNAME.ContentChecker"
         ]
     }
   ]

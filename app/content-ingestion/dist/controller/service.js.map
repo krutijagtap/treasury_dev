@@ -1,0 +1,1 @@
+{"version":3,"file":"service.js","names":["sap","ui","define","util","async","createContent","extensionApi","oParams","action","model","executeUnBoundInvokeAction"],"sources":["service-dbg.js"],"mappings":"AAAAA,IAAIC,GAAGC,OAAO,CACV,eACD,SAAUC,GACT,aASAC,eAAeC,EAAcC,EAAaC,EAAQC,EAAOC,GAGrD,aAAaN,EAAKO,2BACdJ,EACAG,EACAD,EACAD,EAER,CAEA,MAAO,CACHF,gBAER","ignoreList":[]}

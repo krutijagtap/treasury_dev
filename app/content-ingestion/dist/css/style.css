@@ -1,0 +1,33 @@
+.customUploadContainer {
+    background-color: #f8f9fb;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.customCard {
+    background-color: #e8f0fe;
+    border-left: 5px solid #1976d2;
+    padding: 1rem;
+    border-radius: 6px;
+}
+
+.customTitle {
+    color: #1a237e;
+    font-weight: bold;
+}
+
+.customLabel {
+    font-weight: 600;
+    color: #37474f;
+}
+
+.customCheckbox {
+    color: #0d47a1;
+}
+
+.customUploadButton {
+    background-color: #1976d2 !important;
+    color: white !important;
+    border-radius: 4px;
+}
