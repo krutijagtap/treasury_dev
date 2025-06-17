@@ -14,7 +14,12 @@
       {
           "name": "$XSAPPNAME.Admin",
           "description": "Administrator"
-      }
+      },
+      {
+        "name": "$XSAPPNAME.ContentChecker",
+        "description": "ContentChecker"
+    }
+  
     
   ],
   "role-templates": [
@@ -39,7 +44,14 @@
           "scope-references": [
               "$XSAPPNAME.Admin"
           ]
-      }
+      },
+      {
+        "name": "Checker",
+        "description": "ContentChecker",
+        "scope-references": [
+            "$XSAPPNAME.Checker"
+        ]
+    }
   ]
   ,
   "role-collections": [
@@ -56,7 +68,14 @@
           "role-template-references": [
               "$XSAPPNAME.Admin"
           ]
-      }
+      },
+      {
+        "name": "Treasury_ContentChecker",
+        "description": "Content Checker access",
+        "role-template-references": [
+            "$XSAPPNAME.Checker"
+        ]
+    }
   ]
   ,
   "oauth2-configuration": {

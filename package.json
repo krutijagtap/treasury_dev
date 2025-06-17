@@ -25,7 +25,8 @@
     "undeploy": "cf undeploy Treasury --delete-services --delete-service-keys --delete-service-brokers",
     "build": "rimraf resources mta_archives && mbt build --mtar archive",
     "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
-    "watch-treasuryui": "cds watch --open treasuryui/webapp/index.html?sap-ui-xx-viewCache=false"
+    "watch-treasuryui": "cds watch --open treasuryui/webapp/index.html?sap-ui-xx-viewCache=false",
+    "watch-content-ingestion": "cds watch --open content-ingestion/webapp/index.html?sap-ui-xx-viewCache=false"
   },
   "cds": {
     "requires": {
@@ -42,7 +43,8 @@
             "joe": {
               "roles": [
                 "Admin",
-                "Viewer"
+                "Viewer",
+                "ContentChecker"
               ]
             },
             "julie": {
@@ -55,6 +57,21 @@
                 "Viewer"
               ]
             }
+          }
+        }
+      },
+      "TestSbcDest": {
+        "kind": "odata-v2",
+        "csrf": true,
+        "csrfInBatch": true,
+        "[development]": {
+          "credentials": {
+            "destination": "TestSbcDest"
+          }
+        },
+        "[production]": {
+          "credentials": {
+            "destination": "TestSbcDest"
           }
         }
       },
@@ -80,6 +97,7 @@
     }
   },
   "sapux": [
-    "app/browsebooks"
+    "app/browsebooks",
+    "app/content-ingestion"
   ]
 }
