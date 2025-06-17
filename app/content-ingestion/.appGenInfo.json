@@ -1,0 +1,33 @@
+{
+  "generationParameters": {
+    "generationDate": "Mon Jun 16 2025 11:54:22 GMT+0000 (Coordinated Universal Time)",
+    "generatorPlatform": "SAP Business Application Studio",
+    "serviceType": "Local Cap",
+    "metadataFilename": "",
+    "serviceUrl": "http://localhost:4004/odata/v4/catalog/",
+    "appName": "content-ingestion",
+    "appTitle": "Content Ingestion",
+    "appDescription": "An SAP Fiori application.",
+    "appNamespace": "com.scb.treasury",
+    "ui5Theme": "sap_horizon",
+    "ui5Version": "1.136.1",
+    "enableCodeAssist": false,
+    "enableEslint": false,
+    "enableTypeScript": false,
+    "showMockDataInfo": false,
+    "generatorVersion": "1.18.0",
+    "template": "List Report Page V4",
+    "generatorName": "SAP Fiori Application Generator",
+    "entityRelatedConfig": [
+      {
+        "type": "Main Entity",
+        "value": "Content"
+      },
+      {
+        "type": "Navigation Entity",
+        "value": "None"
+      }
+    ],
+    "launchText": "In order to launch the generated app, simply start your CAP project and navigate to the following location in your browser:\n\nhttp://localhost:4004/content-ingestion/webapp/index.html"
+  }
+}
