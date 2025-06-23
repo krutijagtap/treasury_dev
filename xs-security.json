@@ -2,88 +2,82 @@
   "xsappname": "Treasury",
   "tenant-mode": "dedicated",
   "scopes": [
-      {
-          "name": "uaa.user",
-          "description": "UAA"
-      }
-      ,
-      {
-          "name": "$XSAPPNAME.Viewer",
-           "description": "Viewer"
-      },
-      {
-          "name": "$XSAPPNAME.Admin",
-          "description": "Administrator"
-      },
-      {
-        "name": "$XSAPPNAME.ContentChecker",
-        "description": "ContentChecker"
+    {
+      "name": "uaa.user",
+      "description": "UAA"
+    },
+    {
+      "name": "$XSAPPNAME.Viewer",
+      "description": "Viewer"
+    },
+    {
+      "name": "$XSAPPNAME.Admin",
+      "description": "Administrator"
+    },
+    {
+      "name": "$XSAPPNAME.ContentChecker",
+      "description": "ContentChecker"
+    },
+    {
+      "name": "$XSAPPNAME.ContentMaker",
+      "description": "ContentMaker"
     }
-  
-    
   ],
   "role-templates": [
-      {
-          "name": "Token_Exchange",
-          "description": "UAA Token Exchange",
-          "scope-references": [
-              "uaa.user"
-          ]
-      }
-      ,
-      {
-          "name": "Viewer",
-          "description": "Viewer",
-          "scope-references": [
-              "$XSAPPNAME.Viewer"
-          ]
-      },
-      {
-          "name": "Admin",
-          "description": "Administrator",
-          "scope-references": [
-              "$XSAPPNAME.Admin"
-          ]
-      },
-      {
-        "name": "ContentChecker",
-        "description": "ContentChecker",
-        "scope-references": [
-            "$XSAPPNAME.ContentChecker"
-        ]
+    {
+      "name": "Token_Exchange",
+      "description": "UAA Token Exchange",
+      "scope-references": ["uaa.user"]
+    },
+    {
+      "name": "Viewer",
+      "description": "Viewer",
+      "scope-references": ["$XSAPPNAME.Viewer"]
+    },
+    {
+      "name": "Admin",
+      "description": "Administrator",
+      "scope-references": ["$XSAPPNAME.Admin"]
+    },
+    {
+      "name": "ContentChecker",
+      "description": "ContentChecker",
+      "scope-references": ["$XSAPPNAME.ContentChecker"]
+    },
+    {
+      "name": "ContentMaker",
+      "description": "ContentMaker",
+      "scope-references": ["$XSAPPNAME.ContentMaker"]
     }
-  ]
-  ,
+  ],
   "role-collections": [
-      {
-          "name": "Treasury_Viewer",
-          "description": "Viewing access",
-          "role-template-references": [
-              "$XSAPPNAME.Viewer"
-          ]
-      },
-      {
-          "name": "Treasury_Administrator",
-          "description": "Administrative access",
-          "role-template-references": [
-              "$XSAPPNAME.Admin"
-          ]
-      },
-      {
-        "name": "Treasury_ContentChecker",
-        "description": "Content Checker access",
-        "role-template-references": [
-            "$XSAPPNAME.ContentChecker"
-        ]
+    {
+      "name": "Treasury_Viewer",
+      "description": "Viewing access",
+      "role-template-references": ["$XSAPPNAME.Viewer"]
+    },
+    {
+      "name": "Treasury_Administrator",
+      "description": "Administrative access",
+      "role-template-references": ["$XSAPPNAME.Admin"]
+    },
+    {
+      "name": "Treasury_ContentChecker",
+      "description": "Content Checker access",
+      "role-template-references": ["$XSAPPNAME.ContentChecker"]
+    },
+    {
+      "name": "Treasury_ContentMaker",
+      "description": "Content Maker access",
+      "role-template-references": ["$XSAPPNAME.ContentMaker"]
     }
-  ]
-  ,
+  ],
   "oauth2-configuration": {
-      "token-validity": 3600,
-      "redirect-uris": [
-          "https://*-Treasury-app.cfapps.*.hana.ondemand.com/login/callback",
-          "https://*.cfapps.*.ondemand.com/**",
-          "https://*.cfapps.*.hana.ondemand.com/**"
-      ]
+    "token-validity": 3600,
+    "redirect-uris": [
+      "https://*-Treasury-app.cfapps.*.hana.ondemand.com/login/callback",
+      "https://*.cfapps.*.ondemand.com/**",
+      "https://*.cfapps.*.hana.ondemand.com/**"
+    ]
   }
 }

@@ -49,3 +49,9 @@ entity EmbeddingStatus : CodeList {
   key code : String;
       name : String;
 }
+
+@odata.singleton
+entity ActionVisibility : cuid, {
+  isChkr : Boolean default false;
+  isMaker   : Boolean default false;
+}

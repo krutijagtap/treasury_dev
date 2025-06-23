@@ -42,7 +42,39 @@ annotate service.Content with @(
         Label : 'General Information',
         Target: '@UI.FieldGroup#GeneratedGroup',
     }, ],
-    UI.LineItem                  : [
+    UI.LineItem#QA                 : [
+        {
+            $Type                : 'UI.DataField',
+            Label                : 'Uploaded Files',
+            Value                : fileName,
+            ![@HTML5.CssDefaults]: {width: 'auto'}
+        },
+        {
+            $Type                : 'UI.DataField',
+            Label                : 'Approval Status',
+            Value                : status_code,
+            ![@HTML5.CssDefaults]: {width: 'auto'}
+        },
+        {
+            $Type                : 'UI.DataField',
+            Label                : 'Media Type',
+            Value                : mediaType,
+            ![@HTML5.CssDefaults]: {width: 'auto'}
+        },
+        {
+            $Type                : 'UI.DataField',
+            Value                : createdBy,
+            ![@HTML5.CssDefaults]: {width: 'auto'}
+        },
+        {
+            $Type                : 'UI.DataField',
+            Label                : 'Created On',
+            Value                : createdAt,
+            ![@HTML5.CssDefaults]: {width: 'auto'}
+        }
+
+    ],
+     UI.LineItem#Sum              : [
         {
             $Type                : 'UI.DataField',
             Label                : 'Uploaded Files',
@@ -91,6 +123,103 @@ annotate service.Content with @(
             ![@HTML5.CssDefaults]: {width: 'auto'},
             ![@UI.Importance]    : #High,
 
+        }
+
+    ],
+        UI.LineItem#QAInbox             : [
+        {
+            $Type                : 'UI.DataField',
+            Label                : 'Uploaded Files',
+            Value                : fileName,
+            ![@HTML5.CssDefaults]: {width: 'auto'}
+        },
+        {
+            $Type                : 'UI.DataField',
+            Label                : 'Approval Status',
+            Value                : status_code,
+            ![@HTML5.CssDefaults]: {width: 'auto'}
+        },
+        {
+            $Type                : 'UI.DataField',
+            Label                : 'Media Type',
+            Value                : mediaType,
+            ![@HTML5.CssDefaults]: {width: 'auto'}
+        },
+        {
+            $Type                : 'UI.DataField',
+            Value                : createdBy,
+            ![@HTML5.CssDefaults]: {width: 'auto'}
+        },
+        {
+            $Type                : 'UI.DataField',
+            Label                : 'Created On',
+            Value                : createdAt,
+            ![@HTML5.CssDefaults]: {width: 'auto'}
+        },
+      
+        {
+            $Type                : 'UI.DataFieldForAction',
+            Action               : 'CatalogService.approveContent',
+            Label                : 'Approve',
+            Inline               : true,
+            Criticality          : #Positive,
+            ![@HTML5.CssDefaults]: {width: 'auto'},
+            ![@UI.Hidden]        : {$edmJson: {$Not: {$And: [
+                {$Eq: [
+                    {$Path: 'status_code'},
+                    'SUBMITTED'
+                ]},
+                {$Path: 'isChecker'}
+            ]}}},
+            InvocationGrouping   : #Isolated,
+        },
+        {
+            $Type                : 'UI.DataFieldForAction',
+            Action               : 'CatalogService.rejectContent',
+            Label                : 'Reject',
+            Inline               : true,
+            Criticality          : #Negative,
+            ![@HTML5.CssDefaults]: {width: 'auto'},
+            ![@UI.Hidden]        : {$edmJson: {$Not: {$And: [
+                {$Eq: [
+                    {$Path: 'status_code'},
+                    'SUBMITTED'
+                ]},
+                {$Path: 'isChecker'}
+            ]}}},
+            InvocationGrouping   : #Isolated
+        }
+
+    ],
+     UI.LineItem#SumInbox           : [
+        {
+            $Type                : 'UI.DataField',
+            Label                : 'Uploaded Files',
+            Value                : fileName,
+            ![@HTML5.CssDefaults]: {width: 'auto'}
+        },
+        {
+            $Type                : 'UI.DataField',
+            Label                : 'Approval Status',
+            Value                : status_code,
+            ![@HTML5.CssDefaults]: {width: 'auto'}
+        },
+        {
+            $Type                : 'UI.DataField',
+            Label                : 'Media Type',
+            Value                : mediaType,
+            ![@HTML5.CssDefaults]: {width: 'auto'}
+        },
+        {
+            $Type                : 'UI.DataField',
+            Value                : createdBy,
+            ![@HTML5.CssDefaults]: {width: 'auto'}
+        },
+        {
+            $Type                : 'UI.DataField',
+            Label                : 'Created On',
+            Value                : createdAt,
+            ![@HTML5.CssDefaults]: {width: 'auto'}
         },
         {
             $Type                : 'UI.DataFieldForAction',
@@ -127,8 +256,7 @@ annotate service.Content with @(
 
     ],
     UI.SelectionFields           : [
-        mediaType,
-        status_code,
+        mediaType
     ],
 );
 
@@ -137,7 +265,7 @@ annotate service.Content with @(
         $Type              : 'UI.SelectionPresentationVariantType',
         PresentationVariant: {
             $Type         : 'UI.PresentationVariantType',
-            Visualizations: ['@UI.LineItem',
+            Visualizations: ['@UI.LineItem#QA',
             ],
         },
         SelectionVariant   : {
@@ -158,7 +286,7 @@ annotate service.Content with @(
         $Type              : 'UI.SelectionPresentationVariantType',
         PresentationVariant: {
             $Type         : 'UI.PresentationVariantType',
-            Visualizations: ['@UI.LineItem',
+            Visualizations: ['@UI.LineItem#Sum',
             ],
         },
         SelectionVariant   : {
@@ -174,7 +302,59 @@ annotate service.Content with @(
             }],
         },
         Text               : 'Summary',
-    }
+    },
+     UI.SelectionPresentationVariant #qainbox     : {
+        $Type              : 'UI.SelectionPresentationVariantType',
+        PresentationVariant: {
+            $Type         : 'UI.PresentationVariantType',
+            Visualizations: ['@UI.LineItem#QAInbox',
+            ],
+        },
+        SelectionVariant   : {
+            $Type        : 'UI.SelectionVariantType',
+            SelectOptions: [{
+                $Type       : 'UI.SelectOptionType',
+                PropertyName: tagType_code,
+                Ranges      : [{
+                    Sign  : #I,
+                    Option: #EQ,
+                    Low   : 'QA'
+                }]
+            }],
+        },
+        Text               : 'Q&A',
+    },
+   UI.SelectionPresentationVariant #summaryinbox: {
+    $Type              : 'UI.SelectionPresentationVariantType',
+    PresentationVariant: {
+      $Type         : 'UI.PresentationVariantType',
+      Visualizations: ['@UI.LineItem#SumInbox']
+    },
+    SelectionVariant   : {
+      $Type        : 'UI.SelectionVariantType',
+      SelectOptions: [
+        {
+          $Type       : 'UI.SelectOptionType',
+          PropertyName: tagType_code,
+          Ranges      : [{
+            Sign  : #I,
+            Option: #EQ,
+            Low   : 'SUMMARY'
+          }]
+        },
+        {
+          $Type       : 'UI.SelectOptionType',
+          PropertyName: status_code,
+          Ranges      : [{
+            Sign  : #I,
+            Option: #NE,
+            Low   : 'DRAFT'
+          }]
+        }
+      ]
+    },
+    Text: 'Summary Inbox'
+  }
 );
 
 annotate service.Content with {

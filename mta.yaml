@@ -49,6 +49,10 @@ modules:
       - comscbtreasurycontentingestion.zip
       name: comscbtreasurycontentingestion
       target-path: resources/
+    - artifacts:
+      - comscbtreasurycontentrepository.zip
+      name: comscbtreasurycontentrepository
+      target-path: resources/
 - name: browsebooks
   type: html5
   path: app/browsebooks
@@ -111,6 +115,16 @@ modules:
 - name: comscbtreasurycontentingestion
   type: html5
   path: app/content-ingestion
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: comscbtreasurycontentrepository
+  type: html5
+  path: app/contentrepository
   build-parameters:
     build-result: dist
     builder: custom

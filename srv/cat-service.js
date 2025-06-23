@@ -1,11 +1,22 @@
 const cds = require("@sap/cds");
 
 module.exports = cds.service.impl(async function () {
-  const { Content, SummaryFiles } = this.entities;
+  const { Content, SummaryFiles, ActionVisibility } = this.entities;
 
   this.after("READ", "Content", (each, req) => {
     each.isChecker = req.user?.roles?.ContentChecker === 1;
   });
+
+  //-------------------------------------------------------------
+  //    Authorization check based on user logged in
+  //-------------------------------------------------------------
+  this.on("READ", ActionVisibility, async (req) => {
+    return {
+      isChkr: req.user?.roles?.ContentChecker === 1,
+      isMaker: req.user?.roles?.ContentMaker === 1
+    };
+  });
+  
 
   this.on("createContent", async (req) => {
     const payloadArray = JSON.parse(req.data.initialData); // Array of objects
@@ -31,19 +42,41 @@ module.exports = cds.service.impl(async function () {
 
     // Insert entries one by one
     for (const data of payloadArray) {
-      if (data.tagType_code == "SUMMARY") {
+      if (data.tagType == "SUMMARY") {
+
+        await INSERT.into(SummaryFiles).entries({
+          fileName: "Test ABC",
+          fileContent: "",
+          url: "https://sapui5.hana.ondemand.com/#/entity/sap.m.CustomListItem/sample/sap.m.sample.CustomListItem/code",
+          createdBy: cds.context.user.id,
+          content_ID:data.keyID
+        });
+        await INSERT.into(SummaryFiles).entries({
+          fileName: "Test ABC 4",
+          fileContent: "",
+          url: "https://sapui5.hana.ondemand.com/#/entity/sap.m.CustomListItem/sample/sap.m.sample.CustomListItem/code",
+          createdBy: cds.context.user.id,
+          content_ID:data.keyID
+        });
+        await INSERT.into(SummaryFiles).entries({
+          fileName: "Test ABC 3",
+          fileContent: "",
+          url: "https://sapui5.hana.ondemand.com/#/entity/sap.m.CustomListItem/sample/sap.m.sample.CustomListItem/code",
+          createdBy: cds.context.user.id,
+          content_ID:data.keyID
+        });
         //Call the API responsible for creating the summary files
-        let SummaryResponse;
-        //Then insert into SummaryFiles
-        //Assume array as response from previous call
-        for (const summary of SummaryResponse) {
-          await INSERT.into(SummaryFiles).entries({
-            fileName: summary.fileName,
-            fileContent: summary.fileContent,
-            url: summary.url,
-            createdBy: cds.context.user.id,
-          });
-        }
+        // let SummaryResponse;
+        // //Then insert into SummaryFiles
+        // //Assume array as response from previous call
+        // for (const summary of SummaryResponse) {
+        //   await INSERT.into(SummaryFiles).entries({
+        //     fileName: summary.fileName,
+        //     fileContent: summary.fileContent,
+        //     url: summary.url,
+        //     createdBy: cds.context.user.id,
+        //   });
+        // }
       }
     }
 
@@ -72,6 +105,7 @@ module.exports = cds.service.impl(async function () {
       status_code: "APPROVED",
     });
   });
+
   this.on("rejectContent", async (req) => {
     const ID = req.params[0].ID;
     await UPDATE(Content, ID).with({
@@ -79,9 +113,9 @@ module.exports = cds.service.impl(async function () {
     });
   });
 
-  this.on('submit', async (req) => {
+  this.on("submit", async (req) => {
     const { ID } = req.params[0]; // since bound to entity
-    await UPDATE(Content).set({ status_code: 'SUBMITTED' }).where({ ID });
+    await UPDATE(Content).set({ status_code: "SUBMITTED" }).where({ ID });
     const updated = await SELECT.one.from(Content).where({ ID });
     return updated;
   });

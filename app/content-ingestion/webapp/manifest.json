@@ -115,9 +115,36 @@
                 }
               },
               "controlConfiguration": {
-                "@com.sap.vocabularies.UI.v1.LineItem": {
+                "@com.sap.vocabularies.UI.v1.LineItem#Sum": {
                   "tableSettings": {
                     "type": "ResponsiveTable"
+                  },
+                  "columns": {
+                    "SummaryFiles": {
+                      "position": {
+                        "anchor": "DataField::fileName",
+                        "placement": "After"
+                      },
+                      "header": "Summary Files",
+                      "template": "com.scb.treasury.contentingestion.fragment.SummaryFiles",
+                       "visible": "{= ${tagType_code} !== 'QA' }"
+                    }
+                  }
+                },
+                "@com.sap.vocabularies.UI.v1.LineItem#SumInbox": {
+                  "tableSettings": {
+                    "type": "ResponsiveTable"
+                  },
+                  "columns": {
+                    "SummaryFiles": {
+                      "position": {
+                        "anchor": "DataField::fileName",
+                        "placement": "After"
+                      },
+                      "header": "Summary Files",
+                      "template": "com.scb.treasury.contentingestion.fragment.SummaryFiles",
+                       "visible": "{= ${tagType_code} !== 'QA' }"
+                    }
                   }
                 }
               },
@@ -125,11 +152,23 @@
                 "paths": [
                   {
                     "key": "qa",
-                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#qa"
+                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#qa",
+                    "visible": "{= ${/ActionVisibility/isMaker} }"
                   },
                   {
                     "key": "summary",
-                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#summary"
+                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#summary",
+                    "visible": "{= ${/ActionVisibility/isMaker} }"
+                  },
+                  {
+                    "key": "qainbox",
+                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#qainbox",
+                    "visible": "{= ${/ActionVisibility/isChkr} }"
+                  },
+                  {
+                    "key": "summaryinbox",
+                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#summaryinbox",
+                    "visible": "{= ${/ActionVisibility/isChkr} }"
                   }
                 ]
               },
@@ -138,7 +177,8 @@
               "content": {
                 "header": {
                   "customHeader": {
-                    "expandedHeaderFragment": "com.scb.treasury.contentingestion.fragment.CustomExpandedHeader"
+                    "expandedHeaderFragment": "com.scb.treasury.contentingestion.fragment.CustomExpandedHeader",
+                    "visible": "{= ${/ActionVisibility/isMaker} }"
                   }
                 }
               }

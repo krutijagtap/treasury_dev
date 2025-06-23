@@ -1,7 +1,7 @@
 {
   "_version": "1.65.0",
   "sap.app": {
-    "id": "com.scb.treasury.contentingestion",
+    "id": "com.scb.treasury.contentrepository",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "applicationVersion": {
@@ -13,7 +13,7 @@
     "sourceTemplate": {
       "id": "@sap/generator-fiori:lrop",
       "version": "1.18.0",
-      "toolsId": "9842a62a-874a-486d-81f6-3c8271b26b9b"
+      "toolsId": "94c4afd9-8430-4aca-b0d7-c72af53f5ed1"
     },
     "dataSources": {
       "mainService": {
@@ -45,7 +45,7 @@
   "sap.ui5": {
     "flexEnabled": true,
     "dependencies": {
-      "minUI5Version": "1.136.1",
+      "minUI5Version": "1.136.2",
       "libs": {
         "sap.m": {},
         "sap.ui.core": {},
@@ -60,7 +60,7 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "com.scb.treasury.contentingestion.i18n.i18n"
+          "bundleName": "com.scb.treasury.contentrepository.i18n.i18n"
         }
       },
       "": {
@@ -78,11 +78,7 @@
       }
     },
     "resources": {
-      "css": [
-        {
-          "uri": "css/style.css"
-        }
-      ]
+      "css": []
     },
     "routing": {
       "config": {},
@@ -107,6 +103,7 @@
             "settings": {
               "contextPath": "/Content",
               "variantManagement": "Page",
+              "defaultTemplateAnnotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#approvedOnly",
               "navigation": {
                 "Content": {
                   "detail": {
@@ -115,42 +112,39 @@
                 }
               },
               "controlConfiguration": {
-                "@com.sap.vocabularies.UI.v1.LineItem#Sum": {
+                "@com.sap.vocabularies.UI.v1.LineItem": {
                   "tableSettings": {
                     "type": "ResponsiveTable"
                   },
                   "columns": {
                     "SummaryFiles": {
+                      "header": "Summary Files",
                       "position": {
                         "anchor": "DataField::fileName",
                         "placement": "After"
                       },
-                      "header": "Summary Files",
-                      "template": "com.scb.treasury.contentingestion.fragment.SummaryFiles",
-                       "visible": "{= ${tagType_code} !== 'QA' }"
+                      "template": "com.scb.treasury.contentrepository.ext.fragment.SummaryFiles"
                     }
                   }
-                }
-              },
-              "views": {
-                "paths": [
-                  {
-                    "key": "qa",
-                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#qa"
-                  },
-                  {
-                    "key": "summary",
-                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#summary"
-                  }
-                ]
-              },
-              "initialLoad": "Enabled",
-              "liveMode": true,
-              "content": {
-                "header": {
-                  "customHeader": {
-                    "expandedHeaderFragment": "com.scb.treasury.contentingestion.fragment.CustomExpandedHeader",
-                    "visible": false
+                },
+                "@com.sap.vocabularies.UI.v1.LineItem#repo": {
+                  "columns": {
+                    "SummaryFiles": {
+                      "header": "Summary Files",
+                      "position": {
+                        "anchor": "DataField::mediaType",
+                        "placement": "Before"
+                      },
+                      "template": "com.scb.treasury.contentrepository.ext.fragment.SummaryFiles"
+                    },
+                    "FileName": {
+                      "header": "File Name",
+                      "position": {
+                        "anchor": "SummaryFiles",
+                        "placement": "Before"
+                      },
+                      "template": "com.scb.treasury.contentrepository.ext.fragment.FileName"
+                    }
                   }
                 }
               }
@@ -166,15 +160,6 @@
               "editableHeaderContent": false,
               "contextPath": "/Content"
             }
-          }
-        }
-      }
-    },
-    "extends": {
-      "extensions": {
-        "sap.ui.controllerExtensions": {
-          "sap.fe.templates.ListReport.ListReportController": {
-            "controllerName": "com.scb.treasury.contentingestion.controller.CustomExpandedHeader"
           }
         }
       }
