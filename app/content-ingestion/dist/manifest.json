@@ -1,0 +1,191 @@
+{
+  "_version": "1.65.0",
+  "sap.app": {
+    "id": "com.scb.treasury.contentingestion",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "0.0.1"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "resources": "resources.json",
+    "sourceTemplate": {
+      "id": "@sap/generator-fiori:lrop",
+      "version": "1.18.0",
+      "toolsId": "9842a62a-874a-486d-81f6-3c8271b26b9b"
+    },
+    "dataSources": {
+      "mainService": {
+        "uri": "/odata/v4/catalog/",
+        "type": "OData",
+        "settings": {
+          "annotations": [],
+          "odataVersion": "4.0"
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "",
+      "favIcon": "",
+      "phone": "",
+      "phone@2": "",
+      "tablet": "",
+      "tablet@2": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": true,
+    "dependencies": {
+      "minUI5Version": "1.136.1",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {},
+        "sap.fe.templates": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "com.scb.treasury.contentingestion.i18n.i18n"
+        }
+      },
+      "": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": true
+        }
+      },
+      "@i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "uri": "i18n/i18n.properties"
+      }
+    },
+    "resources": {
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
+    },
+    "routing": {
+      "config": {},
+      "routes": [
+        {
+          "pattern": ":?query:",
+          "name": "ContentList",
+          "target": "ContentList"
+        },
+        {
+          "pattern": "Content({key}):?query:",
+          "name": "ContentObjectPage",
+          "target": "ContentObjectPage"
+        }
+      ],
+      "targets": {
+        "ContentList": {
+          "type": "Component",
+          "id": "ContentList",
+          "name": "sap.fe.templates.ListReport",
+          "options": {
+            "settings": {
+              "contextPath": "/Content",
+              "variantManagement": "Page",
+              "navigation": {
+                "Content": {
+                  "detail": {
+                    "route": "ContentObjectPage"
+                  }
+                }
+              },
+              "controlConfiguration": {
+                "@com.sap.vocabularies.UI.v1.LineItem#Sum": {
+                  "tableSettings": {
+                    "type": "ResponsiveTable"
+                  },
+                  "columns": {
+                    "SummaryFiles": {
+                      "position": {
+                        "anchor": "DataField::fileName",
+                        "placement": "After"
+                      },
+                      "header": "Summary Files",
+                      "template": "com.scb.treasury.contentingestion.fragment.SummaryFiles",
+                       "visible": "{= ${tagType_code} !== 'QA' }"
+                    }
+                  }
+                }
+              },
+              "views": {
+                "paths": [
+                  {
+                    "key": "qa",
+                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#qa"
+                  },
+                  {
+                    "key": "summary",
+                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#summary"
+                  }
+                ]
+              },
+              "initialLoad": "Enabled",
+              "liveMode": true,
+              "content": {
+                "header": {
+                  "customHeader": {
+                    "expandedHeaderFragment": "com.scb.treasury.contentingestion.fragment.CustomExpandedHeader",
+                    "visible": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "ContentObjectPage": {
+          "type": "Component",
+          "id": "ContentObjectPage",
+          "name": "sap.fe.templates.ObjectPage",
+          "options": {
+            "settings": {
+              "editableHeaderContent": false,
+              "contextPath": "/Content"
+            }
+          }
+        }
+      }
+    },
+    "extends": {
+      "extensions": {
+        "sap.ui.controllerExtensions": {
+          "sap.fe.templates.ListReport.ListReportController": {
+            "controllerName": "com.scb.treasury.contentingestion.controller.CustomExpandedHeader"
+          }
+        }
+      }
+    }
+  },
+  "sap.fiori": {
+    "registrationIds": [],
+    "archeType": "transactional"
+  },
+  "sap.cloud": {
+    "public": true,
+    "service": "Treasury"
+  }
+}
