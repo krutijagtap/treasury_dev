@@ -1,4 +1,7 @@
 const cds = require("@sap/cds");
+const { executeHttpRequest } = require('@sap-cloud-sdk/http-client');
+const treasuryAPI = "treasuryUpload";
+const sapCfAxios = require("sap-cf-axios").default;
 
 module.exports = cds.service.impl(async function () {
   const { Content, SummaryFiles, ActionVisibility } = this.entities;
@@ -16,7 +19,7 @@ module.exports = cds.service.impl(async function () {
       isMaker: req.user?.roles?.ContentMaker === 1
     };
   });
-  
+
 
   this.on("createContent", async (req) => {
     const payloadArray = JSON.parse(req.data.initialData); // Array of objects
@@ -49,21 +52,21 @@ module.exports = cds.service.impl(async function () {
           fileContent: "",
           url: "https://sapui5.hana.ondemand.com/#/entity/sap.m.CustomListItem/sample/sap.m.sample.CustomListItem/code",
           createdBy: cds.context.user.id,
-          content_ID:data.keyID
+          content_ID: data.keyID
         });
         await INSERT.into(SummaryFiles).entries({
-          fileName: "Test ABC 4",
+          fileName: "Test AB",
           fileContent: "",
           url: "https://sapui5.hana.ondemand.com/#/entity/sap.m.CustomListItem/sample/sap.m.sample.CustomListItem/code",
           createdBy: cds.context.user.id,
-          content_ID:data.keyID
+          content_ID: data.keyID
         });
         await INSERT.into(SummaryFiles).entries({
-          fileName: "Test ABC 3",
+          fileName: "Test AC",
           fileContent: "",
           url: "https://sapui5.hana.ondemand.com/#/entity/sap.m.CustomListItem/sample/sap.m.sample.CustomListItem/code",
           createdBy: cds.context.user.id,
-          content_ID:data.keyID
+          content_ID: data.keyID
         });
         //Call the API responsible for creating the summary files
         // let SummaryResponse;
@@ -119,4 +122,25 @@ module.exports = cds.service.impl(async function () {
     const updated = await SELECT.one.from(Content).where({ ID });
     return updated;
   });
+
+  this.on('chatResponse', async (req) => {
+    console.log("request obj" + req);
+    const response = await executeHttpRequest(
+      {destinationName: 'treasuryUpload'},
+      {
+        method: 'POST',
+        url: '/api/chat',
+        headers: { 
+          "Content-Type": "application/json" },
+        data: { "message": req.data.prompt }
+      } 
+    );   
+    if (response.status === 200 && response.data != null){
+     return response.data
+    }else{
+     throw new Error(`Error creating chat response ${response.status}`)
+    } 
+  });
+
+
 });

@@ -10,6 +10,30 @@
       "authenticationType": "none"
     },
     {
+      "source": "^/api/(.*)$",
+      "target": "$1",
+      "destination": "treasuryUpload",
+      "authenticationType": "none"
+    },
+    {
+      "source": "^/v2/odata/v4/Treasury-srv-api/(.*)$",
+      "target": "/v2/odata/v4/Treasury-srv-api/$1",
+      "authenticationType": "xsuaa",
+      "destination": "treasuryUpload"
+    },
+
+    {
+      "source": "^/odata/v4/Treasury-srv-api/(.*)$",
+      "target": "/odata/v4/Treasury-srv-api/$1",
+      "authenticationType": "xsuaa",
+      "destination": "treasuryUpload"
+    },
+    {
+      "source": "^/user-api/currentUser$",
+      "target": "/currentUser",
+      "service": "sap-approuter-userapi"
+    },
+    {
       "source": "^/odata/v4/catalog/(.*)$",
       "authenticationType": "none",
       "destination": "Treasury-srv-api"

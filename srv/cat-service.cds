@@ -39,6 +39,6 @@ service CatalogService {
     entity TagTypes         as projection on treasury.TagTypes;
     entity ActionVisibility as projection on treasury.ActionVisibility;
     action createContent(initialData : String) returns String;
-
+    action chatResponse(prompt:String) returns String;
 
 }

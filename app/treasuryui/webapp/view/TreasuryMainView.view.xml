@@ -10,7 +10,16 @@
 
         <content>
     <FlexBox direction="Column" class="earningsBox">
-            <FlexBox id="chatFlexBox" class="ChatFlexBox">
+
+            <FlexBox id="chatFlexBox" class="ChatFlexBox" direction="Column">
+                 <Title text="How can I help you today?" textAlign="Center" class="TitleFlexBox"/>
+                 <HBox justifyContent="End">
+                <MultiComboBox id="multiCombo" selectionChange="onSelectDocument" class="comboBox" placeholder="Choose files to analyze">
+                <core:Item key="1" text="SCB_InvestorPresentation_1Q25.pdf" />
+                <core:Item key="2" text="SCB_PressRelease_1Q25.pdf" />
+                <core:Item key="3" text="SCB_Transcripts_1Q25.pdf" />
+			    </MultiComboBox>
+                </HBox>
                  <core:Fragment fragmentName="treasuryui.fragment.chatBox" type="XML"/>
             </FlexBox>
 
