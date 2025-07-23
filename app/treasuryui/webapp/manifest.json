@@ -23,6 +23,10 @@
           "annotations": [],
           "odataVersion": "4.0"
         }
+      },
+      "treasuryUpload": {
+        "uri": "/treasuryUpload/",           
+        "type": "http"
       }
     }
   },
@@ -49,7 +53,7 @@
       "libs": {
         "sap.m": {},
         "sap.ui.core": {}
-      }  
+      }
     },
     "contentDensities": {
       "compact": true,

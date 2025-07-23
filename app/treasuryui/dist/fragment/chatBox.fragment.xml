@@ -39,7 +39,7 @@
                 
                  <!-- <Button text="Ask FinSight"  enabled="{chatModel>/enableSubmit}" visible="{chatModel>/enableQuery}" press="onUserChat" /> -->
                   <Button text="Ask FinSight"   press="onUserChat" />
-             
+                  <Button text="Summary"   press="onGenerateSummary" />
 
 
             </FlexBox>

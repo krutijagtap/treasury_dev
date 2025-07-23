@@ -85,11 +85,12 @@ modules:
       instance:
         destinations:
         - Authentication: OAuth2UserTokenExchange
+          HTML5.DynamicDestination: true
+          HTML5.ForwardAuthToken: true
           Name: Treasury-srv-api
-          TokenServiceInstanceName: Treasury-uaa
-          TokenServiceKeyName: Treasury-uaa-key
+          ProxyType: Internet
+          Type: HTTP
           URL: ~{srv-api/srv-url}
-          sap.cloud.service: Treasury
         - Name: Treasury_Treasury_repo_host
           ServiceInstanceName: Treasury-html5-srv
           ServiceKeyName: Treasury-repo-host-key
@@ -99,7 +100,7 @@ modules:
           ServiceInstanceName: Treasury-uaa
           ServiceKeyName: Treasury-uaa-key
           sap.cloud.service: Treasury
-        existing_destinations_policy: ignore
+        existing_destinations_policy: update
   build-parameters:
     no-source: true
 - name: treasuryui

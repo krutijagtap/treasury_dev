@@ -1,7 +1,8 @@
 sap.ui.define([
     "sap/ui/core/UIComponent",
-    "treasuryui/model/models"
-], (UIComponent, models) => {
+    "treasuryui/model/models",
+    "treasuryui/model/chatModel"
+], (UIComponent, models, chatModel) => {
     "use strict";
 
     return UIComponent.extend("treasuryui.Component", {
@@ -21,6 +22,9 @@ sap.ui.define([
 
             // enable routing
             this.getRouter().initialize();
+
+            //set chat model
+            this.setModel(new chatModel(), "chatModel");
         }
     });
 });

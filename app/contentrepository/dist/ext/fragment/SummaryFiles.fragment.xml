@@ -1,0 +1,19 @@
+<core:FragmentDefinition
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+>
+    <FlexBox
+        items="{summaryFiles}"
+        wrap="Wrap"
+        direction="Column"
+    >
+        <items>
+            <Link
+                text="{fileName}"
+                href="{url}"
+                target="_blank"
+                class="sapUiTinyMarginBottom"
+            />
+        </items>
+    </FlexBox>
+</core:FragmentDefinition>

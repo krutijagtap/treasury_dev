@@ -54,6 +54,18 @@
     width: 100%;
     box-sizing: border-box;
   }
+  .TitleFlexBox {
+    font-size: xx-large;
+  }
+  .fileSection {
+    padding: 1rem;
+    margin: 1rem;
+    background-color: rgba(0, 183, 240, 0.1);
+    width: fit-content;
+  }
+  .textPadding{
+    padding-top: 0.5rem;
+  }
   .ChatFlexBox {
     padding: 2rem;
     max-width: 1200px;
