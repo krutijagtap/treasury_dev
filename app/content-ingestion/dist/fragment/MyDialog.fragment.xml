@@ -1,0 +1,19 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+    <Dialog
+        id="myDialog"
+        title="My Dialog">
+        <content>
+            <Input
+                id="myInput"
+                placeholder="Enter something"/>
+        </content>
+        <endButton>
+            <Button
+                id="__closeButton" 
+                text="Close"
+                press=".onCloseDialog"/>
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

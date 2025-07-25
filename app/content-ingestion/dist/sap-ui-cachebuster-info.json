@@ -1,0 +1,23 @@
+{
+  "controller/service.js.map": 1753361403765,
+  "controller/service.js": 1750811608000,
+  "lib/util.js": 1750811608000,
+  "controller/CustomExpandedHeader.controller.js": 1753361047779,
+  "manifest.json": 1753328424330,
+  "Component.js": 1750811608000,
+  "controller/service-dbg.js": 1750811608000,
+  "i18n/i18n.properties": 1750811608000,
+  "lib/util-dbg.js": 1750811608000,
+  "lib/util.js.map": 1753361403770,
+  "controller/CustomExpandedHeader-dbg.controller.js": 1753361047779,
+  "controller/CustomExpandedHeader.controller.js.map": 1753361403782,
+  "Component-dbg.js": 1750811608000,
+  "Component.js.map": 1753361403764,
+  "Component-preload.js": 1753361405153,
+  "Component-preload.js.map": 1753361405153,
+  "fragment/SummaryFiles.fragment.xml": 1750811608000,
+  "fragment/MyDialog.fragment.xml": 1753170080715,
+  "fragment/CustomExpandedHeader.fragment.xml": 1750811608000,
+  "css/style.css": 1750811608000,
+  "index.html": 1750811608000
+}

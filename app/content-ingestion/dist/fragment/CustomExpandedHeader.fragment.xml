@@ -1,0 +1,52 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout"
+    xmlns:u="sap.ui.unified">
+
+    <VBox class="customUploadContainer sapUiSmallMargin" width="100%" height="100%">
+        <Title text="Upload Content" level="H4" class="sapUiSmallMarginBottom customTitle" />
+
+        <VBox class="customCard sapUiSmallMarginBottom" width="100%">
+            <Label 
+                id="__uploaderLabel" 
+                text="Select File" 
+                labelFor="__fileUploader" 
+                required="true" 
+                class="sapUiTinyMarginBottom customLabel" />
+
+            <u:FileUploader 
+                id="__fileUploader" 
+                width="300px"
+                tooltip="Choose file to be uploaded" 
+                change="onFileChange" 
+                fileType="pdf" 
+                maximumFileSize="5" 
+                class="sapUiSmallMarginBottom" />
+
+            <HBox alignItems="Center" class="sapUiSmallMarginBottom sapUiTinyMarginTop">
+                <Label text="To be used in:" class="sapUiSmallMarginEnd customLabel"/>
+                <HBox>
+                    <CheckBox 
+                        id="__checkboxQA" 
+                        text="QA" 
+                        selected="false" 
+                        select="onQAChecked" 
+                        class="sapUiSmallMarginEnd customCheckbox" />
+                    <CheckBox 
+                        id="__checkboxSummary" 
+                        text="Summary" 
+                        selected="false" 
+                        class="sapUiSmallMarginEnd customCheckbox" />
+                </HBox>
+            </HBox>
+
+            <Button 
+                id="__uploaderButton" 
+                text="Upload Attachment" 
+                press=".extension.com.scb.treasury.contentingestion.controller.CustomExpandedHeader.onUploadFile"
+                type="Emphasized" 
+                class="customUploadButton" />
+        </VBox>
+    </VBox>
+</core:FragmentDefinition>

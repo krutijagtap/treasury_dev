@@ -1,0 +1,110 @@
+{
+  "name": "Treasury",
+  "version": "1.0.0",
+  "description": "A simple CAP project.",
+  "repository": "<Add your repository here>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@cap-js/hana": "^1",
+    "@sap-cloud-sdk/resilience": "^4.0.2",
+    "@sap/cds": "^8",
+    "@sap/xssec": "^4.8.0",
+    "@sap-cloud-sdk/http-client": "^3.12.0",
+    "@sap/cds-compiler": "4.8.0",
+    "@sap/cds-hana": "2.0.0",
+    "express": "^4",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "@cap-js/cds-types": "^0.10.0",
+    "@cap-js/sqlite": "^1",
+    "@sap/cds-dk": "^8",
+    "mbt": "^1.2.29",
+    "rimraf": "^5.0.5"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch-browsebooks": "cds watch --open browsebooks/webapp/index.html?sap-ui-xx-viewCache=false",
+    "undeploy": "cf undeploy Treasury --delete-services --delete-service-keys --delete-service-brokers",
+    "build": "rimraf resources mta_archives && mbt build --mtar archive",
+    "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
+    "watch-treasuryui": "cds watch --open treasuryui/webapp/index.html?sap-ui-xx-viewCache=false",
+    "watch-content-ingestion": "cds watch --open content-ingestion/webapp/index.html?sap-ui-xx-viewCache=false",
+    "watch-contentrepository": "cds watch --open contentrepository/webapp/index.html?sap-ui-xx-viewCache=false"
+  },
+  "cds": {
+    "requires": {
+      "uaa": {
+        "kind": "xsuaa"
+      },
+      "auth": {
+        "[production]": {
+          "strategy": "JWT"
+        },
+        "[development]": {
+          "strategy": "mock",
+          "users": {
+            "joe": {
+              "roles": [
+                "Admin",
+                "Viewer",
+                "ContentChecker"
+              ]
+            },
+            "julie": {
+              "roles": [
+                "Viewer"
+              ]
+            },
+            "bob": {
+              "roles": [
+                "Viewer"
+              ]
+            }
+          }
+        }
+      },
+      "TestSbcDest": {
+        "kind": "odata-v2",
+        "csrf": true,
+        "csrfInBatch": true,
+        "[development]": {
+          "credentials": {
+            "destination": "TestSbcDest"
+          }
+        },
+        "[production]": {
+          "credentials": {
+            "destination": "TestSbcDest"
+          }
+        }
+      },
+      "db": {
+        "[production]": {
+          "kind": "hana-cloud"
+        },
+        "[development]": {
+          "kind": "sqlite"
+        },
+        "model": [
+          "db",
+          "srv"
+        ]
+      },
+      "xsuaa-api": {
+        "kind": "rest",
+        "credentials": {
+          "url": "",
+          "forwardAuthToken": true
+        }
+      },
+      "destinations": true
+    }
+  },
+  "sapux": [
+    "app/browsebooks",
+    "app/content-ingestion",
+    "app/contentrepository"
+  ]
+}

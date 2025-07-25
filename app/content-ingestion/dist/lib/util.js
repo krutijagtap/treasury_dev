@@ -1,0 +1,2 @@
+sap.ui.define([],function(){"use strict";function e(e,n){return n?.getModel("i18n")?.getResourceBundle()?.getText(e)}async function n(e,n,t,o={}){const i=[];Object.entries(o).forEach(([e,n])=>{i.push({name:e,value:n})});return new Promise(function(o,u){e.editFlow.invokeAction(t,{model:n,parameterValues:i,skipParameterDialog:true,invocationGrouping:true}).then(function(e){const n=e;if(n?.status=="FAILED"){u(n)}else{o(n)}}).catch(e=>{u(e)})})}return{getI18nText:e,executeUnBoundInvokeAction:n}});
+//# sourceMappingURL=util.js.map
