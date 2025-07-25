@@ -13,12 +13,19 @@
                                             <Button icon="sap-icon://copy" type="Transparent" press="onChatCopy" tooltip="{i18n>copyTooltip}"/>
                                             <Button icon="sap-icon://download" type="Transparent" press="onChatExport" tooltip="{i18n>export}" app:message="chatModel>/result"/>
                                             </HBox>
-
-                                          <VBox id="pdfContainer" renderType="Bare" class="sapUiContentPadding"/>
+                                          <!-- <PDFViewer
+                                              id="idDisplayEarningDocument"
+                                              source=""
+                                              title=""
+                                              height="50rem"
+                                              isTrustedSource="true"
+                                          />
+                                          </VBox> -->
                             </FlexBox>
                             <FlexBox class="responseTextBox response-content">
                           <!-- <core:HTML content="{chatModel>/result}"  class="response-content"></core:HTML> -->
-                          <FormattedText htmlText="{chatModel>/result}" class="response-content" />
+                          <VBox id="pdfContainer" renderType="Bare" class="sapUiContentPadding"/>
+                          <!-- <FormattedText id="pdfContainer" htmlText="{chatModel>/result}" class="response-content" /> -->
 
                              </FlexBox>
 
