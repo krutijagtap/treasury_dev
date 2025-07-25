@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <mvc:View xmlns:table="sap.ui.table" xmlns:unified="sap.ui.unified" xmlns:mvc="sap.ui.core.mvc"
           xmlns="sap.m"
           xmlns:core="sap.ui.core"
@@ -5,6 +6,14 @@
           controllerName="treasuryui.controller.TreasuryReport"
           xmlns:upload="sap.m.upload">
 <!-- <VBox height="100%" width="100%">
+=======
+<mvc:View xmlns:mvc="sap.ui.core.mvc"
+          xmlns="sap.m"
+          xmlns:core="sap.ui.core"
+          xmlns:ui="sap.ui.core"
+          controllerName="treasuryui.controller.TreasuryReport">
+<VBox height="100%" width="100%">
+>>>>>>> 6b05fe794e00b05f88f2dcdcb1b496cae8816a1f
   <core:ComponentContainer
     id="BrowseBooks"
     name="browsebooks"
@@ -15,6 +24,7 @@
     propagateModel="true"
     settings="{id: 'browsebooks'}"
      />
+<<<<<<< HEAD
 </VBox> -->
 <Page id="reportsPage" title="Upload Content">
 <content>
@@ -52,6 +62,9 @@
  </IconTabBar>
 </content>
 </Page>
+=======
+</VBox>
+>>>>>>> 6b05fe794e00b05f88f2dcdcb1b496cae8816a1f
 </mvc:View>
 
 

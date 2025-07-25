@@ -1,11 +1,22 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6b05fe794e00b05f88f2dcdcb1b496cae8816a1f
 sap.ui.define(
   [
     "sap/ui/core/mvc/ControllerExtension",
     "sap/m/MessageBox",
     "sap/ui/core/BusyIndicator",
+<<<<<<< HEAD
     "./service",
   ],
   function (ControllerExtension, MessageBox, BusyIndicator, service) {
+=======
+    "sap/ui/core/Fragment",
+    "./service",
+  ],
+  function (ControllerExtension, MessageBox, BusyIndicator,Fragment, service) {
+>>>>>>> 6b05fe794e00b05f88f2dcdcb1b496cae8816a1f
     "use strict";
 
     return ControllerExtension.extend(
@@ -24,7 +35,49 @@ sap.ui.define(
             .replaceAll(".", "/");
           return sap.ui.require.toUrl(sComponentId);
         },
+<<<<<<< HEAD
 
+=======
+        onfetchCSRF: async function(url){
+          const response = await fetch(url, {
+            method: "HEAD",
+            credentials: "include",
+            headers: {
+                "X-CSRF-Token": "Fetch"
+            }
+        });
+        const token = response.headers.get("X-CSRF-Token");
+        if (!token) {
+            throw new Error("Failed to fetch CSRF token");
+        }
+        return token;
+        }, 
+        
+      onfetchData: async function (oFile) {
+        const chatUrl =  sap.ui.require.toUrl('com/scb/treasury/contentingestion')+ "/api/upload";
+        const csrfUrl =  sap.ui.require.toUrl('com/scb/treasury/contentingestion');
+        const csrf = await this.onfetchCSRF(csrfUrl);
+        console.log(oFile);
+        let formData = new FormData();
+        formData.append("file", oFile);
+        try {  
+          const response = await fetch(chatUrl, {
+               method: "POST",
+               headers: { 
+                 "X-CSRF-Token":csrf,
+               },
+               body: formData
+           });
+           if (!response.message) {          
+             sap.m.MessageToast.show(response.message);
+            }
+          }             
+            catch (error) {
+           console.error("API Error:", error);
+       }
+       return response;          
+     },
+>>>>>>> 6b05fe794e00b05f88f2dcdcb1b496cae8816a1f
         /**
          * Get i18n text by key
          */
@@ -64,6 +117,7 @@ sap.ui.define(
 
         /**
          * Handles file upload and prepares payload
+<<<<<<< HEAD
          */
         onUploadFile: async function () {
           try {
@@ -71,6 +125,36 @@ sap.ui.define(
 
             const oFileUploader = this.base.byId("__fileUploader");
             const oFile = oFileUploader.getDomRef("fu").files[0];
+=======
+         */ onOpenDialog: function () {
+          var that = this;
+          if (!this._oDialog) {
+              Fragment.load({
+                  id: this.getView().getId(),
+                  name: "com.scb.treasury.contentingestion.fragment.MyDialog",
+                  controller: this
+              }).then(function (oDialog) {
+                  that._oDialog = oDialog;
+                  that.getView().addDependent(oDialog);
+                  that.oDialog.open();
+              });
+          } else {
+              this._oDialog.open();
+          }
+      },
+
+      onCloseDialog: function () {
+          this._oDialog.close();
+      },
+        onUploadFile: async function () {
+          try {
+            BusyIndicator.show(0);
+            sap.m.MessageToast.show("opening dialog box");
+            this.onOpenDialog();
+            const oFileUploader = this.base.byId("__fileUploader");
+            const oFile = oFileUploader.getDomRef("fu").files[0];
+           
+>>>>>>> 6b05fe794e00b05f88f2dcdcb1b496cae8816a1f
             const isQASelected = this.base.byId("__checkboxQA").getSelected();
             const isSummarySelected = this.base
               .byId("__checkboxSummary")
@@ -85,6 +169,7 @@ sap.ui.define(
               sap.m.MessageToast.show("Please select a file to upload.");
               return;
             }
+<<<<<<< HEAD
 
             const fileHash = await this.calculateFileHash(oFile);
             const sFileName = oFile.name;
@@ -125,6 +210,51 @@ sap.ui.define(
             } else {
               oFileUploader.setValueState("Error");
             }
+=======
+            const response =this.onfetchData(oFile);
+            if(response.metadata.processing_decision == "REJECTED")
+              return;
+            else{const fileHash = await this.calculateFileHash(oFile);
+              const sFileName = oFile.name;
+              const sMimeType = oFile.type;
+              const sContentUrl = `./v2/odata/v4/catalog/Content('${fileHash}')/content`;
+  
+              const aPayloads = [];
+    
+              if (isQASelected) {
+                aPayloads.push({
+                  keyID: `QA_${fileHash}`,
+                  fileName: sFileName,
+                  mediaType: sMimeType,
+                  tagType: "QA",
+                  status: "SUBMITTED",
+                  url: sContentUrl,
+                });
+              }
+  
+              if (isSummarySelected) {
+                aPayloads.push({
+                  keyID: `SUM_${fileHash}`,
+                  fileName: sFileName,
+                  mediaType: sMimeType,
+                  tagType: "SUMMARY",
+                  status: "DRAFT",
+                  url: sContentUrl,
+                });
+              }
+  
+              if (oFileUploader.getValue()) {
+                oFileUploader.setValueState("None");
+                await this._postInitialFileRecord(aPayloads);
+  
+                oFileUploader.setValue("");
+                this.base.byId("__checkboxQA").setSelected(false);
+                this.base.byId("__checkboxSummary").setSelected(false);
+              } else {
+                oFileUploader.setValueState("Error");
+              }}
+            
+>>>>>>> 6b05fe794e00b05f88f2dcdcb1b496cae8816a1f
           } catch (error) {
             console.error(error);
             MessageBox.error(this._getText("fileUploadError"), {

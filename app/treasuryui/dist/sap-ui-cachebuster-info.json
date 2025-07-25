@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "view/App.view.xml": 1753336368903,
   "controller/TreasuryReport.controller.js": 1753336368903,
   "model/chatModel.js": 1753336368903,
@@ -32,4 +33,39 @@
   "fragment/FrameHeader.fragment.xml": 1753336368903,
   "css/style.css": 1753336368903,
   "index.html": 1753336368903
+=======
+  "Component-preload.js": 1753361389235,
+  "Component.js": 1750811608000,
+  "model/chatModel.js": 1750811608000,
+  "controller/TreasuryReport.controller.js": 1750811608000,
+  "controller/TreasuryMainView.controller.js": 1750811608000,
+  "controller/App.controller.js": 1750811608000,
+  "manifest.json": 1750811608000,
+  "model/models.js": 1750811608000,
+  "controller/App-dbg.controller.js": 1750811608000,
+  "controller/App.controller.js.map": 1753361389080,
+  "model/chatModel-dbg.js": 1750811608000,
+  "model/chatModel.js.map": 1753361389084,
+  "controller/TreasuryReport-dbg.controller.js": 1750811608000,
+  "controller/TreasuryReport.controller.js.map": 1753361389078,
+  "controller/TreasuryMainView-dbg.controller.js": 1750811608000,
+  "controller/TreasuryMainView.controller.js.map": 1753361389077,
+  "Component-dbg.js": 1750811608000,
+  "Component.js.map": 1753361389080,
+  "model/models-dbg.js": 1750811608000,
+  "model/models.js.map": 1753361389081,
+  "i18n/i18n.properties": 1750811608000,
+  "Component-preload.js.map": 1753361389235,
+  "view/TreasuryMainView.view.xml": 1750811608000,
+  "view/ReportsView.view.xml": 1750811608000,
+  "view/App.view.xml": 1750811608000,
+  "fragment/resultBox.fragment.xml": 1750811608000,
+  "fragment/chatBoxbackup.fragment.xml": 1750811608000,
+  "fragment/chatBox.fragment.xml": 1750811608000,
+  "fragment/RejectionDialog.fragment.xml": 1750811608000,
+  "fragment/FrameSideContent.fragment.xml": 1750811608000,
+  "fragment/FrameHeader.fragment.xml": 1750811608000,
+  "css/style.css": 1750811608000,
+  "index.html": 1750811608000
+>>>>>>> 6b05fe794e00b05f88f2dcdcb1b496cae8816a1f
 }

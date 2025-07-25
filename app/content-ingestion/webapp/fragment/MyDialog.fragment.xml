@@ -1,0 +1,24 @@
+<core:FragmentDefinition
+        xmlns="sap.m"
+        xmlns:core="sap.ui.core">
+        <Dialog
+        id="myDialog"
+        title="My Dialog"
+         class="sapUiResponsivePadding--around">
+        <content>
+    <HBox id ="allSections" class="sectionContainer">
+      <VBox id="headerSection" class="sectionBox">
+        <Label id ="dublincore" text="DUBLIN CORE" class="sectionTitle"/>
+      </VBox>
+
+      <VBox id="technicalSection" class="sectionBox">
+        <Label id ="techDetails" text="TECHNICAL DETAILS" class="sectionTitle"/>
+      </VBox>
+
+      <VBox id="additionalSection" class="sectionBox">
+        <Label id ="addFields"  text="ADDITIONAL FIELDS" class="sectionTitle"/>
+      </VBox>
+    </HBox>
+</content>
+ </Dialog>
+    </core:FragmentDefinition>
