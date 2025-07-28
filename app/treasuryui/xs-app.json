@@ -12,7 +12,7 @@
     {
       "source": "^/api/(.*)$",
       "target": "/api/$1",
-      "destination": "treasuryUpload",
+      "destination": "Treasurybackend",
       "authenticationType": "none"
     },
     {

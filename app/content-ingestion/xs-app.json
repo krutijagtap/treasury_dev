@@ -24,7 +24,7 @@
       "source": "^/api/(.*)$",
       "target": "/api/$1",
       "authenticationType": "none",
-      "destination": "treasuryUpload",
+      "destination": "Treasurybackend",
       "csrfProtection" : false
     },
     {

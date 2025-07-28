@@ -24,8 +24,8 @@
           "odataVersion": "4.0"
         }
       },
-      "treasuryUpload": {
-        "uri": "/treasuryUpload/",           
+      "Treasurybackend": {
+        "uri": "/Treasurybackend/",           
         "type": "http"
       }
     }

@@ -1,6 +1,6 @@
 const cds = require("@sap/cds");
 const { executeHttpRequest } = require('@sap-cloud-sdk/http-client');
-const treasuryAPI = "treasuryUpload";
+const treasuryAPI = "Treasurybackend";
 const sapCfAxios = require("sap-cf-axios").default;
 
 module.exports = cds.service.impl(async function () {
@@ -126,7 +126,7 @@ module.exports = cds.service.impl(async function () {
   this.on('chatResponse', async (req) => {
     console.log("request obj" + req);
     const response = await executeHttpRequest(
-      {destinationName: 'treasuryUpload'},
+      {destinationName: 'Treasurybackend'},
       {
         method: 'POST',
         url: '/api/chat',
