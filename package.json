@@ -14,13 +14,12 @@
     "@sap/cds-compiler": "4.8.0",
     "@sap/cds-hana": "2.0.0",
     "express": "^4",
-    "sqlite3": "^5.1.7",
-    "sap-cf-axios": "^1.0.2"
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "@cap-js/cds-types": "^0.10.0",
     "@cap-js/sqlite": "^1",
-    "@sap/cds-dk": "^8",
+    "@sap/cds-dk": "^8.9.8",
     "mbt": "^1.2.29",
     "rimraf": "^5.0.5"
   },
@@ -99,13 +98,7 @@
           "url": "",
           "forwardAuthToken": true
         }
-      },
-      "treasuryUpload": {
-      "kind": "xsuaa",
-      "credentials": {
-        "destination": "treasuryUpload"
       }
-    }
     }
   },
   "sapux": [

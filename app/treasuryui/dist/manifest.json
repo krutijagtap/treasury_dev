@@ -25,8 +25,8 @@
         }
 <<<<<<< HEAD
       },
-      "treasuryUpload": {
-        "uri": "/treasuryUpload/",           
+      "Treasurybackend": {
+        "uri": "/Treasurybackend/",           
         "type": "http"
 =======
 >>>>>>> 6b05fe794e00b05f88f2dcdcb1b496cae8816a1f
