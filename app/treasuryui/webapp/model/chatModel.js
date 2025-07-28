@@ -8,11 +8,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
     enableUpload: true,
     enableQuery: true,
     userMessage : "",
-<<<<<<< HEAD
     placeHolder : "Get Started by choosing your file or entering a query to Intellibase",
-=======
-    placeHolder : "Bank: [Enter bank name e.g. Standard Chartered, HSBC]\nPeriod: [Enter period e.g. 1Q 2025]\nUser Prompt: [Enter your prompt]",
->>>>>>> 6b05fe794e00b05f88f2dcdcb1b496cae8816a1f
     busyText:"",
     result:      "",
     maker: true,

@@ -40,7 +40,8 @@ sap.ui.define([
       const chatModel = this.getOwnerComponent().getModel("chatModel");
       const oView = this.getView();
       const sInput = this.byId("chatFeedInput").getValue();
-
+      var aSelectedItems = this.byId("multiCombo").getSelectedItems();
+      const isValid = sInput.toLowerCase().includes("intellibase") || aSelectedItems.length > 0;
       // Disable submit + hide previous result
       chatModel.setSubmit(false);
       chatModel.setvisibleResult(false);
@@ -58,7 +59,7 @@ sap.ui.define([
       await Promise.resolve();
 
       try {
-        const resp = await this.onfetchData(sInput);
+        const resp = await this.onfetchData(sInput, isValid);
 
         chatModel.setResult(resp);
         chatModel.setvisibleResult(true);
@@ -73,7 +74,7 @@ sap.ui.define([
       }
     },
 
-    onfetchData: async function (sInput) {
+    onfetchData: async function (sInput, isValid) {
       const chatUrl = this.getBaseUrl() + "/api/chat";
       const csrf = this.fetchCsrfToken();
       const oContainer = this.byId("pdfContainer");
@@ -85,7 +86,11 @@ sap.ui.define([
 
       // const url = "https://standard-chartered-bank-core-foundational-12982zqn-genai839893a.cfapps.ap11.hana.ondemand.com/api/chat";
 
-      const payload = { "message": "Intellibase: What is the total RWA in UK for end of December 2024" };
+      if(!isValid){
+        MessageBox.error("Please select a file or Ask Intellibase");
+        return;
+      }
+      const payload = { "message": sInput };
 
       try {
         const response = await fetch(chatUrl, {
@@ -126,7 +131,7 @@ sap.ui.define([
       var oSelectedFile = aMultiBoxSelectedItems[0].getText(); // or .getKey() depending on your binding
       // MessageBox.success("Proceeding with file: ", oSelectedFile);
       textArea.setValue(`Research Summary: ${oSelectedFile}`)
-      this._callSummaryApi("Research Summary: C-PressRelease-2Q25.pdf");
+      this._callSummaryApi("Research Summary: C-PressRelease-2Q25.pdf",oSelectedFile);
     },
     getBaseUrl: function () {
       return sap.ui.require.toUrl('treasuryui');
@@ -143,7 +148,7 @@ sap.ui.define([
       const token = response.headers.get("X-CSRF-Token");
       return token;
     },
-    _callSummaryApi: async function (promptMessage) {
+    _callSummaryApi: async function (promptMessage,oSelectedFile) {
       const oBusy = new BusyDialog({ text: "Fetching summary..." });
       oBusy.open();
       // var url = "https://standard-chartered-bank-core-foundational-12982zqn-genai839893a.cfapps.ap11.hana.ondemand.com/api/chat"  
