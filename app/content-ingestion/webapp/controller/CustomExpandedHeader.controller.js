@@ -47,28 +47,30 @@ sap.ui.define(
         }, 
         
       onfetchData: async function (oFile) {
-        const chatUrl =  sap.ui.require.toUrl('com/scb/treasury/contentingestion')+ "/api/upload";
+        // const chatUrl =  sap.ui.require.toUrl('com/scb/treasury/contentingestion')+ "/api/upload";
+        const chatUrl =  "/api/upload";
         const csrfUrl =  sap.ui.require.toUrl('com/scb/treasury/contentingestion');
-        const csrf = await this.onfetchCSRF(csrfUrl);
+        // const csrf = await this.onfetchCSRF(csrfUrl);
         console.log(oFile);
         let formData = new FormData();
         formData.append("file", oFile);
         try {  
           const response = await fetch(chatUrl, {
                method: "POST",
-               headers: { 
-                 "X-CSRF-Token":csrf,
-               },
+              //  headers: { 
+              //   //  "X-CSRF-Token":csrf,
+              //  },
                body: formData
            });
-           if (!response.message) {          
+           if (!response.ok) {          
              sap.m.MessageToast.show(response.message);
+             return;
             }
+          return response;
           }             
-            catch (error) {
+          catch (error) {
            console.error("API Error:", error);
-       }
-       return response;          
+       }          
      },
         /**
          * Get i18n text by key

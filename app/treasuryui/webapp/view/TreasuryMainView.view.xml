@@ -17,7 +17,7 @@
                 <MultiComboBox id="multiCombo" selectionChange="onSelectDocument" class="comboBox" placeholder="Choose files to analyze">
                 <core:Item key="1" text="SCB_InvestorPresentation_1Q25.pdf" />
                 <core:Item key="2" text="SCB_PressRelease_1Q25.pdf"/>
-                <core:Item key="3" text="SCB_Transcripts_1Q25.pdf"/>
+                <core:Item key="3" text="C-PressRelease-2Q25.pdf"/>
 			    </MultiComboBox>
                 </HBox>
                  <core:Fragment fragmentName="treasuryui.fragment.chatBox" type="XML"/>

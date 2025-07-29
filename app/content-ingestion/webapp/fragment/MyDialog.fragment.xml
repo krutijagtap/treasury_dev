@@ -19,6 +19,7 @@
         <Label id ="addFields"  text="ADDITIONAL FIELDS" class="sectionTitle"/>
       </VBox>
     </HBox>
+    <Button id="closeButton" text="Close" press="onCloseDialog"/>
 </content>
  </Dialog>
     </core:FragmentDefinition>
