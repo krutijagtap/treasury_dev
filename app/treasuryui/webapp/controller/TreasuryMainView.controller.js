@@ -156,7 +156,7 @@ sap.ui.define([
       const chatUrl = this.getBaseUrl() + "/api/chat";
       const csrf = this.fetchCsrfToken();
       const payload = {
-        "message": "Research Summary: C-PressRelease-2Q25.pdf"
+        "message": "Research Summary: "+oSelectedFile
       };
       // // Disable submit + hide previous result
       chatModel.setSubmit(false);
@@ -217,7 +217,7 @@ sap.ui.define([
         press: function () {
           const a = document.createElement("a");
           a.href = url;
-          a.download = filename; // <-- this sets the filename
+          a.download = filename;
           a.click();
         }
       });
@@ -229,7 +229,7 @@ sap.ui.define([
         content: [
           downloadButton,
           new sap.ui.core.HTML({
-            content: `<iframe src="${url}" style="width:100%;height:70vh;border:none;"></iframe>`
+            content: `<iframe src="${url}" class="pdf-iframe"></iframe>`
           })
         ],
         layoutData: new sap.m.FlexItemData({ growFactor: 1 })

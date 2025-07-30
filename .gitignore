@@ -48,6 +48,7 @@ gen/
 node_modules/
 target/
 dist/
+app/**/dist/
 package-lock.json
 *package-lock.json
  

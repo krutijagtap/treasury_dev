@@ -277,10 +277,11 @@ annotate service.Content with @(
                     Sign  : #I,
                     Option: #EQ,
                     Low   : 'QA'
-                }]
+                }],
             }],
         },
         Text               : 'Q&A',
+        @UI.Hidden: true
     },
     UI.SelectionPresentationVariant #summary: {
         $Type              : 'UI.SelectionPresentationVariantType',
@@ -302,6 +303,7 @@ annotate service.Content with @(
             }],
         },
         Text               : 'Summary',
+        @UI.Hidden: true
     },
      UI.SelectionPresentationVariant #qainbox     : {
         $Type              : 'UI.SelectionPresentationVariantType',
@@ -323,6 +325,7 @@ annotate service.Content with @(
             }],
         },
         Text               : 'Q&A',
+        @UI.Hidden: true
     },
    UI.SelectionPresentationVariant #summaryinbox: {
     $Type              : 'UI.SelectionPresentationVariantType',
@@ -353,7 +356,8 @@ annotate service.Content with @(
         }
       ]
     },
-    Text: 'Summary Inbox'
+    Text: 'Summary Inbox',
+    @UI.Hidden: true
   }
 );
 
