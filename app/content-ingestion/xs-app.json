@@ -9,6 +9,12 @@
       "destination": "Treasury-srv-api"
     },
     {
+      "source": "^/v2/odata/v4/catalog/(.*)$",
+      "target": "/v2/odata/v4/catalog/$1",
+      "authenticationType": "none",
+      "destination": "Treasury-srv-api"
+    },
+    {
       "source": "^/resources/(.*)$",
       "target": "/resources/$1",
       "authenticationType": "none",
@@ -33,7 +39,5 @@
       "service": "html5-apps-repo-rt",
       "authenticationType": "xsuaa"
     }
-   
-   
   ]
 }

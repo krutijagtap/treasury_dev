@@ -52,8 +52,8 @@ sap.ui.define(
         onfetchData: async function (oFile) {
           const chatUrl = sap.ui.require.toUrl('com/scb/treasury/contentingestion') + "/api/upload";
           // const chatUrl = "/api/upload";
-          const csrfUrl = sap.ui.require.toUrl('com/scb/treasury/contentingestion');
-          const csrf = await this.onfetchCSRF(csrfUrl);
+          const baseUrl = sap.ui.require.toUrl('com/scb/treasury/contentingestion');
+          const csrf = await this.onfetchCSRF(baseUrl);
           console.log(oFile);
           let formData = new FormData();
           formData.append("file", oFile);
@@ -115,18 +115,13 @@ sap.ui.define(
 
         /**
          * Handles file upload and prepares payload
-         */ onOpenDialog: function (response) {
+         */
+        onOpenDialog: function (response) {
           var that = this;
           const metaData = response.metadata;
-          if(!metaData){
+          if (!metaData) {
             return;
           }
-          // const auditTrail = JSON.stringify(metaData.audit_trail[0]);
-          // const doc_details = JSON.stringify({
-          //   type: metaData.dc_type,
-          //   documentDate: metaData.document_date,
-          //   extractionTool: metaData.extraction_tool
-          // });
           const jsonResponse = {
             header: {
               contributor: metaData.contributor,
@@ -142,16 +137,15 @@ sap.ui.define(
               fileExtension: metaData.file_extension,
               fileFormat: metaData.file_format,
               mimeType: metaData.mime_type
-            }
-            ,
+            },
             additional: {
               accessLevel: metaData.access_level,
               auditTrail: metaData.audit_trail[0],
               documentInfo: {
-                  type: metaData.dc_type,
-                  documentDate: metaData.document_date,
-                  extractionTool: metaData.extraction_tool
-                }
+                type: metaData.dc_type,
+                documentDate: metaData.document_date,
+                extractionTool: metaData.extraction_tool
+              }
             }
           };
           this.iProgress = 0;
@@ -170,6 +164,7 @@ sap.ui.define(
             that._populateJsonData(jsonResponse);
             this._oDialog.open();
           }
+          return true;
         },
 
         onCloseDialog: function () {
@@ -179,9 +174,14 @@ sap.ui.define(
           try {
             BusyIndicator.show(0);
             sap.m.MessageToast.show("opening dialog box");
-            // this.onOpenDialog();
             const oFileUploader = this.base.byId("__fileUploader");
             const oFile = oFileUploader.getDomRef("fu").files[0];
+            const baseUrl = sap.ui.require.toUrl('com/scb/treasury/contentingestion');
+            const chatUrl = baseUrl + "/api/upload";
+            const csrf = await this.onfetchCSRF(baseUrl);
+            console.log(oFile);
+            let formData = new FormData();
+            formData.append("file", oFile);
 
             const isQASelected = this.base.byId("__checkboxQA").getSelected();
             const isSummarySelected = this.base
@@ -197,50 +197,94 @@ sap.ui.define(
               sap.m.MessageToast.show("Please select a file to upload.");
               return;
             }
-            const response = await this.onfetchData(oFile);
-            this.onOpenDialog(response);
-            // if (response.metadata.processing_decision == "REJECTED")
-            //   return;
-            // else {
+            // get the API response
+            const responseAPI = await fetch(chatUrl, {
+              method: "POST",
+              headers: {
+                "X-CSRF-Token": csrf,
+              },
+              body: formData
+            });
+            if (!responseAPI.ok) {
+              sap.m.MessageToast.show(responseAPI.message);
+              return;
+            }
+            const json = await responseAPI.json();
+            const dialog = await this.onOpenDialog(json);
+            // this.getView().byId("decisionText").setText(response.metadata.processing_decision);
+            if (dialog) {
+              // if (response.metadata.processing_decision == "REJECTED")
+              //   return;
+              // else {
               const fileHash = await this.calculateFileHash(oFile);
               const sFileName = oFile.name;
               const sMimeType = oFile.type;
-              const sContentUrl = `./v2/odata/v4/catalog/Content('${fileHash}')/content`;
+              const sContentUrl = `/Content(ID='${fileHash}',IsActiveEntity=true)/content`;
 
               const aPayloads = [];
 
-              // if (isQASelected) {
               aPayloads.push({
                 keyID: `${fileHash}`,
                 fileName: sFileName,
                 mediaType: sMimeType,
                 status: "SUBMITTED",
-                url: sContentUrl,
+                url: sContentUrl
               });
-              // }
-
-              // if (isSummarySelected) {
-              // aPayloads.push({
-              //   keyID: `SUM_${fileHash}`,
-              //   fileName: sFileName,
-              //   mediaType: sMimeType,
-              //   tagType: "SUMMARY",
-              //   status: "DRAFT",
-              //   url: sContentUrl,
-              // });
-              // }
 
               if (oFileUploader.getValue()) {
                 oFileUploader.setValueState("None");
-                await this._postInitialFileRecord(aPayloads);
+                const putUrl = baseUrl + "/odata/v4/catalog/Content(ID='" + fileHash + "',IsActiveEntity=true)/content"; ///odata/v4/catalog
+                const contentUrl = baseUrl + "/odata/v4/catalog/Content"; ///odata/v4/catalog
+                // const response = await service.createContent(
+                //   this.base,
+                //   { initialData: JSON.stringify(aPayloads) },
+                //   "CatalogService.EntityContainer/createContent",
+                //   oModel
+                // );
 
+                // create a record in Content Table
+                const response = await fetch(contentUrl, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-Token": csrf
+                  },
+                  credentials: "include",
+                  body: JSON.stringify({
+                    "ID": fileHash,
+                    "fileName": sFileName,
+                    "mediaType": sMimeType,
+                    // "url": "./odata/v4/earning-upload-srv/Content('" + fileHash + "')/content",
+                    "status": "Submitted"
+                  })
+                });
+
+                if (!response.ok) {
+                  if (response.status === 400) {
+                    sap.m.MessageToast.show("400-Bad Request");
+                    return
+                  } else {
+                    throw new Error(`Entity creation failed: ${response.status}`);
+                  }
+                }
+
+                const oExtModel = this.base.getExtensionAPI().getModel();
+                await fetch(putUrl, {
+                  method: "PUT",
+                  headers: {
+                    "Content-Type": oFile.type,
+                    "Slug": encodeURIComponent(oFile.name),
+                    "X-CSRF-Token": csrf
+                  },
+                  credentials: "include",
+                  body: oFile
+                });
+                oExtModel.refresh();
                 oFileUploader.setValue("");
-                // this.base.byId("__checkboxQA").setSelected(false);
-                // this.base.byId("__checkboxSummary").setSelected(false);
               } else {
                 oFileUploader.setValueState("Error");
               }
-            // }
+            }
 
           } catch (error) {
             console.error(error);
@@ -267,10 +311,10 @@ sap.ui.define(
         /**
          * Calls CAP action and refreshes ListReport model
          */
-        _postInitialFileRecord: async function (aPayloads) {
+        _postInitialFileRecord: async function (aPayloads, oFile, fileHash) {
           try {
             const oModel = this.getView().getModel();
-
+            const putUrl = sap.ui.require.toUrl('com/scb/treasury/contentingestion') + "Content('" + fileHash + "')/content"
             const response = await service.createContent(
               this.base,
               { initialData: JSON.stringify(aPayloads) },
@@ -280,6 +324,16 @@ sap.ui.define(
 
             if (response) {
               const oExtModel = this.base.getExtensionAPI().getModel();
+              await fetch(putUrl, {
+                method: "PUT",
+                headers: {
+                  "Content-Type": oFile.type,
+                  "Slug": encodeURIComponent(oFile.name),
+                  "X-CSRF-Token": csrfToken
+                },
+                credentials: "include",
+                body: oFile
+              });
               oExtModel.refresh();
             }
           } catch (error) {

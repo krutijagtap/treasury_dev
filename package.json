@@ -6,21 +6,20 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "@cap-js/hana": "^1",
     "@sap-cloud-sdk/http-client": "^3.12.0",
     "@sap-cloud-sdk/resilience": "^4.0.2",
-    "@sap/cds": "^8",
+    "@sap/cds": "7.9.5",
     "@sap/cds-compiler": "4.8.0",
+    "@sap/cds-dk": "7.9.3",
     "@sap/cds-hana": "2.0.0",
+    "@sap/cds-odata-v2-adapter-proxy": "^1.9.21",
     "@sap/xssec": "^4.8.0",
     "express": "^4",
     "sap-cf-axios": "^1.0.2",
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
-    "@cap-js/cds-types": "^0.10.0",
-    "@cap-js/sqlite": "^1",
-    "@sap/cds-dk": "^8",
+    "@sap/cds-dk": "7.9.3",
     "mbt": "^1.2.29",
     "rimraf": "^5.0.5",
     "ui5-middleware-simpleproxy": "^3.4.3"

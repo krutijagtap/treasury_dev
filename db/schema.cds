@@ -22,7 +22,7 @@ entity Content : managed {
       url             : String;
 
       @Core.MediaType: mediaType
-      content         : LargeString;
+      content         : LargeBinary;
       summaryFiles    : Composition of many SummaryFiles
                           on summaryFiles.content = $self;
       isChecker       : Boolean;

@@ -1,272 +1,269 @@
 using CatalogService as service from '../../srv/cat-service';
 
-annotate service.Content with @(
-    UI.FieldGroup #GeneratedGroup: {
-        $Type: 'UI.FieldGroupType',
-        Data : [
+annotate service.Content with @UI.LineItem: [
             {
-                $Type: 'UI.DataField',
-                Label: 'fileName',
+                $Type: 'UI.DataFieldWithUrl',
+                Label: 'File Name',
                 Value: fileName,
+                Url: url,
+                ![@HTML5.CssDefaults]: {width: 'auto', }
             },
             {
                 $Type: 'UI.DataField',
-                Label: 'mediaType',
+                Label: 'Media Type',
                 Value: mediaType,
+                ![@HTML5.CssDefaults]: {width: 'auto', }
             },
             {
                 $Type: 'UI.DataField',
-                Label: 'tagType_code',
+                Label: 'Tag Type',
                 Value: tagType_code,
+                ![@HTML5.CssDefaults]: {width: 'auto', }
             },
             {
                 $Type: 'UI.DataField',
-                Label: 'status_code',
+                Label: 'Status Code',
                 Value: status_code,
+                ![@HTML5.CssDefaults]: {width: 'auto', }
             },
             {
                 $Type: 'UI.DataField',
-                Label: 'embeddingStatus_code',
+                Label: 'Embedding Status Code',
                 Value: embeddingStatus_code,
+                ![@HTML5.CssDefaults]: {width: 'auto', }
             },
             {
                 $Type: 'UI.DataField',
-                Label: 'url',
-                Value: url,
-            },
-        ],
-    },
-    UI.Facets                    : [{
-        $Type : 'UI.ReferenceFacet',
-        ID    : 'GeneratedFacet1',
-        Label : 'General Information',
-        Target: '@UI.FieldGroup#GeneratedGroup',
-    }, ],
-    UI.LineItem#QA                 : [
-        {
-            $Type                : 'UI.DataField',
-            Label                : 'Uploaded Files',
-            Value                : fileName,
-            ![@HTML5.CssDefaults]: {width: 'auto'}
-        },
-        {
-            $Type                : 'UI.DataField',
-            Label                : 'Approval Status',
-            Value                : status_code,
-            ![@HTML5.CssDefaults]: {width: 'auto'}
-        },
-        {
-            $Type                : 'UI.DataField',
-            Label                : 'Media Type',
-            Value                : mediaType,
-            ![@HTML5.CssDefaults]: {width: 'auto'}
-        },
-        {
-            $Type                : 'UI.DataField',
-            Value                : createdBy,
-            ![@HTML5.CssDefaults]: {width: 'auto'}
-        },
-        {
-            $Type                : 'UI.DataField',
-            Label                : 'Created On',
-            Value                : createdAt,
-            ![@HTML5.CssDefaults]: {width: 'auto'}
-        }
+                Label: 'Content',
+                Value: content,
+                ![@HTML5.CssDefaults]: {width: 'auto', }
+            }
+    // UI.Facets                    : [{
+    //     $Type : 'UI.ReferenceFacet',
+    //     ID    : 'GeneratedFacet1',
+    //     Label : 'General Information',
+    //     Target: '@UI.FieldGroup#GeneratedGroup',
+    // }, ],
+    // UI.LineItem#QA                 : [
+    //     {
+    //         $Type                : 'UI.DataField',
+    //         Label                : 'Uploaded Files',
+    //         Value                : fileName,
+    //         ![@HTML5.CssDefaults]: {width: 'auto'}
+    //     },
+    //     {
+    //         $Type                : 'UI.DataField',
+    //         Label                : 'Approval Status',
+    //         Value                : status_code,
+    //         ![@HTML5.CssDefaults]: {width: 'auto'}
+    //     },
+    //     {
+    //         $Type                : 'UI.DataField',
+    //         Label                : 'Media Type',
+    //         Value                : mediaType,
+    //         ![@HTML5.CssDefaults]: {width: 'auto'}
+    //     },
+    //     {
+    //         $Type                : 'UI.DataField',
+    //         Value                : createdBy,
+    //         ![@HTML5.CssDefaults]: {width: 'auto'}
+    //     },
+    //     {
+    //         $Type                : 'UI.DataField',
+    //         Label                : 'Created On',
+    //         Value                : createdAt,
+    //         ![@HTML5.CssDefaults]: {width: 'auto'}
+    //     }
 
-    ],
-     UI.LineItem#Sum              : [
-        {
-            $Type                : 'UI.DataField',
-            Label                : 'Uploaded Files',
-            Value                : fileName,
-            ![@HTML5.CssDefaults]: {width: 'auto'}
-        },
-        {
-            $Type                : 'UI.DataField',
-            Label                : 'Approval Status',
-            Value                : status_code,
-            ![@HTML5.CssDefaults]: {width: 'auto'}
-        },
-        {
-            $Type                : 'UI.DataField',
-            Label                : 'Media Type',
-            Value                : mediaType,
-            ![@HTML5.CssDefaults]: {width: 'auto'}
-        },
-        {
-            $Type                : 'UI.DataField',
-            Value                : createdBy,
-            ![@HTML5.CssDefaults]: {width: 'auto'}
-        },
-        {
-            $Type                : 'UI.DataField',
-            Label                : 'Created On',
-            Value                : createdAt,
-            ![@HTML5.CssDefaults]: {width: 'auto'}
-        },
-        {
-            $Type                : 'UI.DataFieldForAction',
-            Action               : 'CatalogService.submit',
-            Label                : 'Submit',
-            Criticality          : #Neutral,
-            ![@UI.Hidden]        : {$edmJson: {$Not: {$And: [
-                {$Eq: [
-                    {$Path: 'tagType_code'},
-                    'SUMMARY'
-                ]},
-                {$Eq: [
-                    {$Path: 'status_code'},
-                    'DRAFT'
-                ]}
-            ]}}},
-            Inline               : true,
-            ![@HTML5.CssDefaults]: {width: 'auto'},
-            ![@UI.Importance]    : #High,
+    // ],
+    //  UI.LineItem#Sum              : [
+    //     {
+    //         $Type                : 'UI.DataField',
+    //         Label                : 'Uploaded Files',
+    //         Value                : fileName,
+    //         ![@HTML5.CssDefaults]: {width: 'auto'}
+    //     },
+    //     {
+    //         $Type                : 'UI.DataField',
+    //         Label                : 'Approval Status',
+    //         Value                : status_code,
+    //         ![@HTML5.CssDefaults]: {width: 'auto'}
+    //     },
+    //     {
+    //         $Type                : 'UI.DataField',
+    //         Label                : 'Media Type',
+    //         Value                : mediaType,
+    //         ![@HTML5.CssDefaults]: {width: 'auto'}
+    //     },
+    //     {
+    //         $Type                : 'UI.DataField',
+    //         Value                : createdBy,
+    //         ![@HTML5.CssDefaults]: {width: 'auto'}
+    //     },
+    //     {
+    //         $Type                : 'UI.DataField',
+    //         Label                : 'Created On',
+    //         Value                : createdAt,
+    //         ![@HTML5.CssDefaults]: {width: 'auto'}
+    //     },
+    //     {
+    //         $Type                : 'UI.DataFieldForAction',
+    //         Action               : 'CatalogService.submit',
+    //         Label                : 'Submit',
+    //         Criticality          : #Neutral,
+    //         ![@UI.Hidden]        : {$edmJson: {$Not: {$And: [
+    //             {$Eq: [
+    //                 {$Path: 'tagType_code'},
+    //                 'SUMMARY'
+    //             ]},
+    //             {$Eq: [
+    //                 {$Path: 'status_code'},
+    //                 'DRAFT'
+    //             ]}
+    //         ]}}},
+    //         Inline               : true,
+    //         ![@HTML5.CssDefaults]: {width: 'auto'},
+    //         ![@UI.Importance]    : #High,
 
-        }
+    //     }
 
-    ],
-        UI.LineItem#QAInbox             : [
-        {
-            $Type                : 'UI.DataField',
-            Label                : 'Uploaded Files',
-            Value                : fileName,
-            ![@HTML5.CssDefaults]: {width: 'auto'}
-        },
-        {
-            $Type                : 'UI.DataField',
-            Label                : 'Approval Status',
-            Value                : status_code,
-            ![@HTML5.CssDefaults]: {width: 'auto'}
-        },
-        {
-            $Type                : 'UI.DataField',
-            Label                : 'Media Type',
-            Value                : mediaType,
-            ![@HTML5.CssDefaults]: {width: 'auto'}
-        },
-        {
-            $Type                : 'UI.DataField',
-            Value                : createdBy,
-            ![@HTML5.CssDefaults]: {width: 'auto'}
-        },
-        {
-            $Type                : 'UI.DataField',
-            Label                : 'Created On',
-            Value                : createdAt,
-            ![@HTML5.CssDefaults]: {width: 'auto'}
-        },
+    // ],
+    //     UI.LineItem#QAInbox             : [
+    //     {
+    //         $Type                : 'UI.DataField',
+    //         Label                : 'Uploaded Files',
+    //         Value                : fileName,
+    //         ![@HTML5.CssDefaults]: {width: 'auto'}
+    //     },
+    //     {
+    //         $Type                : 'UI.DataField',
+    //         Label                : 'Approval Status',
+    //         Value                : status_code,
+    //         ![@HTML5.CssDefaults]: {width: 'auto'}
+    //     },
+    //     {
+    //         $Type                : 'UI.DataField',
+    //         Label                : 'Media Type',
+    //         Value                : mediaType,
+    //         ![@HTML5.CssDefaults]: {width: 'auto'}
+    //     },
+    //     {
+    //         $Type                : 'UI.DataField',
+    //         Value                : createdBy,
+    //         ![@HTML5.CssDefaults]: {width: 'auto'}
+    //     },
+    //     {
+    //         $Type                : 'UI.DataField',
+    //         Label                : 'Created On',
+    //         Value                : createdAt,
+    //         ![@HTML5.CssDefaults]: {width: 'auto'}
+    //     },
       
-        {
-            $Type                : 'UI.DataFieldForAction',
-            Action               : 'CatalogService.approveContent',
-            Label                : 'Approve',
-            Inline               : true,
-            Criticality          : #Positive,
-            ![@HTML5.CssDefaults]: {width: 'auto'},
-            ![@UI.Hidden]        : {$edmJson: {$Not: {$And: [
-                {$Eq: [
-                    {$Path: 'status_code'},
-                    'SUBMITTED'
-                ]},
-                {$Path: 'isChecker'}
-            ]}}},
-            InvocationGrouping   : #Isolated,
-        },
-        {
-            $Type                : 'UI.DataFieldForAction',
-            Action               : 'CatalogService.rejectContent',
-            Label                : 'Reject',
-            Inline               : true,
-            Criticality          : #Negative,
-            ![@HTML5.CssDefaults]: {width: 'auto'},
-            ![@UI.Hidden]        : {$edmJson: {$Not: {$And: [
-                {$Eq: [
-                    {$Path: 'status_code'},
-                    'SUBMITTED'
-                ]},
-                {$Path: 'isChecker'}
-            ]}}},
-            InvocationGrouping   : #Isolated
-        }
+    //     {
+    //         $Type                : 'UI.DataFieldForAction',
+    //         Action               : 'CatalogService.approveContent',
+    //         Label                : 'Approve',
+    //         Inline               : true,
+    //         Criticality          : #Positive,
+    //         ![@HTML5.CssDefaults]: {width: 'auto'},
+    //         ![@UI.Hidden]        : {$edmJson: {$Not: {$And: [
+    //             {$Eq: [
+    //                 {$Path: 'status_code'},
+    //                 'SUBMITTED'
+    //             ]},
+    //             {$Path: 'isChecker'}
+    //         ]}}},
+    //         InvocationGrouping   : #Isolated,
+    //     },
+    //     {
+    //         $Type                : 'UI.DataFieldForAction',
+    //         Action               : 'CatalogService.rejectContent',
+    //         Label                : 'Reject',
+    //         Inline               : true,
+    //         Criticality          : #Negative,
+    //         ![@HTML5.CssDefaults]: {width: 'auto'},
+    //         ![@UI.Hidden]        : {$edmJson: {$Not: {$And: [
+    //             {$Eq: [
+    //                 {$Path: 'status_code'},
+    //                 'SUBMITTED'
+    //             ]},
+    //             {$Path: 'isChecker'}
+    //         ]}}},
+    //         InvocationGrouping   : #Isolated
+    //     }
 
-    ],
-     UI.LineItem#SumInbox           : [
-        {
-            $Type                : 'UI.DataField',
-            Label                : 'Uploaded Files',
-            Value                : fileName,
-            ![@HTML5.CssDefaults]: {width: 'auto'}
-        },
-        {
-            $Type                : 'UI.DataField',
-            Label                : 'Approval Status',
-            Value                : status_code,
-            ![@HTML5.CssDefaults]: {width: 'auto'}
-        },
-        {
-            $Type                : 'UI.DataField',
-            Label                : 'Media Type',
-            Value                : mediaType,
-            ![@HTML5.CssDefaults]: {width: 'auto'}
-        },
-        {
-            $Type                : 'UI.DataField',
-            Value                : createdBy,
-            ![@HTML5.CssDefaults]: {width: 'auto'}
-        },
-        {
-            $Type                : 'UI.DataField',
-            Label                : 'Created On',
-            Value                : createdAt,
-            ![@HTML5.CssDefaults]: {width: 'auto'}
-        },
-        {
-            $Type                : 'UI.DataFieldForAction',
-            Action               : 'CatalogService.approveContent',
-            Label                : 'Approve',
-            Inline               : true,
-            Criticality          : #Positive,
-            ![@HTML5.CssDefaults]: {width: 'auto'},
-            ![@UI.Hidden]        : {$edmJson: {$Not: {$And: [
-                {$Eq: [
-                    {$Path: 'status_code'},
-                    'SUBMITTED'
-                ]},
-                {$Path: 'isChecker'}
-            ]}}},
-            InvocationGrouping   : #Isolated,
-        },
-        {
-            $Type                : 'UI.DataFieldForAction',
-            Action               : 'CatalogService.rejectContent',
-            Label                : 'Reject',
-            Inline               : true,
-            Criticality          : #Negative,
-            ![@HTML5.CssDefaults]: {width: 'auto'},
-            ![@UI.Hidden]        : {$edmJson: {$Not: {$And: [
-                {$Eq: [
-                    {$Path: 'status_code'},
-                    'SUBMITTED'
-                ]},
-                {$Path: 'isChecker'}
-            ]}}},
-            InvocationGrouping   : #Isolated
-        }
+    // ],
+    //  UI.LineItem#SumInbox           : [
+    //     {
+    //         $Type                : 'UI.DataField',
+    //         Label                : 'Uploaded Files',
+    //         Value                : fileName,
+    //         ![@HTML5.CssDefaults]: {width: 'auto'}
+    //     },
+    //     {
+    //         $Type                : 'UI.DataField',
+    //         Label                : 'Approval Status',
+    //         Value                : status_code,
+    //         ![@HTML5.CssDefaults]: {width: 'auto'}
+    //     },
+    //     {
+    //         $Type                : 'UI.DataField',
+    //         Label                : 'Media Type',
+    //         Value                : mediaType,
+    //         ![@HTML5.CssDefaults]: {width: 'auto'}
+    //     },
+    //     {
+    //         $Type                : 'UI.DataField',
+    //         Value                : createdBy,
+    //         ![@HTML5.CssDefaults]: {width: 'auto'}
+    //     },
+    //     {
+    //         $Type                : 'UI.DataField',
+    //         Label                : 'Created On',
+    //         Value                : createdAt,
+    //         ![@HTML5.CssDefaults]: {width: 'auto'}
+    //     },
+    //     {
+    //         $Type                : 'UI.DataFieldForAction',
+    //         Action               : 'CatalogService.approveContent',
+    //         Label                : 'Approve',
+    //         Inline               : true,
+    //         Criticality          : #Positive,
+    //         ![@HTML5.CssDefaults]: {width: 'auto'},
+    //         ![@UI.Hidden]        : {$edmJson: {$Not: {$And: [
+    //             {$Eq: [
+    //                 {$Path: 'status_code'},
+    //                 'SUBMITTED'
+    //             ]},
+    //             {$Path: 'isChecker'}
+    //         ]}}},
+    //         InvocationGrouping   : #Isolated,
+    //     },
+    //     {
+    //         $Type                : 'UI.DataFieldForAction',
+    //         Action               : 'CatalogService.rejectContent',
+    //         Label                : 'Reject',
+    //         Inline               : true,
+    //         Criticality          : #Negative,
+    //         ![@HTML5.CssDefaults]: {width: 'auto'},
+    //         ![@UI.Hidden]        : {$edmJson: {$Not: {$And: [
+    //             {$Eq: [
+    //                 {$Path: 'status_code'},
+    //                 'SUBMITTED'
+    //             ]},
+    //             {$Path: 'isChecker'}
+    //         ]}}},
+    //         InvocationGrouping   : #Isolated
+    //     }
 
-    ],
-    UI.SelectionFields           : [
-        mediaType
-    ],
-);
+    // ],
+];
 
 annotate service.Content with @(
     UI.SelectionPresentationVariant #qa     : {
         $Type              : 'UI.SelectionPresentationVariantType',
         PresentationVariant: {
-            $Type         : 'UI.PresentationVariantType',
-            Visualizations: ['@UI.LineItem#QA',
-            ],
+            $Type         : 'UI.PresentationVariantType'
         },
         SelectionVariant   : {
             $Type        : 'UI.SelectionVariantType',
@@ -286,9 +283,7 @@ annotate service.Content with @(
     UI.SelectionPresentationVariant #summary: {
         $Type              : 'UI.SelectionPresentationVariantType',
         PresentationVariant: {
-            $Type         : 'UI.PresentationVariantType',
-            Visualizations: ['@UI.LineItem#Sum',
-            ],
+            $Type         : 'UI.PresentationVariantType'
         },
         SelectionVariant   : {
             $Type        : 'UI.SelectionVariantType',
@@ -308,9 +303,7 @@ annotate service.Content with @(
      UI.SelectionPresentationVariant #qainbox     : {
         $Type              : 'UI.SelectionPresentationVariantType',
         PresentationVariant: {
-            $Type         : 'UI.PresentationVariantType',
-            Visualizations: ['@UI.LineItem#QAInbox',
-            ],
+            $Type         : 'UI.PresentationVariantType'
         },
         SelectionVariant   : {
             $Type        : 'UI.SelectionVariantType',
@@ -330,8 +323,7 @@ annotate service.Content with @(
    UI.SelectionPresentationVariant #summaryinbox: {
     $Type              : 'UI.SelectionPresentationVariantType',
     PresentationVariant: {
-      $Type         : 'UI.PresentationVariantType',
-      Visualizations: ['@UI.LineItem#SumInbox']
+      $Type         : 'UI.PresentationVariantType'
     },
     SelectionVariant   : {
       $Type        : 'UI.SelectionVariantType',
