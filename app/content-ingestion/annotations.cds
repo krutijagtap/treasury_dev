@@ -307,7 +307,7 @@ annotate service.Content with @(
             $Type        : 'UI.SelectionVariantType',
             SelectOptions: [{
                 $Type       : 'UI.SelectOptionType',
-                PropertyName: tagType_code,
+                PropertyName: tagType,
                 Ranges      : [{
                     Sign  : #I,
                     Option: #EQ,
@@ -325,7 +325,7 @@ annotate service.Content with @(
             $Type        : 'UI.SelectionVariantType',
             SelectOptions: [{
                 $Type       : 'UI.SelectOptionType',
-                PropertyName: tagType_code,
+                PropertyName: tagType,
                 Ranges      : [{
                     Sign  : #I,
                     Option: #EQ,
@@ -343,7 +343,7 @@ annotate service.Content with @(
             $Type        : 'UI.SelectionVariantType',
             SelectOptions: [{
                 $Type       : 'UI.SelectOptionType',
-                PropertyName: tagType_code,
+                PropertyName: tagType,
                 Ranges      : [{
                     Sign  : #I,
                     Option: #EQ,
@@ -362,7 +362,7 @@ annotate service.Content with @(
             SelectOptions: [
                 {
                     $Type       : 'UI.SelectOptionType',
-                    PropertyName: tagType_code,
+                    PropertyName: tagType,
                     Ranges      : [{
                         Sign  : #I,
                         Option: #EQ,
@@ -371,7 +371,7 @@ annotate service.Content with @(
                 },
                 {
                     $Type       : 'UI.SelectOptionType',
-                    PropertyName: status_code,
+                    PropertyName: status,
                     Ranges      : [{
                         Sign  : #I,
                         Option: #NE,
