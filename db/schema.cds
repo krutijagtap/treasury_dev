@@ -16,16 +16,19 @@ entity Content : managed {
   key ID              : String;
       fileName        : String;
       mediaType       : String;
-      tagType         : Association to TagTypes;
-      status          : Association to ContentStatus;
-      embeddingStatus : Association to EmbeddingStatus;
+      tagType         : String;
+      //Association to TagTypes;
+      status          : String;
+      //Association to ContentStatus;
+      embeddingStatus : String;
+      //Association to EmbeddingStatus;
       url             : String;
 
       @Core.MediaType: mediaType
       content         : LargeBinary;
       summaryFiles    : Composition of many SummaryFiles
                           on summaryFiles.content = $self;
-      isChecker       : Boolean;
+      isChecker       : Boolean;      
 }
 
 entity SummaryFiles : cuid, managed {

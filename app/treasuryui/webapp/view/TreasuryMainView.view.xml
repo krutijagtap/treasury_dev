@@ -14,11 +14,9 @@
             <FlexBox id="chatFlexBox" class="ChatFlexBox" direction="Column">
                  <Title text="How can I help you today?" textAlign="Center" class="TitleFlexBox"/>
                  <HBox justifyContent="End">
-                <MultiComboBox id="multiCombo" selectionChange="onSelectDocument" class="comboBox" placeholder="Choose files to analyze">
-                <core:Item key="1" text="SCB_InvestorPresentation_1Q25.pdf" />
-                <core:Item key="2" text="SCB_PressRelease_1Q25.pdf"/>
-                <core:Item key="3" text="C-PressRelease-2Q25.pdf"/>
-			    </MultiComboBox>
+                <MultiComboBox id="multiCombo" items="{ path: '/Content', filters: [{ path: 'status', operator: 'EQ', value1: 'COMPLETED' } ]}" selectionChange="onSelectDocument" placeholder="Choose files to analyze">
+                <core:Item key="{ID}" text="{fileName}" />
+                </MultiComboBox>
                 </HBox>
                  <core:Fragment fragmentName="treasuryui.fragment.chatBox" type="XML"/>
             </FlexBox>

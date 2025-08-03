@@ -148,30 +148,6 @@
                   }
                 }
               },
-              "views": {
-                "paths": [
-                  {
-                    "key": "qa",
-                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#qa",
-                    "visible": "{= ${/ActionVisibility/isMaker} }"
-                  },
-                  {
-                    "key": "summary",
-                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#summary",
-                    "visible": "{= ${/ActionVisibility/isMaker} }"
-                  },
-                  {
-                    "key": "qainbox",
-                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#qainbox",
-                    "visible": "{= ${/ActionVisibility/isChkr} }"
-                  },
-                  {
-                    "key": "summaryinbox",
-                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#summaryinbox",
-                    "visible": "{= ${/ActionVisibility/isChkr} }"
-                  }
-                ]
-              },
               "initialLoad": "Enabled",
               "liveMode": true,
               "content": {

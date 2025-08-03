@@ -9,7 +9,7 @@ service CatalogService {
         errorMessage : String;
     };
 
-            @odata.draft.enabled
+            // @odata.draft.enabled
             @(requires: 'authenticated-user')
             @UI.CreateHidden                  : true
             @UI.DeleteHidden                  : true

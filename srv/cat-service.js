@@ -38,9 +38,9 @@ module.exports = cds.service.impl(async function () {
   //       tagType_code: data.tagType,
   //       status_code: data.status,
   //       url: data.url,
-  //       createdBy: cds.context.user.id,
+    //       createdBy: cds.context.user.id,
   //       // content: data.content, // Add if needed later
-  //     });
+    //     });
   //   }
 
   //   // Insert entries one by one
@@ -89,36 +89,36 @@ module.exports = cds.service.impl(async function () {
   //   };
   // });
   this.on("approveContent", async (req) => {
-    const ID = req.params[0].ID;
-    //Call API to create Embeddings
-    const embeddingService = await cds.connect.to("TestSbcDest");
-    const tx = embeddingService.tx(req);
+    const ID = req.params[0];
+    // //Call API to create Embeddings
+    // const embeddingService = await cds.connect.to("TestSbcDest");
+    // const tx = embeddingService.tx(req);
 
-    try {
-      const embeddings = await tx.send({
-        method: "POST",
-        path: "/api/generate-embeddings",
-        headers: { "Content-Type": "application/json" },
-      });
-    } catch (error) {
-      console.log("Failed in getting embeddings due to: " + error);
-    }
+    // try {
+    //   const embeddings = await tx.send({
+    //     method: "POST",
+    //     path: "/api/generate-embeddings",
+    //     headers: { "Content-Type": "application/json" },
+    //   });
+    // } catch (error) {
+    //   console.log("Failed in getting embeddings due to: " + error);
+    // }
 
     await UPDATE(Content, ID).with({
-      status_code: "APPROVED",
+      status: "COMPLETED"
     });
   });
 
   this.on("rejectContent", async (req) => {
     const ID = req.params[0].ID;
     await UPDATE(Content, ID).with({
-      status_code: "REJECTED",
+      status: "REJECTED",
     });
   });
 
   this.on("submit", async (req) => {
     const { ID } = req.params[0]; // since bound to entity
-    await UPDATE(Content).set({ status_code: "SUBMITTED" }).where({ ID });
+    await UPDATE(Content).set({ status: "SUBMITTED" }).where({ ID });
     const updated = await SELECT.one.from(Content).where({ ID });
     return updated;
   });

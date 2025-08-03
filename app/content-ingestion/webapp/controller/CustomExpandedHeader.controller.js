@@ -220,6 +220,7 @@ sap.ui.define(
               const sFileName = oFile.name;
               const sMimeType = oFile.type;
               const sContentUrl = `/Content(ID='${fileHash}',IsActiveEntity=true)/content`;
+              const oModel = this.getView().getModel();
 
               const aPayloads = [];
 
@@ -251,11 +252,10 @@ sap.ui.define(
                   },
                   credentials: "include",
                   body: JSON.stringify({
-                    "ID": fileHash,
-                    "fileName": sFileName,
-                    "mediaType": sMimeType,
-                    // "url": "./odata/v4/earning-upload-srv/Content('" + fileHash + "')/content",
-                    "status": "Submitted"
+                    "ID": `${fileHash}`,
+                    fileName: oFile.name,
+                    "url": "/odata/v4/catalog/Content('" + fileHash + "')/content",
+                    "status": "SUBMITTED"
                   })
                 });
 
@@ -284,6 +284,25 @@ sap.ui.define(
               } else {
                 oFileUploader.setValueState("Error");
               }
+              // }
+
+
+              // const oExtModel = this.base.getExtensionAPI().getModel();
+              // await fetch(putUrl, {
+              //   method: "PUT",
+              //   headers: {
+              //     "Content-Type": oFile.type,
+              //     // "Slug": encodeURIComponent(oFile.name),
+              //     "X-CSRF-Token": csrf
+              //   },
+              //   credentials: "include",
+              //   body: oFile
+              // });
+              // oExtModel.refresh();
+              //   oFileUploader.setValue("");
+              // } else {
+              //   oFileUploader.setValueState("Error");
+              // }
             }
 
           } catch (error) {
