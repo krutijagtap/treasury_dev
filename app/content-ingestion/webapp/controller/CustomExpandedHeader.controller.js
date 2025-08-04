@@ -213,97 +213,98 @@ sap.ui.define(
             const dialog = await this.onOpenDialog(json);
             // this.getView().byId("decisionText").setText(response.metadata.processing_decision);
             if (dialog) {
-              // if (response.metadata.processing_decision == "REJECTED")
-              //   return;
-              // else {
-              const fileHash = await this.calculateFileHash(oFile);
-              const sFileName = oFile.name;
-              const sMimeType = oFile.type;
-              const sContentUrl = `/Content(ID='${fileHash}',IsActiveEntity=true)/content`;
-              const oModel = this.getView().getModel();
+            // if (json.metadata.processing_decision == "REJECTED")
+            //   return;
+            // else {
+            const fileHash = await this.calculateFileHash(oFile);
+            const sFileName = oFile.name;
+            const sMimeType = oFile.type;
+            const sContentUrl = `/Content(ID='${fileHash}',IsActiveEntity=true)/content`;
+            const oModel = this.getView().getModel();
 
-              const aPayloads = [];
+            const aPayloads = [];
 
-              aPayloads.push({
-                keyID: `${fileHash}`,
-                fileName: sFileName,
-                mediaType: sMimeType,
-                status: "SUBMITTED",
-                url: sContentUrl
+            aPayloads.push({
+              keyID: `${fileHash}`,
+              fileName: sFileName,
+              mediaType: sMimeType,
+              status: "SUBMITTED",
+              url: sContentUrl
+            });
+
+            if (oFileUploader.getValue()) {
+              oFileUploader.setValueState("None");
+              const putUrl = baseUrl + "/odata/v4/catalog/Content/" + fileHash + "/content"; ///odata/v4/catalog
+              const contentUrl = baseUrl + "/odata/v4/catalog/Content"; ///odata/v4/catalog
+              // const response = await service.createContent(
+              //   this.base,
+              //   { initialData: JSON.stringify(aPayloads) },
+              //   "CatalogService.EntityContainer/createContent",
+              //   oModel
+              // );
+
+              // create a record in Content Table
+              const response = await fetch(contentUrl, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "X-CSRF-Token": csrf
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                  "ID": `${fileHash}`,
+                  fileName: oFile.name,
+                  "url": "/odata/v4/catalog/Content/" + fileHash + "/content",
+                  status: "SUBMITTED"
+                })
               });
 
-              if (oFileUploader.getValue()) {
-                oFileUploader.setValueState("None");
-                const putUrl = baseUrl + "/odata/v4/catalog/Content(ID='" + fileHash + "',IsActiveEntity=true)/content"; ///odata/v4/catalog
-                const contentUrl = baseUrl + "/odata/v4/catalog/Content"; ///odata/v4/catalog
-                // const response = await service.createContent(
-                //   this.base,
-                //   { initialData: JSON.stringify(aPayloads) },
-                //   "CatalogService.EntityContainer/createContent",
-                //   oModel
-                // );
-
-                // create a record in Content Table
-                const response = await fetch(contentUrl, {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrf
-                  },
-                  credentials: "include",
-                  body: JSON.stringify({
-                    "ID": `${fileHash}`,
-                    fileName: oFile.name,
-                    "url": "/odata/v4/catalog/Content('" + fileHash + "')/content",
-                    "status": "SUBMITTED"
-                  })
-                });
-
-                if (!response.ok) {
-                  if (response.status === 400) {
-                    sap.m.MessageToast.show("400-Bad Request");
-                    return
-                  } else {
-                    throw new Error(`Entity creation failed: ${response.status}`);
-                  }
+              if (!response.ok) {
+                if (response.status === 400) {
+                  sap.m.MessageToast.show("400-Bad Request");
+                  return
+                } else {
+                  throw new Error(`Entity creation failed: ${response.status}`);
                 }
-
-                const oExtModel = this.base.getExtensionAPI().getModel();
-                await fetch(putUrl, {
-                  method: "PUT",
-                  headers: {
-                    "Content-Type": oFile.type,
-                    "Slug": encodeURIComponent(oFile.name),
-                    "X-CSRF-Token": csrf
-                  },
-                  credentials: "include",
-                  body: oFile
-                });
-                oExtModel.refresh();
-                oFileUploader.setValue("");
-              } else {
-                oFileUploader.setValueState("Error");
               }
-              // }
 
-
-              // const oExtModel = this.base.getExtensionAPI().getModel();
-              // await fetch(putUrl, {
-              //   method: "PUT",
-              //   headers: {
-              //     "Content-Type": oFile.type,
-              //     // "Slug": encodeURIComponent(oFile.name),
-              //     "X-CSRF-Token": csrf
-              //   },
-              //   credentials: "include",
-              //   body: oFile
-              // });
-              // oExtModel.refresh();
-              //   oFileUploader.setValue("");
-              // } else {
-              //   oFileUploader.setValueState("Error");
-              // }
+              const oExtModel = this.base.getExtensionAPI().getModel();
+              await fetch(putUrl, {
+                method: "PUT",
+                headers: {
+                  "Content-Type": oFile.type,
+                  "Slug": encodeURIComponent(oFile.name),
+                  "X-CSRF-Token": csrf
+                },
+                credentials: "include",
+                body: oFile
+              });
+              oExtModel.refresh();
+              oFileUploader.setValue("");
+            } else {
+              oFileUploader.setValueState("Error");
             }
+            // }
+
+
+            // const oExtModel = this.base.getExtensionAPI().getModel();
+            // await fetch(putUrl, {
+            //   method: "PUT",
+            //   headers: {
+            //     "Content-Type": oFile.type,
+            //     // "Slug": encodeURIComponent(oFile.name),
+            //     "X-CSRF-Token": csrf
+            //   },
+            //   credentials: "include",
+            //   body: oFile
+            // });
+            // oExtModel.refresh();
+            //   oFileUploader.setValue("");
+            // } else {
+            //   oFileUploader.setValueState("Error");
+            // }
+            // }
+          }
 
           } catch (error) {
             console.error(error);

@@ -14,7 +14,7 @@
             <FlexBox id="chatFlexBox" class="ChatFlexBox" direction="Column">
                  <Title text="How can I help you today?" textAlign="Center" class="TitleFlexBox"/>
                  <HBox justifyContent="End">
-                <MultiComboBox id="multiCombo" items="{ path: '/Content', filters: [{ path: 'status', operator: 'EQ', value1: 'COMPLETED' } ]}" selectionChange="onSelectDocument" placeholder="Choose files to analyze">
+                <MultiComboBox id="multiCombo" items="{path:'/Content', filters: [{ path: 'status', operator: 'EQ', value1: 'COMPLETED' }]}" selectionChange="onSelectDocument" placeholder="Choose files to analyze">
                 <core:Item key="{ID}" text="{fileName}" />
                 </MultiComboBox>
                 </HBox>

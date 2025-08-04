@@ -10,7 +10,8 @@ sap.ui.define([
   return Controller.extend("treasuryui.controller.TreasuryMainView", {
     onInit() {
       let oModel = new sap.ui.model.json.JSONModel();
-      this.getView().setModel(oModel);
+      // this.getView().setModel(oModel);
+      this.getView().setModel(oModel, "treasuryModel");
     },
     onfetchCSRF: async function (url) {
       const response = await fetch(url, {
