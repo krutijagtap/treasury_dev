@@ -31,7 +31,7 @@
       </VBox>
     </HBox>
     <Label id="decisionID" text="Decision: " design="Bold" class="sapUiTinyMarginTop"/>
-    <Text id="decisionText" text="" class="sapUiTinyMarginTop"/>
+    <Text id="decisionText" text="{viewModel>/decision}" class="sapUiTinyMarginTop"/>
     <HBox justifyContent="End">
     <Button id="closeButton" text="Close" press="onCloseDialog"/>
     </HBox>

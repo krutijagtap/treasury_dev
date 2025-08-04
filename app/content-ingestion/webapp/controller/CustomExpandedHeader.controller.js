@@ -18,11 +18,14 @@ sap.ui.define(
     return ControllerExtension.extend(
       "com.scb.treasury.contentingestion.controller.CustomExpandedHeader",
       {
-        onInit: function () {
-          let oModel = new sap.ui.model.json.JSONModel();
-          this.getView().setModel(oModel);
-        },
-
+        override: {
+        onInit() {
+          const oModel = new sap.ui.model.json.JSONModel();
+          this.getView().setModel(oModel, "viewModel");
+          this.getView().getModel("viewModel").setProperty("/decision");
+        }
+      }
+        ,
         /**
          * Returns the base URL of the Component
          */
@@ -211,16 +214,12 @@ sap.ui.define(
             }
             const json = await responseAPI.json();
             const dialog = await this.onOpenDialog(json);
-            // this.getView().getModel().setProperty("decision",json.metadata.processing_decision)
-            // this.getView().byId("decisionText").setText(response.metadata.processing_decision);
+            const decision = json.metadata.processing_decision;
+            this.getView().getModel("viewModel").setProperty("/decision", decision)
             if (dialog) {
-            if (json.metadata.processing_decision == "REJECTED")
-            {
-              this.getView().byId("decisionText").setText(json.metadata.processing_decision);
+            if (decision == "REJECTED")
               return;
-            }
             else {
-            this.getView().byId("decisionText").setText(json.metadata.processing_decision);
             const fileHash = await this.calculateFileHash(oFile);
             const sFileName = oFile.name;
             const sMimeType = oFile.type;

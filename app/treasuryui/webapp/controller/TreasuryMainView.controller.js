@@ -91,7 +91,7 @@ sap.ui.define([
         MessageBox.error("Please select a file or Ask Intellibase");
         return;
       }
-      const payload = { "message": sInput };
+      const payload = { "message": "user_id: 1623894:" + sInput };
 
       try {
         const response = await fetch(chatUrl, {
@@ -109,11 +109,14 @@ sap.ui.define([
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-        const sResponse = data.FINAL_RESULT;  // ✅ Store API response in a variable
+        const sResponse = data.FINAL_RESULT + "<h3>SQL Query Used:</h3>" +
+          "<pre style='font-family: monospace; white-space: pre-wrap;'>" +
+          data.SQL_QUERY + "</pre>";
         const oHtml = new sap.m.FormattedText({
           htmlText: sResponse
         });
         oContainer.addItem(oHtml);
+        // oContainer.addItem(sResponseQuery);
         console.log("API Response:", sResponse);
         return oContainer;
       } catch (err) {
@@ -157,7 +160,7 @@ sap.ui.define([
       const chatUrl = this.getBaseUrl() + "/api/chat";
       const csrf = this.fetchCsrfToken();
       const payload = {
-        "message": "Research Summary: "+oSelectedFile
+        "message": "Research Summary: " + oSelectedFile
       };
       // // Disable submit + hide previous result
       chatModel.setSubmit(false);
