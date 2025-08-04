@@ -2,10 +2,9 @@ using CatalogService as service from '../../srv/cat-service';
 
 annotate service.Content with @UI.LineItem: [
     {
-        $Type                : 'UI.DataFieldWithUrl',
+        $Type                : 'UI.DataField',
         Label                : 'File Name',
         Value                : fileName,
-        Url                  : url,
         ![@HTML5.CssDefaults]: {width: 'auto', }
     },
     {

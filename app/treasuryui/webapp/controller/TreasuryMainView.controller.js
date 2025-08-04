@@ -226,11 +226,11 @@ sap.ui.define([
       return new sap.m.Panel({
         headerText: filename,
         width: "100%",
-        height: "auto",
+        height: "250vh",
         content: [
           downloadButton,
           new sap.ui.core.HTML({
-            content: `<iframe src="${url}" class="pdf-iframe"></iframe>`
+            content: `<iframe src="${url}" class="pdf-iframe" style="width: 100%; height: 150vh;"></iframe>`
           })
         ],
         layoutData: new sap.m.FlexItemData({ growFactor: 1 })

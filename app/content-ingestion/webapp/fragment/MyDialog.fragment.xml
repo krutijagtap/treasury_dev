@@ -9,11 +9,11 @@
          resizable="true">
         <content>
     <VBox>
-      <Text text="{i18n>processingStatus}" />
-      <ProgressIndicator id="progressIndicator" percentValue="0" displayValue="0%" state="None" />
+      <!-- <Text text="{i18n>processingStatus}" /> -->
+      <!-- <ProgressIndicator id="progressIndicator" percentValue="0" displayValue="0%" state="None" />
       <List id="stepsList" items="{/steps}">
         <StandardListItem title="{step}" icon="{icon}" info="{status}" />
-      </List>
+      </List> -->
       <!-- <Text text="{/fileName}" />
       <Text text="{i18n>waitMessage}" /> -->
     </VBox>
@@ -31,7 +31,7 @@
       </VBox>
     </HBox>
     <Label id="decisionID" text="Decision: " design="Bold" class="sapUiTinyMarginTop"/>
-    <Text id="decisionText" class="sapUiTinyMarginTop"/>
+    <Text id="decisionText" text="" class="sapUiTinyMarginTop"/>
     <HBox justifyContent="End">
     <Button id="closeButton" text="Close" press="onCloseDialog"/>
     </HBox>

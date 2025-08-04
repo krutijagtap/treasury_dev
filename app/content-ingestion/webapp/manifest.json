@@ -91,11 +91,6 @@
           "pattern": ":?query:",
           "name": "ContentList",
           "target": "ContentList"
-        },
-        {
-          "pattern": "Content({key}):?query:",
-          "name": "ContentObjectPage",
-          "target": "ContentObjectPage"
         }
       ],
       "targets": {
@@ -107,13 +102,6 @@
             "settings": {
               "contextPath": "/Content",
               "variantManagement": "Page",
-              "navigation": {
-                "Content": {
-                  "detail": {
-                    "route": "ContentObjectPage"
-                  }
-                }
-              },
               "controlConfiguration": {
                 "@com.sap.vocabularies.UI.v1.LineItem#Sum": {
                   "tableSettings": {
@@ -158,17 +146,6 @@
                   }
                 }
               }
-            }
-          }
-        },
-        "ContentObjectPage": {
-          "type": "Component",
-          "id": "ContentObjectPage",
-          "name": "sap.fe.templates.ObjectPage",
-          "options": {
-            "settings": {
-              "editableHeaderContent": false,
-              "contextPath": "/Content"
             }
           }
         }

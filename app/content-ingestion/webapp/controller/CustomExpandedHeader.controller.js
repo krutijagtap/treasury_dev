@@ -211,15 +211,20 @@ sap.ui.define(
             }
             const json = await responseAPI.json();
             const dialog = await this.onOpenDialog(json);
+            // this.getView().getModel().setProperty("decision",json.metadata.processing_decision)
             // this.getView().byId("decisionText").setText(response.metadata.processing_decision);
             if (dialog) {
-            // if (json.metadata.processing_decision == "REJECTED")
-            //   return;
-            // else {
+            if (json.metadata.processing_decision == "REJECTED")
+            {
+              this.getView().byId("decisionText").setText(json.metadata.processing_decision);
+              return;
+            }
+            else {
+            this.getView().byId("decisionText").setText(json.metadata.processing_decision);
             const fileHash = await this.calculateFileHash(oFile);
             const sFileName = oFile.name;
             const sMimeType = oFile.type;
-            const sContentUrl = `/Content(ID='${fileHash}',IsActiveEntity=true)/content`;
+            const sContentUrl = `/Content/${fileHash}/content`;
             const oModel = this.getView().getModel();
 
             const aPayloads = [];
@@ -284,7 +289,7 @@ sap.ui.define(
             } else {
               oFileUploader.setValueState("Error");
             }
-            // }
+            }
 
 
             // const oExtModel = this.base.getExtensionAPI().getModel();
