@@ -90,19 +90,19 @@ module.exports = cds.service.impl(async function () {
   // });
   this.on("approveContent", async (req) => {
     const ID = req.params[0];
-    // //Call API to create Embeddings
-    // const embeddingService = await cds.connect.to("TestSbcDest");
-    // const tx = embeddingService.tx(req);
+    //Call API to create Embeddings
+    const embeddingService = await cds.connect.to("TestSbcDest");
+    const tx = embeddingService.tx(req);
 
-    // try {
-    //   const embeddings = await tx.send({
-    //     method: "POST",
-    //     path: "/api/generate-embeddings",
-    //     headers: { "Content-Type": "application/json" },
-    //   });
-    // } catch (error) {
-    //   console.log("Failed in getting embeddings due to: " + error);
-    // }
+    try {
+      const embeddings = await tx.send({
+        method: "POST",
+        path: "/api/generate-embeddings",
+        headers: { "Content-Type": "application/json" },
+      });
+    } catch (error) {
+      console.log("Failed in getting embeddings due to: " + error);
+    }
 
     await UPDATE(Content, ID).with({
       status: "COMPLETED"
