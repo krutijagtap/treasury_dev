@@ -42,7 +42,8 @@ sap.ui.define([
       const oView = this.getView();
       const sInput = this.byId("chatFeedInput").getValue();
       var aSelectedItems = this.byId("multiCombo").getSelectedItems();
-      const isValid = sInput.toLowerCase().includes("intellibase") || aSelectedItems.length > 0;
+      const isIntellibase = sInput.toLowerCase().includes("intellibase");
+      const isValid = isIntellibase || aSelectedItems.length > 0;
       // Disable submit + hide previous result
       chatModel.setSubmit(false);
       chatModel.setvisibleResult(false);
@@ -60,7 +61,7 @@ sap.ui.define([
       await Promise.resolve();
 
       try {
-        const resp = await this.onfetchData(sInput, isValid);
+        const resp = await this.onfetchData(sInput, isValid, isIntellibase);
 
         chatModel.setResult(resp);
         chatModel.setvisibleResult(true);
@@ -75,8 +76,10 @@ sap.ui.define([
       }
     },
 
-    onfetchData: async function (sInput, isValid) {
+    onfetchData: async function (sInput, isValid, isIntellibase) {
       const chatUrl = this.getBaseUrl() + "/api/chat";
+      const thisUser = this.getBaseUrl() + "/user-api/currentUser";
+      var payload;
       const csrf = this.fetchCsrfToken();
       const oContainer = this.byId("pdfContainer");
       oContainer.removeAllItems();
@@ -85,13 +88,29 @@ sap.ui.define([
         controller.abort(); // Aborts the request after 90s
       }, 90000);
 
-      // const url = "https://standard-chartered-bank-core-foundational-12982zqn-genai839893a.cfapps.ap11.hana.ondemand.com/api/chat";
+      //get user details to fetch bankID
+      const user = await fetch(thisUser, {
+        method: "GET",
+        headers: {
+          "X-CSRF-Token": csrf,
+          "Content-Type": "application/json"
+        }
+      })
+      if (!user.ok) {
+        MessageBox.error("Not a valid user");
+        return;
+      }
+      const userDetails = await user.json();
+      const bankId = userDetails.name;
 
       if (!isValid) {
         MessageBox.error("Please select a file or Ask Intellibase");
         return;
       }
-      const payload = { "message": "user_id: 1623894:" + sInput };
+      if (isIntellibase) { payload = { "message": "user_id:" + bankId + ":" + sInput }; }
+      else {
+        payload = { "message": sInput };
+      }
 
       try {
         const response = await fetch(chatUrl, {

@@ -22,11 +22,15 @@ service CatalogService {
         actions {
             @cds.odata.bindingparameter.name  : '_it'
             @sap.fe.core.RefreshAfterExecution: true
-            action approveContent() returns ReturnType;
+            action approveContent() returns Content;
 
             @cds.odata.bindingparameter.name  : '_it'
             @sap.fe.core.RefreshAfterExecution: true
-            action rejectContent()  returns ReturnType;
+            action rejectContent()  returns Content;
+
+            @cds.odata.bindingparameter.name  : '_it'
+            @sap.fe.core.RefreshAfterExecution: true
+            action deleteContent()  returns ReturnType;
 
             @cds.odata.bindingparameter.name  : '_it'
             @sap.fe.core.RefreshAfterExecution: true

@@ -76,6 +76,25 @@ annotate service.Content with @UI.LineItem: [
         //     {$Path: 'isChecker'}
         // ]}}},
         InvocationGrouping   : #Isolated
+    },
+    {
+        $Type                : 'UI.DataFieldForAction',
+        Action               : 'CatalogService.deleteContent',
+        IconUrl              : 'sap-icon://delete',
+        Inline               : true,
+        ![@HTML5.CssDefaults]: {width: 'auto'},
+        @UI.Hidden           : {$edmJson: {$Not: {$Eq: [
+            {$Path: 'status'},
+            'SUBMITTED'
+        ]}}},
+        // ![@UI.Hidden]        : {$edmJson: {$Not: {$And: [
+        //     {$Eq: [
+        //         {$Path: 'status'},
+        //         'SUBMITTED'
+        //     ]},
+        //     {$Path: 'isChecker'}
+        // ]}}},
+        InvocationGrouping   : #Isolated
     }
 // UI.Facets                    : [{
 //     $Type : 'UI.ReferenceFacet',

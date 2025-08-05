@@ -38,9 +38,9 @@ module.exports = cds.service.impl(async function () {
   //       tagType_code: data.tagType,
   //       status_code: data.status,
   //       url: data.url,
-    //       createdBy: cds.context.user.id,
+  //       createdBy: cds.context.user.id,
   //       // content: data.content, // Add if needed later
-    //     });
+  //     });
   //   }
 
   //   // Insert entries one by one
@@ -91,22 +91,24 @@ module.exports = cds.service.impl(async function () {
   this.on("approveContent", async (req) => {
     const ID = req.params[0];
     //Call API to create Embeddings
-    const embeddingService = await cds.connect.to("TestSbcDest");
-    const tx = embeddingService.tx(req);
+    // const embeddingService = await cds.connect.to("TestSbcDest");
+    // const tx = embeddingService.tx(req);
 
-    try {
-      const embeddings = await tx.send({
-        method: "POST",
-        path: "/api/generate-embeddings",
-        headers: { "Content-Type": "application/json" },
-      });
-    } catch (error) {
-      console.log("Failed in getting embeddings due to: " + error);
-    }
+    // try {
+    //   const embeddings = await tx.send({
+    //     method: "POST",
+    //     path: "/api/generate-embeddings",
+    //     headers: { "Content-Type": "application/json" },
+    //   });
+    // } catch (error) {
+    //   console.log("Failed in getting embeddings due to: " + error);
+    // }
 
     await UPDATE(Content, ID).with({
       status: "COMPLETED"
     });
+
+    return await SELECT.one.from(Content).where({ ID });
   });
 
   this.on("rejectContent", async (req) => {
@@ -114,6 +116,46 @@ module.exports = cds.service.impl(async function () {
     await UPDATE(Content, ID).with({
       status: "REJECTED",
     });
+    return await SELECT.one.from(Content).where({ ID });
+  });
+
+  this.on("deleteContent", async (req) => {
+    const ID = req.params[0];
+
+    try {
+      const file = await cds.run(
+        SELECT.from(Content).where({ ID: ID })
+      );
+
+      const othersFiles = file[0].createdBy !== req.user.id;
+      const approvedFiles = file[0].status === 'Approved';
+
+      if (approvedFiles.length > 0) {
+        req.reject(400, 'You cannot delete files that are already Approved.');
+      }
+      else if (othersFiles.length > 0) {
+        req.reject(400, 'You cannot delete files that are not created by you');
+      }
+
+      const response = await executeHttpRequest(
+        { destinationName: 'Treasurybackend' },
+        {
+          method: 'POST',
+          url: '/api/delete-files',
+          data: ID
+        }
+
+      );
+
+      if (response.success) {
+         await cds.run(
+          DELETE.from(Content).where({ ID: ID })
+        );
+      }
+      return await SELECT.one.from(Content).where({ ID });
+    } catch (error) {
+      console.log("Failed in getting embeddings due to: " + error);
+    }
   });
 
   this.on("submit", async (req) => {
@@ -126,20 +168,21 @@ module.exports = cds.service.impl(async function () {
   this.on('chatResponse', async (req) => {
     console.log("request obj" + req);
     const response = await executeHttpRequest(
-      {destinationName: 'Treasurybackend'},
+      { destinationName: 'Treasurybackend' },
       {
         method: 'POST',
         url: '/api/chat',
-        headers: { 
-          "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json"
+        },
         data: { "message": req.data.prompt }
-      } 
-    );   
-    if (response.status === 200 && response.data != null){
-     return response.data
-    }else{
-     throw new Error(`Error creating chat response ${response.status}`)
-    } 
+      }
+    );
+    if (response.status === 200 && response.data != null) {
+      return response.data
+    } else {
+      throw new Error(`Error creating chat response ${response.status}`)
+    }
   });
 
 
