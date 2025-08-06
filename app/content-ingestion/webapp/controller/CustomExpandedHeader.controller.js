@@ -23,9 +23,15 @@ sap.ui.define(
           const oModel = new sap.ui.model.json.JSONModel();
           this.getView().setModel(oModel, "viewModel");
           this.getView().getModel("viewModel").setProperty("/decision");
+        },
+        onTableActionPress: function (oEvent) {
+          debugger;
+          console.log("Meta Data");
+          sap.m.MessageToast.show("Meta Data");
+         
         }
       }
-        ,
+        , 
         /**
          * Returns the base URL of the Component
          */
@@ -53,18 +59,19 @@ sap.ui.define(
         },
 
         onfetchData: async function (oFile) {
-          const chatUrl = sap.ui.require.toUrl('com/scb/treasury/contentingestion') + "/api/upload";
-          // const chatUrl = "/api/upload";
-          const baseUrl = sap.ui.require.toUrl('com/scb/treasury/contentingestion');
-          const csrf = await this.onfetchCSRF(baseUrl);
+        //  const chatUrl = sap.ui.require.toUrl('com/scb/treasury/contentingestion') + "/api/upload";
+           const chatUrl = "/api/upload";
+        //  const baseUrl = sap.ui.require.toUrl('com/scb/treasury/contentingestion');
+        //  const csrf = await this.onfetchCSRF(baseUrl);
           console.log(oFile);
+         
           let formData = new FormData();
           formData.append("file", oFile);
           try {
             const response = await fetch(chatUrl, {
               method: "POST",
               headers: {
-                "X-CSRF-Token": csrf,
+         //     "X-CSRF-Token": csrf,
               },
               body: formData
             });
@@ -180,12 +187,13 @@ sap.ui.define(
             const oFileUploader = this.base.byId("__fileUploader");
             const oFile = oFileUploader.getDomRef("fu").files[0];
             const baseUrl = sap.ui.require.toUrl('com/scb/treasury/contentingestion');
-            const chatUrl = baseUrl + "/api/upload";
-            const csrf = await this.onfetchCSRF(baseUrl);
+            
+           // const chatUrl =  "/api/upload";
+          const csrf = await this.onfetchCSRF(baseUrl);
             console.log(oFile);
             let formData = new FormData();
             formData.append("file", oFile);
-
+  
             const isQASelected = this.base.byId("__checkboxQA").getSelected();
             const isSummarySelected = this.base
               .byId("__checkboxSummary")
@@ -200,11 +208,12 @@ sap.ui.define(
               sap.m.MessageToast.show("Please select a file to upload.");
               return;
             }
+          
             // get the API response
             const responseAPI = await fetch(chatUrl, {
               method: "POST",
-              headers: {
-                "X-CSRF-Token": csrf,
+             headers: {
+               "X-CSRF-Token": csrf,
               },
               body: formData
             });
@@ -239,7 +248,8 @@ sap.ui.define(
             if (oFileUploader.getValue()) {
               oFileUploader.setValueState("None");
               const putUrl = baseUrl + "/odata/v4/catalog/Content/" + fileHash + "/content"; ///odata/v4/catalog
-              const contentUrl = baseUrl + "/odata/v4/catalog/Content"; ///odata/v4/catalog
+             const contentUrl = baseUrl + "/odata/v4/catalog/Content";
+             // const contentUrl = "/odata/v4/catalog/Content"; ///odata/v4/catalog
               // const response = await service.createContent(
               //   this.base,
               //   { initialData: JSON.stringify(aPayloads) },
@@ -266,19 +276,19 @@ sap.ui.define(
               if (!response.ok) {
                 if (response.status === 400) {
                   sap.m.MessageToast.show("400-Bad Request");
-                  return
+                                    return
                 } else {
                   throw new Error(`Entity creation failed: ${response.status}`);
                 }
               }
-
+              this.saveMetaData(csrf,json,oFile.name);
               const oExtModel = this.base.getExtensionAPI().getModel();
               await fetch(putUrl, {
                 method: "PUT",
                 headers: {
                   "Content-Type": oFile.type,
                   "Slug": encodeURIComponent(oFile.name),
-                  "X-CSRF-Token": csrf
+               "X-CSRF-Token": csrf
                 },
                 credentials: "include",
                 body: oFile
@@ -289,8 +299,7 @@ sap.ui.define(
               oFileUploader.setValueState("Error");
             }
             }
-
-
+           
             // const oExtModel = this.base.getExtensionAPI().getModel();
             // await fetch(putUrl, {
             //   method: "PUT",
@@ -419,6 +428,23 @@ sap.ui.define(
             }
           });
         },
+        saveMetaData: function(csrf,json,fileName)
+        {
+          const contentUrlmet = "/odata/v4/catalog/MetaDataForFiles";
+          const response = fetch(contentUrlmet, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRF-Token": csrf
+            },
+            credentials: "include",
+            body: JSON.stringify( {
+              fileName: fileName,
+              metaData: JSON.stringify({json})
+                          })
+          });
+        }
+        
       }
     );
   }

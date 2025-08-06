@@ -35,7 +35,8 @@ service CatalogService {
             @cds.odata.bindingparameter.name  : '_it'
             @sap.fe.core.RefreshAfterExecution: true
             action submit()         returns Content;
-        };
+            
+                  };
 
     entity SummaryFiles     as projection on treasury.SummaryFiles;
     entity ContentStatus    as projection on treasury.ContentStatus;
@@ -44,5 +45,8 @@ service CatalogService {
     entity ActionVisibility as projection on treasury.ActionVisibility;
     action createContent(initialData : String) returns String;
     action chatResponse(prompt : String)       returns String;
+    entity MetaDataForFiles as projection on treasury.MetaDataForFiles;
+    //action showMetaData() returns String;
+ // action showMetaData() for MetaDataForFiles;
 
 }

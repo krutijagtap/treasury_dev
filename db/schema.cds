@@ -28,7 +28,11 @@ entity Content : managed {
       content         : LargeBinary;
       summaryFiles    : Composition of many SummaryFiles
                           on summaryFiles.content = $self;
-      isChecker       : Boolean;      
+     metaData        : Composition of one MetaDataForFiles
+        on metaData.fileName = $self.fileName;
+      isChecker       : Boolean;    
+
+     
 }
 
 entity SummaryFiles : cuid, managed {
@@ -58,3 +62,10 @@ entity ActionVisibility : cuid, {
   isChkr : Boolean default false;
   isMaker   : Boolean default false;
 }
+
+entity MetaDataForFiles : cuid, managed {
+    fileName    : String;
+     metaData : LargeString;
+   
+}
+
