@@ -37,6 +37,7 @@ annotate service.Content with @UI.LineItem: [
         Value                : content,
         ![@HTML5.CssDefaults]: {width: 'auto', }
     },
+   
     {
         $Type                : 'UI.DataFieldForAction',
         Action               : 'CatalogService.approveContent',
@@ -76,8 +77,10 @@ annotate service.Content with @UI.LineItem: [
         //     {$Path: 'isChecker'}
         // ]}}},
         InvocationGrouping   : #Isolated
-    }
-// UI.Facets                    : [{
+    },
+   
+   
+    // UI.Facets                    : [{
 //     $Type : 'UI.ReferenceFacet',
 //     ID    : 'GeneratedFacet1',
 //     Label : 'General Information',

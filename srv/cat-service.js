@@ -141,6 +141,9 @@ module.exports = cds.service.impl(async function () {
      throw new Error(`Error creating chat response ${response.status}`)
     } 
   });
-
+  this.on("showMetaData", async (req) => {
+   console.log("metaData");
+    return "";
+  });
 
 });
