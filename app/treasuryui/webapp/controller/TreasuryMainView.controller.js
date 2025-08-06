@@ -42,8 +42,7 @@ sap.ui.define([
       const oView = this.getView();
       const sInput = this.byId("chatFeedInput").getValue();
       var aSelectedItems = this.byId("multiCombo").getSelectedItems();
-      const isIntellibase = sInput.toLowerCase().includes("intellibase");
-      const isValid = isIntellibase || aSelectedItems.length > 0;
+      const isValid = sInput.toLowerCase().includes("intellibase") || aSelectedItems.length > 0;
       // Disable submit + hide previous result
       chatModel.setSubmit(false);
       chatModel.setvisibleResult(false);
