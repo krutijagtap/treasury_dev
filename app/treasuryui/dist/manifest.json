@@ -23,10 +23,23 @@
           "annotations": [],
           "odataVersion": "4.0"
         }
-      },
+      },     
       "Treasurybackend": {
         "uri": "/Treasurybackend/",           
         "type": "http"
+      }
+    },
+    "crossNavigation": {
+      "inbounds": {
+        "Treasury": {
+          "semanticObject": "treasury",
+          "action": "display",
+          "title": "Treasury",
+          "signature": {
+            "parameters": {},
+            "additionalParameters": "allowed"
+          }
+        }
       }
     }
   },
@@ -118,7 +131,14 @@
           "pattern": "Reports",
           "name": "Reports",
           "target": "ReportsView"
+        },
+        {
+          "pattern": "ContentIngestionView",
+          "name": "ContentIngestionView",
+          "target": "ContentIngestionView"
         }
+        
+
       ],
       "targets": {
         "TargetTreasuryMainView": {
@@ -132,6 +152,10 @@
         "ReportsView": {
           "id": "ReportsView",
           "name": "ReportsView"
+        },
+        "ContentIngestionView": {
+          "id": "ContentIngestionView",
+          "name": "ContentIngestionView"
         }
       }
     },
@@ -141,5 +165,9 @@
       "id": "App",
       "async": true
     }
+  },
+  "sap.cloud": {
+    "public": true,
+    "service": "TreasuryUI"
   }
 }

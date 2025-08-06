@@ -24,6 +24,19 @@
           "odataVersion": "4.0"
         }
       }
+    },
+    "crossNavigation": {
+      "inbounds": {
+        "content-display": {
+          "semanticObject": "content",
+          "action": "display",
+          "title": "Content Ingestion",
+          "signature": {
+            "parameters": {},
+            "additionalParameters": "allowed"
+          }
+        }
+      }
     }
   },
   "sap.ui": {
@@ -115,7 +128,7 @@
                       },
                       "header": "Summary Files",
                       "template": "com.scb.treasury.contentingestion.fragment.SummaryFiles",
-                       "visible": "{= ${tagType_code} !== 'QA' }"
+                      "visible": "{= ${tagType_code} !== 'QA' }"
                     }
                   }
                 },
@@ -131,7 +144,19 @@
                       },
                       "header": "Summary Files",
                       "template": "com.scb.treasury.contentingestion.fragment.SummaryFiles",
-                       "visible": "{= ${tagType_code} !== 'QA' }"
+                      "visible": "{= ${tagType_code} !== 'QA' }"
+                    }
+                  }
+                },
+                "@com.sap.vocabularies.UI.v1.LineItem": {
+                  "columns": {
+                    "CustomColumn": {
+                      "header": "MetaData",
+                      "position": {
+                        "anchor": "DataField::content",
+                        "placement": "Before"
+                      },
+                      "template": "com.scb.treasury.contentingestion.ext.fragment.CustomColumn"
                     }
                   }
                 }

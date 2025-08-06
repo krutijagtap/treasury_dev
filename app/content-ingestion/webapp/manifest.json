@@ -24,6 +24,19 @@
           "odataVersion": "4.0"
         }
       }
+    },
+    "crossNavigation": {
+      "inbounds": {
+        "content-display": {
+          "semanticObject": "content",
+          "action": "display",
+          "title": "Content Ingestion",
+          "signature": {
+            "parameters": {},
+            "additionalParameters": "allowed"
+          }
+        }
+      }
     }
   },
   "sap.ui": {
