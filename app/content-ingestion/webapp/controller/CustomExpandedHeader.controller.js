@@ -188,7 +188,7 @@ sap.ui.define(
             const oFile = oFileUploader.getDomRef("fu").files[0];
             const baseUrl = sap.ui.require.toUrl('com/scb/treasury/contentingestion');
             
-           // const chatUrl =  "/api/upload";
+           const chatUrl =  baseUrl + "/api/upload";
           const csrf = await this.onfetchCSRF(baseUrl);
             console.log(oFile);
             let formData = new FormData();
@@ -247,7 +247,7 @@ sap.ui.define(
 
             if (oFileUploader.getValue()) {
               oFileUploader.setValueState("None");
-              const putUrl = baseUrl + "/odata/v4/catalog/Content/" + fileHash + "/content"; ///odata/v4/catalog
+            const putUrl = baseUrl + "/odata/v4/catalog/Content/" + fileHash + "/content"; ///odata/v4/catalog
              const contentUrl = baseUrl + "/odata/v4/catalog/Content";
              // const contentUrl = "/odata/v4/catalog/Content"; ///odata/v4/catalog
               // const response = await service.createContent(
@@ -281,7 +281,7 @@ sap.ui.define(
                   throw new Error(`Entity creation failed: ${response.status}`);
                 }
               }
-              this.saveMetaData(csrf,json,oFile.name);
+              const metadataRes = await this.saveMetaData(csrf,json.metadata,oFile.name);
               const oExtModel = this.base.getExtensionAPI().getModel();
               await fetch(putUrl, {
                 method: "PUT",
@@ -430,7 +430,7 @@ sap.ui.define(
         },
         saveMetaData: function(csrf,json,fileName)
         {
-          const contentUrlmet = "/odata/v4/catalog/MetaDataForFiles";
+          const contentUrlmet = sap.ui.require.toUrl('com/scb/treasury/contentingestion') + "/odata/v4/catalog/MetaDataForFiles";
           const response = fetch(contentUrlmet, {
             method: "POST",
             headers: {
@@ -439,10 +439,12 @@ sap.ui.define(
             },
             credentials: "include",
             body: JSON.stringify( {
-              fileName: fileName,
-              metaData: JSON.stringify({json})
+              "fileName": fileName,
+              "metaData": JSON.stringify({json})
                           })
           });
+
+          return response;
         }
         
       }
