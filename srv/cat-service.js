@@ -107,21 +107,12 @@ module.exports = cds.service.impl(async function () {
     //       method: 'POST',
 
     //       headers: {
-
     //         'Content-Type': 'application/json'
-
     //       },
-
     //       url: '/api/approved-file-upload',
-
     //       data: { "filename": fileName }
-
     //     }
-
     //   );
-
-
-
     //   //generate embeddings if approved-file-upload returns true
 
     //   const responseEmbeddings = await executeHttpRequest(
