@@ -9,24 +9,28 @@ service CatalogService {
         errorMessage : String;
     };
 
-            @odata.draft.enabled
-            @(requires: 'authenticated-user')
+            // @odata.draft.enabled
+    @(requires: 'authenticated-user')
             @UI.CreateHidden                  : true
             @UI.DeleteHidden                  : true
             @UI.UpdateHidden                  : true
-    entity Content          as
-        select from treasury.Content {
-            *,
-            summaryFiles as summaryFiles
-        }
+    entity Content          as projection on treasury.Content
+                               // select from treasury.Content {
+                               //     *,
+                               //     summaryFiles as summaryFiles
+                               // }
         actions {
             @cds.odata.bindingparameter.name  : '_it'
             @sap.fe.core.RefreshAfterExecution: true
-            action approveContent() returns ReturnType;
+            action approveContent() returns Content;
 
             @cds.odata.bindingparameter.name  : '_it'
             @sap.fe.core.RefreshAfterExecution: true
-            action rejectContent()  returns ReturnType;
+            action rejectContent()  returns Content;
+
+            @cds.odata.bindingparameter.name  : '_it'
+            @sap.fe.core.RefreshAfterExecution: true
+            action deleteContent()  returns ReturnType;
 
             @cds.odata.bindingparameter.name  : '_it'
             @sap.fe.core.RefreshAfterExecution: true
@@ -39,6 +43,6 @@ service CatalogService {
     entity TagTypes         as projection on treasury.TagTypes;
     entity ActionVisibility as projection on treasury.ActionVisibility;
     action createContent(initialData : String) returns String;
-    action chatResponse(prompt:String) returns String;
+    action chatResponse(prompt : String)       returns String;
 
 }

@@ -10,7 +10,8 @@ sap.ui.define([
   return Controller.extend("treasuryui.controller.TreasuryMainView", {
     onInit() {
       let oModel = new sap.ui.model.json.JSONModel();
-      this.getView().setModel(oModel);
+      // this.getView().setModel(oModel);
+      this.getView().setModel(oModel, "treasuryModel");
     },
     onfetchCSRF: async function (url) {
       const response = await fetch(url, {
@@ -59,7 +60,7 @@ sap.ui.define([
       await Promise.resolve();
 
       try {
-        const resp = await this.onfetchData(sInput, isValid);
+        const resp = await this.onfetchData(sInput, isValid, isIntellibase);
 
         chatModel.setResult(resp);
         chatModel.setvisibleResult(true);
@@ -74,8 +75,10 @@ sap.ui.define([
       }
     },
 
-    onfetchData: async function (sInput, isValid) {
+    onfetchData: async function (sInput, isValid, isIntellibase) {
       const chatUrl = this.getBaseUrl() + "/api/chat";
+      const thisUser = this.getBaseUrl() + "/user-api/currentUser";
+      var payload;
       const csrf = this.fetchCsrfToken();
       const oContainer = this.byId("pdfContainer");
       oContainer.removeAllItems();
@@ -84,13 +87,29 @@ sap.ui.define([
         controller.abort(); // Aborts the request after 90s
       }, 90000);
 
-      // const url = "https://standard-chartered-bank-core-foundational-12982zqn-genai839893a.cfapps.ap11.hana.ondemand.com/api/chat";
+      //get user details to fetch bankID
+      const user = await fetch(thisUser, {
+        method: "GET",
+        headers: {
+          "X-CSRF-Token": csrf,
+          "Content-Type": "application/json"
+        }
+      })
+      if (!user.ok) {
+        MessageBox.error("Not a valid user");
+        return;
+      }
+      const userDetails = await user.json();
+      const bankId = userDetails.name;
 
-      if(!isValid){
+      if (!isValid) {
         MessageBox.error("Please select a file or Ask Intellibase");
         return;
       }
-      const payload = { "message": sInput };
+      if (isIntellibase) { payload = { "message": "user_id:" + bankId + ":" + sInput }; }
+      else {
+        payload = { "message": sInput };
+      }
 
       try {
         const response = await fetch(chatUrl, {
@@ -108,11 +127,14 @@ sap.ui.define([
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-        const sResponse = data.FINAL_RESULT;  // ✅ Store API response in a variable
+        const sResponse = data.FINAL_RESULT + "<h3>SQL Query Used:</h3>" +
+          "<pre style='font-family: monospace; white-space: pre-wrap;'>" +
+          data.SQL_QUERY + "</pre>";
         const oHtml = new sap.m.FormattedText({
           htmlText: sResponse
         });
         oContainer.addItem(oHtml);
+        // oContainer.addItem(sResponseQuery);
         console.log("API Response:", sResponse);
         return oContainer;
       } catch (err) {
@@ -131,7 +153,7 @@ sap.ui.define([
       var oSelectedFile = aMultiBoxSelectedItems[0].getText(); // or .getKey() depending on your binding
       // MessageBox.success("Proceeding with file: ", oSelectedFile);
       textArea.setValue(`Research Summary: ${oSelectedFile}`)
-      this._callSummaryApi("Research Summary: C-PressRelease-2Q25.pdf",oSelectedFile);
+      this._callSummaryApi("Research Summary: C-PressRelease-2Q25.pdf", oSelectedFile);
     },
     getBaseUrl: function () {
       return sap.ui.require.toUrl('treasuryui');
@@ -148,7 +170,7 @@ sap.ui.define([
       const token = response.headers.get("X-CSRF-Token");
       return token;
     },
-    _callSummaryApi: async function (promptMessage,oSelectedFile) {
+    _callSummaryApi: async function (promptMessage, oSelectedFile) {
       const oBusy = new BusyDialog({ text: "Fetching summary..." });
       oBusy.open();
       // var url = "https://standard-chartered-bank-core-foundational-12982zqn-genai839893a.cfapps.ap11.hana.ondemand.com/api/chat"  
@@ -156,7 +178,7 @@ sap.ui.define([
       const chatUrl = this.getBaseUrl() + "/api/chat";
       const csrf = this.fetchCsrfToken();
       const payload = {
-        "message": "Research Summary: C-PressRelease-2Q25.pdf"
+        "message": "Research Summary: " + oSelectedFile
       };
       // // Disable submit + hide previous result
       chatModel.setSubmit(false);
@@ -210,20 +232,37 @@ sap.ui.define([
       const blob = new Blob([bytes], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
 
-      // return new sap.m.Panel({
-      //   headerText: filename,
-      //   content: [
-      //     new sap.ui.core.HTML({
-      //       content: `<iframe src="${url}" width="100%" height="600px" style="border:none;"></iframe>`
-      //     })
-      //   ]
-      // });
-      return new sap.m.PDFViewer({
-        source: url,
-        title: filename,
-        width: "100%",
-        height: "600px"
+      const downloadButton = new sap.m.Button({
+        icon: "sap-icon://download",
+        tooltip: "Download PDF",
+        type: "Transparent",
+        press: function () {
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = filename;
+          a.click();
+        }
       });
+
+      return new sap.m.Panel({
+        headerText: filename,
+        width: "100%",
+        height: "250vh",
+        content: [
+          downloadButton,
+          new sap.ui.core.HTML({
+            content: `<iframe src="${url}" class="pdf-iframe" style="width: 100%; height: 150vh;"></iframe>`
+          })
+        ],
+        layoutData: new sap.m.FlexItemData({ growFactor: 1 })
+      });
+      // return new sap.m.PDFViewer({
+      //   source: url,
+      //   title: filename,
+      //   width: "100%",
+      //   height: "600px",
+      //   showDownloadButton: true
+      // });
     }
   });
 });

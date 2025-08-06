@@ -25,19 +25,21 @@
                 class="sapUiSmallMarginBottom" />
 
             <HBox alignItems="Center" class="sapUiSmallMarginBottom sapUiTinyMarginTop">
-                <Label text="To be used in:" class="sapUiSmallMarginEnd customLabel"/>
+                <Label text="To be used in:" class="sapUiSmallMarginEnd customLabel" visible="false"/>
                 <HBox>
                     <CheckBox 
                         id="__checkboxQA" 
                         text="QA" 
                         selected="false" 
                         select="onQAChecked" 
-                        class="sapUiSmallMarginEnd customCheckbox" />
+                        class="sapUiSmallMarginEnd customCheckbox" 
+                        visible="false"/>
                     <CheckBox 
                         id="__checkboxSummary" 
                         text="Summary" 
                         selected="false" 
-                        class="sapUiSmallMarginEnd customCheckbox" />
+                        class="sapUiSmallMarginEnd customCheckbox"
+                        visible="false"/>
                 </HBox>
             </HBox>
 

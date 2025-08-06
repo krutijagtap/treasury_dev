@@ -1,25 +1,12 @@
 {
-<<<<<<< HEAD
-  "index.html": 1753336368899,
-  "Component.js": 1753336368899,
-  "manifest.json": 1753336368899,
-  "Component-dbg.js": 1753336368899,
-  "Component.js.map": 1753448984894,
-  "Component-preload.js": 1753448985118,
-  "Component-preload.js.map": 1753448985118,
-  "ext/fragment/SummaryFiles.fragment.xml": 1753336368899,
-  "ext/fragment/FileName.fragment.xml": 1753336368899,
-  "i18n/i18n.properties": 1753336368899
-=======
-  "ext/fragment/FileName.fragment.xml": 1750811608000,
-  "manifest.json": 1750811608000,
-  "Component.js": 1750811608000,
-  "Component-dbg.js": 1750811608000,
-  "Component.js.map": 1753361422162,
-  "Component-preload.js": 1753361425337,
-  "Component-preload.js.map": 1753361425337,
-  "ext/fragment/SummaryFiles.fragment.xml": 1750811608000,
-  "i18n/i18n.properties": 1750811608000,
-  "index.html": 1750811608000
->>>>>>> 6b05fe794e00b05f88f2dcdcb1b496cae8816a1f
+  "ext/fragment/FileName.fragment.xml": 1753706861217,
+  "Component.js": 1753706861217,
+  "manifest.json": 1753706861217,
+  "Component-dbg.js": 1753706861217,
+  "Component.js.map": 1754365921278,
+  "Component-preload.js": 1754365921530,
+  "Component-preload.js.map": 1754365921530,
+  "ext/fragment/SummaryFiles.fragment.xml": 1753706861217,
+  "i18n/i18n.properties": 1753706861217,
+  "index.html": 1753706861217
 }

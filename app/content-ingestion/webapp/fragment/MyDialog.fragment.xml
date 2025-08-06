@@ -4,8 +4,19 @@
         <Dialog
         id="myDialog"
         title="My Dialog"
-         class="sapUiResponsivePadding--around">
+         class="sapUiResponsivePadding--around"
+         draggable="true"
+         resizable="true">
         <content>
+    <VBox>
+      <!-- <Text text="{i18n>processingStatus}" /> -->
+      <!-- <ProgressIndicator id="progressIndicator" percentValue="0" displayValue="0%" state="None" />
+      <List id="stepsList" items="{/steps}">
+        <StandardListItem title="{step}" icon="{icon}" info="{status}" />
+      </List> -->
+      <!-- <Text text="{/fileName}" />
+      <Text text="{i18n>waitMessage}" /> -->
+    </VBox>
     <HBox id ="allSections" class="sectionContainer">
       <VBox id="headerSection" class="sectionBox">
         <Label id ="dublincore" text="DUBLIN CORE" class="sectionTitle"/>
@@ -18,6 +29,11 @@
       <VBox id="additionalSection" class="sectionBox">
         <Label id ="addFields"  text="ADDITIONAL FIELDS" class="sectionTitle"/>
       </VBox>
+    </HBox>
+    <Label id="decisionID" text="Decision: " design="Bold" class="sapUiTinyMarginTop"/>
+    <Text id="decisionText" text="{viewModel>/decision}" class="sapUiTinyMarginTop"/>
+    <HBox justifyContent="End">
+    <Button id="closeButton" text="Close" press="onCloseDialog"/>
     </HBox>
 </content>
  </Dialog>

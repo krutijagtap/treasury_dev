@@ -3,7 +3,7 @@
     xmlns="sap.m"
 >
     <FlexBox
-        items="{summaryFiles}"
+        items="{Content}"
         wrap="Wrap"
         direction="Column"
     >

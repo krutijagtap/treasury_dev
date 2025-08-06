@@ -74,6 +74,12 @@
           "autoExpandSelect": true,
           "earlyRequests": true
         }
+      },
+      "treasuryModel": {
+        "type": "sap.ui.model.odata.v4.ODataModel",
+        "settings": {
+          "serviceUrl": "/catalog/"
+        }
       }
     },
     "resources": {

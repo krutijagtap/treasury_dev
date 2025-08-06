@@ -23,13 +23,10 @@
           "annotations": [],
           "odataVersion": "4.0"
         }
-<<<<<<< HEAD
       },
       "Treasurybackend": {
         "uri": "/Treasurybackend/",           
         "type": "http"
-=======
->>>>>>> 6b05fe794e00b05f88f2dcdcb1b496cae8816a1f
       }
     }
   },
@@ -56,11 +53,7 @@
       "libs": {
         "sap.m": {},
         "sap.ui.core": {}
-<<<<<<< HEAD
       }
-=======
-      }  
->>>>>>> 6b05fe794e00b05f88f2dcdcb1b496cae8816a1f
     },
     "contentDensities": {
       "compact": true,
@@ -80,6 +73,12 @@
           "operationMode": "Server",
           "autoExpandSelect": true,
           "earlyRequests": true
+        }
+      },
+      "treasuryModel": {
+        "type": "sap.ui.model.odata.v4.ODataModel",
+        "settings": {
+          "serviceUrl": "/catalog/"
         }
       }
     },
@@ -143,8 +142,4 @@
       "async": true
     }
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 6b05fe794e00b05f88f2dcdcb1b496cae8816a1f

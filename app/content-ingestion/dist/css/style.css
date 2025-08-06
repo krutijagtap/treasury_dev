@@ -31,3 +31,31 @@
     color: white !important;
     border-radius: 4px;
 }
+.sectionContainer {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .sectionBox {
+    width: 32%;
+    padding: 1rem;
+    box-sizing: border-box;
+    background-color: #f8f9fa;
+    border-left: 4px solid #0070f2; /* 💙 Blue line */
+    border-top: 1px solid #e0e0e0;
+    border-right: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    border-radius: 4px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  .sectionTitle {
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: #1a5276;
+    font-size: 1rem;
+    text-transform: uppercase;
+    border-bottom: 1px solid #d0d0d0;
+    padding-bottom: 4px;
+  }

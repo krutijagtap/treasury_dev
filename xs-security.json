@@ -7,12 +7,8 @@
       "description": "UAA"
     },
     {
-      "name": "$XSAPPNAME.Viewer",
-      "description": "Viewer"
-    },
-    {
-      "name": "$XSAPPNAME.Admin",
-      "description": "Administrator"
+      "name": "$XSAPPNAME.Support",
+      "description": "Support"
     },
     {
       "name": "$XSAPPNAME.ContentChecker",
@@ -30,46 +26,19 @@
       "scope-references": ["uaa.user"]
     },
     {
-      "name": "Viewer",
-      "description": "Viewer",
-      "scope-references": ["$XSAPPNAME.Viewer"]
+      "name": "Workzone_EFDNA_GenAI_Treasury_Support",
+      "description": "Support",
+      "scope-references": ["$XSAPPNAME.Support"]
     },
     {
-      "name": "Admin",
-      "description": "Administrator",
-      "scope-references": ["$XSAPPNAME.Admin"]
-    },
-    {
-      "name": "ContentChecker",
+      "name": "Workzone_EFDNA_GenAI_Treasury_Checker",
       "description": "ContentChecker",
       "scope-references": ["$XSAPPNAME.ContentChecker"]
     },
     {
-      "name": "ContentMaker",
+      "name": "Workzone_EFDNA_GenAI_Treasury_Maker",
       "description": "ContentMaker",
       "scope-references": ["$XSAPPNAME.ContentMaker"]
-    }
-  ],
-  "role-collections": [
-    {
-      "name": "Treasury_Viewer",
-      "description": "Viewing access",
-      "role-template-references": ["$XSAPPNAME.Viewer"]
-    },
-    {
-      "name": "Treasury_Administrator",
-      "description": "Administrative access",
-      "role-template-references": ["$XSAPPNAME.Admin"]
-    },
-    {
-      "name": "Treasury_ContentChecker",
-      "description": "Content Checker access",
-      "role-template-references": ["$XSAPPNAME.ContentChecker"]
-    },
-    {
-      "name": "Treasury_ContentMaker",
-      "description": "Content Maker access",
-      "role-template-references": ["$XSAPPNAME.ContentMaker"]
     }
   ],
   "oauth2-configuration": {

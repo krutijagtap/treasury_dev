@@ -91,11 +91,6 @@
           "pattern": ":?query:",
           "name": "ContentList",
           "target": "ContentList"
-        },
-        {
-          "pattern": "Content({key}):?query:",
-          "name": "ContentObjectPage",
-          "target": "ContentObjectPage"
         }
       ],
       "targets": {
@@ -107,13 +102,6 @@
             "settings": {
               "contextPath": "/Content",
               "variantManagement": "Page",
-              "navigation": {
-                "Content": {
-                  "detail": {
-                    "route": "ContentObjectPage"
-                  }
-                }
-              },
               "controlConfiguration": {
                 "@com.sap.vocabularies.UI.v1.LineItem#Sum": {
                   "tableSettings": {
@@ -148,30 +136,6 @@
                   }
                 }
               },
-              "views": {
-                "paths": [
-                  {
-                    "key": "qa",
-                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#qa",
-                    "visible": "{= ${/ActionVisibility/isMaker} }"
-                  },
-                  {
-                    "key": "summary",
-                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#summary",
-                    "visible": "{= ${/ActionVisibility/isMaker} }"
-                  },
-                  {
-                    "key": "qainbox",
-                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#qainbox",
-                    "visible": "{= ${/ActionVisibility/isChkr} }"
-                  },
-                  {
-                    "key": "summaryinbox",
-                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#summaryinbox",
-                    "visible": "{= ${/ActionVisibility/isChkr} }"
-                  }
-                ]
-              },
               "initialLoad": "Enabled",
               "liveMode": true,
               "content": {
@@ -182,17 +146,6 @@
                   }
                 }
               }
-            }
-          }
-        },
-        "ContentObjectPage": {
-          "type": "Component",
-          "id": "ContentObjectPage",
-          "name": "sap.fe.templates.ObjectPage",
-          "options": {
-            "settings": {
-              "editableHeaderContent": false,
-              "contextPath": "/Content"
             }
           }
         }
