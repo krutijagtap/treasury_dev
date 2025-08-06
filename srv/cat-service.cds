@@ -30,7 +30,7 @@ service CatalogService {
 
             @cds.odata.bindingparameter.name  : '_it'
             @sap.fe.core.RefreshAfterExecution: true
-            action deleteContent()  returns ReturnType;
+            action deleteContent()  returns Content;
 
             @cds.odata.bindingparameter.name  : '_it'
             @sap.fe.core.RefreshAfterExecution: true

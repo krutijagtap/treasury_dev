@@ -88,6 +88,7 @@ module.exports = cds.service.impl(async function () {
   //     message: `${payloadArray.length} records inserted.`,
   //   };
   // });
+
   this.on("approveContent", async (req) => {
     const ID = req.params[0];
     //Call API to create Embeddings
@@ -95,197 +96,102 @@ module.exports = cds.service.impl(async function () {
     // const tx = embeddingService.tx(req);
 
     // try {
-
     //   //check for approved-file-upload
-
     //   const responseFileUpload = await executeHttpRequest(
-
     //     { destinationName: 'Treasurybackend' },
-
     //     {
-
     //       method: 'POST',
-
     //       headers: {
-
     //         'Content-Type': 'application/json'
-
     //       },
-
     //       url: '/api/approved-file-upload',
-
     //       data: { "filename": fileName }
-
     //     }
-
     //   );
-
-
 
     //   //generate embeddings if approved-file-upload returns true
-
     //   const responseEmbeddings = await executeHttpRequest(
-
     //     { destinationName: 'Treasurybackend' },
-
     //     {
-
     //       method: 'POST',
-
     //       headers: {
-
     //         'Content-Type': 'application/json'
-
     //       },
-
     //       url: '/api/generate-embeddings',
-
     //       data: { "filename": fileName }
-
     //     }
-
     //   );
-
     // } catch (error) {
-
     //   console.log("Failed in getting embeddings due to: " + error);
-
     // }
-
-
-
     await UPDATE(Content, ID).with({
-
       status: "COMPLETED"
-
     });
-
-
-
     return await SELECT.one.from(Content).where({ ID });
-
   });
 
 
 
   this.on("rejectContent", async (req) => {
-
     const ID = req.params[0];
-
     await UPDATE(Content, ID).with({
-
       status: "REJECTED",
-
     });
-
     return await SELECT.one.from(Content).where({ ID });
-
   });
 
 
 
   this.on("deleteContent", async (req) => {
-
     const ID = req.params[0];
-
-
-
-
-
     try {
-
       const file = await cds.run(
-
         SELECT.from(Content).where({ ID: ID })
-
       );
-
-
-
       const othersFiles = file[0].createdBy !== req.user.id;
-
       const approvedFiles = file[0].status === 'Approved';
-
       const fileName = file[0].fileName;
-
-
-
       if (approvedFiles.length > 0) {
-
         req.reject(400, 'You cannot delete files that are already Approved.');
-
       }
-
       else if (othersFiles.length > 0) {
-
         req.reject(400, 'You cannot delete files that are not created by you');
 
       }
-
-
-
       const response = await executeHttpRequest(
-
         { destinationName: 'Treasurybackend' },
-
         {
-
           method: 'POST',
-
           headers: {
-
             'Content-Type': 'application/json'
-
           },
-
           url: '/api/delete-files',
-
           data: { "filename": fileName }
-
         }
-
       );
-
-
-
       // if (response.success) {
-
       await DELETE.from(Content).where({ ID: ID });
-
       // }
-
-      return true;
-
+      return await SELECT.from(Content);
     } catch (error) {
-
       console.log("Failed in getting embeddings due to: " + error);
-
     }
-
   });
 
 
 
   this.on("submit", async (req) => {
-
     const { ID } = req.params[0]; // since bound to entity
-
     await UPDATE(Content).set({ status: "SUBMITTED" }).where({ ID });
-
     const updated = await SELECT.one.from(Content).where({ ID });
-
     return updated;
-
   });
 
 
 
   this.on('chatResponse', async (req) => {
-
     console.log("request obj" + req);
-
     const response = await executeHttpRequest(
-
       { destinationName: 'Treasurybackend' },
       {
         method: 'POST',
