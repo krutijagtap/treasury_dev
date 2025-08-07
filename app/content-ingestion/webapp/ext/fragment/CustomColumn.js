@@ -5,22 +5,59 @@ sap.ui.define([
   'use strict';
 
   return {
-      onPress: function(oEvent) {
-          MessageToast.show("Custom handler invoked.");
-          var that = this;
+      onPress: async function(oEvent) {
+ 
+          // var that = this;
          
-          const oContext = oEvent.getSource().getBindingContext();
-          const oView = this.editFlow.getView();
-          const oModel = oView.getModel();
+          // const oContext = oEvent.getSource().getBindingContext();
+          // const oView = this.editFlow.getView();
+          // const oModel = oView.getModel();
     
-          const sPath = oContext.getPath();
-          const oMetadata = oContext.requestObject("metaData");
+          // const sPath = oContext.getPath();
+          // const oData = oContext.requestObject();
+          // const sMetaData = oData?.metaData;
+         
         
-        
-          const oModelMet = new sap.ui.model.json.JSONModel(oMetadata);
+          // const oModelMet = new sap.ui.model.json.JSONModel(oMetadata);
 
-          const metaData = oModelMet.getData(); 
-          MessageToast.show(metaData);
+          // const metaData = oModelMet.getData(); 
+          // const oContext = oEvent.getSource().getBindingContext(); 
+          // if (!oContext) return;
+          // try {
+          //     const oData = await oContext.requestObject();
+          //     const sMetaData = oData?.metaData; 
+          //     if (sMetaData) {
+          //         const parsedMeta = JSON.parse(sMetaData); 
+          //         console.log("Parsed Metadata:", parsedMeta);
+          //         const oModel = new sap.ui.model.json.JSONModel(parsedMeta);
+          //         this.getView().setModel(oModel, "metaModel");
+      
+          //     } else {
+          //         console.warn("No metadata available for this row.");
+          //     }
+      
+          // } catch (err) {
+          //     console.error("Error while reading metadata:", err);
+          // }
+const oContext = oEvent.getSource().getBindingContext();
+if (!oContext) return;
+
+try {
+  const metaDataValue = await oContext.requestObject("metaData");
+  if (metaDataValue) {
+    const outerParsed = JSON.parse(metaDataValue);
+    const innerParsed = JSON.parse(outerParsed.metadata);
+    console.log("✅ Parsed Metadata:", innerParsed);
+
+    const oMetaModel = new sap.ui.model.json.JSONModel(innerParsed);
+    this.getView().setModel(oMetaModel, "metaModel");
+  } else {
+    console.warn("metaData field not available");
+  }
+} catch (e) {
+  console.error("Error parsing metaData:", e);
+}
+  MessageToast.show(metaData);
         const jsonResponse = { header: {
           contributor: "",
           creator: "",

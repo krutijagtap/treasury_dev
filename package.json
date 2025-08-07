@@ -17,7 +17,8 @@
     "express": "^4",
     "hana": "^0.0.2",
     "sap-cf-axios": "^1.0.2",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "@sap/cds-hana": "^2"
   },
   "devDependencies": {
     "@sap/cds-dk": "^9",

@@ -188,8 +188,8 @@ sap.ui.define(
             const oFile = oFileUploader.getDomRef("fu").files[0];
             const baseUrl = sap.ui.require.toUrl('com/scb/treasury/contentingestion');
 
-            const chatUrl = baseUrl + "/api/upload";
-            const csrf = await this.onfetchCSRF(baseUrl);
+            const chatUrl =  "/api/upload";
+           // const csrf = await this.onfetchCSRF(baseUrl);
             console.log(oFile);
             let formData = new FormData();
             formData.append("file", oFile);
@@ -213,7 +213,7 @@ sap.ui.define(
             const responseAPI = await fetch(chatUrl, {
               method: "POST",
               headers: {
-                "X-CSRF-Token": csrf,
+           //     "X-CSRF-Token": csrf,
               },
               body: formData
             });
@@ -264,14 +264,15 @@ sap.ui.define(
                     method: "POST",
                     headers: {
                       "Content-Type": "application/json",
-                      "X-CSRF-Token": csrf
+                   //   "X-CSRF-Token": csrf
                     },
                     credentials: "include",
                     body: JSON.stringify({
                       "ID": `${fileHash}`,
                       fileName: oFile.name,
                       "url": "/odata/v4/catalog/Content/" + fileHash + "/content",
-                      status: "SUBMITTED"
+                      status: "SUBMITTED",
+                      metaData: JSON.stringify({ metadata })
                     })
                   });
 
@@ -290,7 +291,7 @@ sap.ui.define(
                     headers: {
                       "Content-Type": oFile.type,
                       "Slug": encodeURIComponent(oFile.name),
-                      "X-CSRF-Token": csrf
+                  //    "X-CSRF-Token": csrf
                     },
                     credentials: "include",
                     body: oFile
@@ -436,7 +437,7 @@ sap.ui.define(
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              "X-CSRF-Token": csrf
+          //    "X-CSRF-Token": csrf
             },
             credentials: "include",
             body: JSON.stringify({

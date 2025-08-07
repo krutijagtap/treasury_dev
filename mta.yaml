@@ -3,183 +3,187 @@ ID: Treasury
 description: A simple CAP project.
 version: 1.0.0
 modules:
-- name: Treasury-srv
-  type: nodejs
-  path: gen/srv
-  requires:
-  - name: Treasury-db
-  - name: Treasury-uaa
-  - name: Treasury-html5-repo-runtime
-  - name: Treasury-destination-service
-  provides:
-  - name: srv-api
-    properties:
-      srv-url: ${default-url}
-  parameters:
-    buildpack: nodejs_buildpack
-    instances: 1
-  build-parameters:
-    builder: npm-ci
-- name: Treasury-db-deployer
-  type: hdb
-  path: gen/db
-  requires:
-  - name: Treasury-db
-  parameters:
-    buildpack: nodejs_buildpack
-- name: Treasury-app-content
-  type: com.sap.application.content
-  path: .
-  requires:
-  - name: Treasury-repo-host
-    parameters:
-      content-target: true
-  build-parameters:
-    build-result: resources
+  - name: Treasury-srv
+    type: nodejs
+    path: gen/srv
     requires:
-    - artifacts:
-      - browsebooks.zip
-      name: browsebooks
-      target-path: resources/
-    - artifacts:
-      - treasuryui.zip
-      name: treasuryui
-      target-path: resources/
-    - artifacts:
-      - comscbtreasurycontentingestion.zip
-      name: comscbtreasurycontentingestion
-      target-path: resources/
-    - artifacts:
-      - comscbtreasurycontentrepository.zip
-      name: comscbtreasurycontentrepository
-      target-path: resources/
-- name: browsebooks
-  type: html5
-  path: app/browsebooks
-  build-parameters:
-    build-result: dist
-    builder: custom
-    commands:
-    - npm install
-    - npm run build:cf
-    supported-platforms: []
-- name: Treasury-destination-content
-  type: com.sap.application.content
-  requires:
-  - name: srv-api
-  - name: Treasury-destination-service
+      - name: Treasury-db
+      - name: Treasury-uaa
+      - name: Treasury-html5-repo-runtime
+      - name: Treasury-destination-service
+    provides:
+      - name: srv-api
+        properties:
+          srv-url: ${default-url}
     parameters:
-      content-target: true
-      service-key:
-        name: Treasury-destination-key
-  - name: Treasury-repo-host
+      buildpack: nodejs_buildpack
+      instances: 1
+    build-parameters:
+      builder: npm-ci
+  - name: Treasury-db-deployer
+    type: hdb
+    path: gen/db
+    requires:
+      - name: Treasury-db
     parameters:
-      service-key:
-        name: Treasury-repo-host-key
-  - name: Treasury-uaa
+      buildpack: nodejs_buildpack
+  - name: Treasury-app-content
+    type: com.sap.application.content
+    path: .
+    requires:
+      - name: Treasury-repo-host
+        parameters:
+          content-target: true
+    build-parameters:
+      build-result: resources
+      requires:
+        - artifacts:
+            - browsebooks.zip
+          name: browsebooks
+          target-path: resources/
+        - artifacts:
+            - treasuryui.zip
+          name: treasuryui
+          target-path: resources/
+        - artifacts:
+            - comscbtreasurycontentingestion.zip
+          name: comscbtreasurycontentingestion
+          target-path: resources/
+        - artifacts:
+            - comscbtreasurycontentrepository.zip
+          name: comscbtreasurycontentrepository
+          target-path: resources/
+  - name: browsebooks
+    type: html5
+    path: app/browsebooks
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm install
+        - npm run build:cf
+      supported-platforms:
+        []
+  - name: Treasury-destination-content
+    type: com.sap.application.content
+    requires:
+      - name: srv-api
+      - name: Treasury-destination-service
+        parameters:
+          content-target: true
+          service-key:
+            name: Treasury-destination-key
+      - name: Treasury-repo-host
+        parameters:
+          service-key:
+            name: Treasury-repo-host-key
+      - name: Treasury-uaa
+        parameters:
+          service-key:
+            name: Treasury-uaa-key
     parameters:
-      service-key:
-        name: Treasury-uaa-key
-  parameters:
-    content:
-      instance:
-        destinations:
-        - Authentication: OAuth2UserTokenExchange
-          Name: Treasury-srv-api
-          TokenServiceInstanceName: Treasury-uaa
-          TokenServiceKeyName: Treasury-uaa-key
-          URL: ~{srv-api/srv-url}
-          sap.cloud.service: Treasury
-        - Name: Treasury_Treasury_repo_host
-          ServiceInstanceName: Treasury-html5-srv
-          ServiceKeyName: Treasury-repo-host-key
-          sap.cloud.service: Treasury
-        - Authentication: OAuth2UserTokenExchange
-          Name: Treasury_Treasury_uaa
-          ServiceInstanceName: Treasury-uaa
-          ServiceKeyName: Treasury-uaa-key
-          sap.cloud.service: Treasury
-        existing_destinations_policy: ignore
-  build-parameters:
-    no-source: true
-- name: treasuryui
-  type: html5
-  path: app/treasuryui
-  build-parameters:
-    build-result: dist
-    builder: custom
-    commands:
-    - npm install
-    - npm run build:cf
-    supported-platforms: []
-- name: comscbtreasurycontentingestion
-  type: html5
-  path: app/content-ingestion
-  build-parameters:
-    build-result: dist
-    builder: custom
-    commands:
-    - npm install
-    - npm run build:cf
-    supported-platforms: []
-- name: comscbtreasurycontentrepository
-  type: html5
-  path: app/contentrepository
-  build-parameters:
-    build-result: dist
-    builder: custom
-    commands:
-    - npm install
-    - npm run build:cf
-    supported-platforms: []
-resources:
-- name: Treasury-uaa
-  type: org.cloudfoundry.managed-service
-  parameters:
-    path: ./xs-security.json
-    service: xsuaa
-    service-plan: application
-- name: Treasury-db
-  type: com.sap.xs.hdi-container
-  parameters:
-    service: hana
-    service-plan: hdi-shared
-- name: Treasury-repo-host
-  type: org.cloudfoundry.managed-service
-  parameters:
-    service: html5-apps-repo
-    service-name: Treasury-html5-srv
-    service-plan: app-host
-- name: Treasury-html5-repo-runtime
-  type: org.cloudfoundry.managed-service
-  parameters:
-    service: html5-apps-repo
-    service-plan: app-runtime
-- name: Treasury-destination-service
-  type: org.cloudfoundry.managed-service
-  parameters:
-    config:
-      HTML5Runtime_enabled: true
-      init_data:
+      content:
         instance:
           destinations:
-          - Authentication: NoAuthentication
-            Name: ui5
-            ProxyType: Internet
-            Type: HTTP
-            URL: https://ui5.sap.com
-          existing_destinations_policy: update
-      version: 1.0.0
-    service: destination
-    service-name: Treasury-destination-service
-    service-plan: lite
+            - Authentication: OAuth2UserTokenExchange
+              Name: Treasury-srv-api
+              TokenServiceInstanceName: Treasury-uaa
+              TokenServiceKeyName: Treasury-uaa-key
+              URL: ~{srv-api/srv-url}
+              sap.cloud.service: Treasury
+            - Name: Treasury_Treasury_repo_host
+              ServiceInstanceName: Treasury-html5-srv
+              ServiceKeyName: Treasury-repo-host-key
+              sap.cloud.service: Treasury
+            - Authentication: OAuth2UserTokenExchange
+              Name: Treasury_Treasury_uaa
+              ServiceInstanceName: Treasury-uaa
+              ServiceKeyName: Treasury-uaa-key
+              sap.cloud.service: Treasury
+          existing_destinations_policy: ignore
+    build-parameters:
+      no-source: true
+  - name: treasuryui
+    type: html5
+    path: app/treasuryui
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm install
+        - npm run build:cf
+      supported-platforms:
+        []
+  - name: comscbtreasurycontentingestion
+    type: html5
+    path: app/content-ingestion
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm install
+        - npm run build:cf
+      supported-platforms:
+        []
+  - name: comscbtreasurycontentrepository
+    type: html5
+    path: app/contentrepository
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm install
+        - npm run build:cf
+      supported-platforms:
+        []
+resources:
+  - name: Treasury-uaa
+    type: org.cloudfoundry.managed-service
+    parameters:
+      path: ./xs-security.json
+      service: xsuaa
+      service-plan: application
+  - name: Treasury-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana
+      service-plan: hdi-shared
+  - name: Treasury-repo-host
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-name: Treasury-html5-srv
+      service-plan: app-host
+  - name: Treasury-html5-repo-runtime
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-runtime
+  - name: Treasury-destination-service
+    type: org.cloudfoundry.managed-service
+    parameters:
+      config:
+        HTML5Runtime_enabled: true
+        init_data:
+          instance:
+            destinations:
+              - Authentication: NoAuthentication
+                Name: ui5
+                ProxyType: Internet
+                Type: HTTP
+                URL: https://ui5.sap.com
+            existing_destinations_policy: update
+        version: 1.0.0
+      service: destination
+      service-name: Treasury-destination-service
+      service-plan: lite
 parameters:
   deploy_mode: html5-repo
   enable-parallel-deployments: true
   timeout: 90
 build-parameters:
   before-all:
-  - builder: custom
-    commands:
-    - npm install --production
-    - npx -p @sap/cds-dk@7.9.3 cds build --production
+    - builder: custom
+      commands:
+        - npm install --production
+        - npx -p @sap/cds-dk@7.9.3 cds build --production
