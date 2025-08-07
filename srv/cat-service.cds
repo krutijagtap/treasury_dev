@@ -45,7 +45,6 @@ service CatalogService {
     entity ActionVisibility as projection on treasury.ActionVisibility;
     action createContent(initialData : String) returns String;
     action chatResponse(prompt : String)       returns String;
-    entity MetaDataForFiles as projection on treasury.MetaDataForFiles;
     //action showMetaData() returns String;
  // action showMetaData() for MetaDataForFiles;
 

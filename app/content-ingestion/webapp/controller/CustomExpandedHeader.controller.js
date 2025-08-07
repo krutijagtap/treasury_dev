@@ -19,19 +19,19 @@ sap.ui.define(
       "com.scb.treasury.contentingestion.controller.CustomExpandedHeader",
       {
         override: {
-        onInit() {
-          const oModel = new sap.ui.model.json.JSONModel();
-          this.getView().setModel(oModel, "viewModel");
-          this.getView().getModel("viewModel").setProperty("/decision");
-        },
-        onTableActionPress: function (oEvent) {
-          debugger;
-          console.log("Meta Data");
-          sap.m.MessageToast.show("Meta Data");
-         
+          onInit() {
+            const oModel = new sap.ui.model.json.JSONModel();
+            this.getView().setModel(oModel, "viewModel");
+            this.getView().getModel("viewModel").setProperty("/decision");
+          },
+          onTableActionPress: function (oEvent) {
+            debugger;
+            console.log("Meta Data");
+            sap.m.MessageToast.show("Meta Data");
+
+          }
         }
-      }
-        , 
+        ,
         /**
          * Returns the base URL of the Component
          */
@@ -59,19 +59,19 @@ sap.ui.define(
         },
 
         onfetchData: async function (oFile) {
-        //  const chatUrl = sap.ui.require.toUrl('com/scb/treasury/contentingestion') + "/api/upload";
-           const chatUrl = "/api/upload";
-        //  const baseUrl = sap.ui.require.toUrl('com/scb/treasury/contentingestion');
-        //  const csrf = await this.onfetchCSRF(baseUrl);
+          //  const chatUrl = sap.ui.require.toUrl('com/scb/treasury/contentingestion') + "/api/upload";
+          const chatUrl = "/api/upload";
+          //  const baseUrl = sap.ui.require.toUrl('com/scb/treasury/contentingestion');
+          //  const csrf = await this.onfetchCSRF(baseUrl);
           console.log(oFile);
-         
+
           let formData = new FormData();
           formData.append("file", oFile);
           try {
             const response = await fetch(chatUrl, {
               method: "POST",
               headers: {
-         //     "X-CSRF-Token": csrf,
+                //     "X-CSRF-Token": csrf,
               },
               body: formData
             });
@@ -187,13 +187,13 @@ sap.ui.define(
             const oFileUploader = this.base.byId("__fileUploader");
             const oFile = oFileUploader.getDomRef("fu").files[0];
             const baseUrl = sap.ui.require.toUrl('com/scb/treasury/contentingestion');
-            
-           const chatUrl =  baseUrl + "/api/upload";
-          const csrf = await this.onfetchCSRF(baseUrl);
+
+            const chatUrl = baseUrl + "/api/upload";
+            const csrf = await this.onfetchCSRF(baseUrl);
             console.log(oFile);
             let formData = new FormData();
             formData.append("file", oFile);
-  
+
             const isQASelected = this.base.byId("__checkboxQA").getSelected();
             const isSummarySelected = this.base
               .byId("__checkboxSummary")
@@ -208,12 +208,12 @@ sap.ui.define(
               sap.m.MessageToast.show("Please select a file to upload.");
               return;
             }
-          
+
             // get the API response
             const responseAPI = await fetch(chatUrl, {
               method: "POST",
-             headers: {
-               "X-CSRF-Token": csrf,
+              headers: {
+                "X-CSRF-Token": csrf,
               },
               body: formData
             });
@@ -226,98 +226,100 @@ sap.ui.define(
             const decision = json.metadata.processing_decision;
             this.getView().getModel("viewModel").setProperty("/decision", decision)
             if (dialog) {
-            if (decision == "REJECTED")
-              return;
-            else {
-            const fileHash = await this.calculateFileHash(oFile);
-            const sFileName = oFile.name;
-            const sMimeType = oFile.type;
-            const sContentUrl = `/Content/${fileHash}/content`;
-            const oModel = this.getView().getModel();
+              if (decision == "REJECTED")
+                return;
+              else {
+                const fileHash = await this.calculateFileHash(oFile);
+                const sFileName = oFile.name;
+                const sMimeType = oFile.type;
+                const sContentUrl = `/Content/${fileHash}/content`;
+                const oModel = this.getView().getModel();
 
-            const aPayloads = [];
+                const aPayloads = [];
 
-            aPayloads.push({
-              keyID: `${fileHash}`,
-              fileName: sFileName,
-              mediaType: sMimeType,
-              status: "SUBMITTED",
-              url: sContentUrl
-            });
+                const metadata = json.metadata;
+                aPayloads.push({
+                  keyID: `${fileHash}`,
+                  fileName: sFileName,
+                  mediaType: sMimeType,
+                  status: "SUBMITTED",
+                  url: sContentUrl,
+                  metaData: JSON.stringify({ metadata })
+                });
 
-            if (oFileUploader.getValue()) {
-              oFileUploader.setValueState("None");
-            const putUrl = baseUrl + "/odata/v4/catalog/Content/" + fileHash + "/content"; ///odata/v4/catalog
-             const contentUrl = baseUrl + "/odata/v4/catalog/Content";
-             // const contentUrl = "/odata/v4/catalog/Content"; ///odata/v4/catalog
-              // const response = await service.createContent(
-              //   this.base,
-              //   { initialData: JSON.stringify(aPayloads) },
-              //   "CatalogService.EntityContainer/createContent",
-              //   oModel
-              // );
+                if (oFileUploader.getValue()) {
+                  oFileUploader.setValueState("None");
+                  const putUrl = baseUrl + "/odata/v4/catalog/Content/" + fileHash + "/content"; ///odata/v4/catalog
+                  const contentUrl = baseUrl + "/odata/v4/catalog/Content";
+                  // const contentUrl = "/odata/v4/catalog/Content"; ///odata/v4/catalog
+                  // const response = await service.createContent(
+                  //   this.base,
+                  //   { initialData: JSON.stringify(aPayloads) },
+                  //   "CatalogService.EntityContainer/createContent",
+                  //   oModel
+                  // );
 
-              // create a record in Content Table
-              const response = await fetch(contentUrl, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  "X-CSRF-Token": csrf
-                },
-                credentials: "include",
-                body: JSON.stringify({
-                  "ID": `${fileHash}`,
-                  fileName: oFile.name,
-                  "url": "/odata/v4/catalog/Content/" + fileHash + "/content",
-                  status: "SUBMITTED"
-                })
-              });
+                  // create a record in Content Table
+                  const response = await fetch(contentUrl, {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                      "X-CSRF-Token": csrf
+                    },
+                    credentials: "include",
+                    body: JSON.stringify({
+                      "ID": `${fileHash}`,
+                      fileName: oFile.name,
+                      "url": "/odata/v4/catalog/Content/" + fileHash + "/content",
+                      status: "SUBMITTED"
+                    })
+                  });
 
-              if (!response.ok) {
-                if (response.status === 400) {
-                  sap.m.MessageToast.show("400-Bad Request");
-                                    return
+                  if (!response.ok) {
+                    if (response.status === 400) {
+                      sap.m.MessageToast.show("400-Bad Request");
+                      return
+                    } else {
+                      throw new Error(`Entity creation failed: ${response.status}`);
+                    }
+                  }
+                  const metadataRes = await this.saveMetaData(csrf, json.metadata, oFile.name);
+                  const oExtModel = this.base.getExtensionAPI().getModel();
+                  await fetch(putUrl, {
+                    method: "PUT",
+                    headers: {
+                      "Content-Type": oFile.type,
+                      "Slug": encodeURIComponent(oFile.name),
+                      "X-CSRF-Token": csrf
+                    },
+                    credentials: "include",
+                    body: oFile
+                  });
+                  oExtModel.refresh();
+                  oFileUploader.setValue("");
                 } else {
-                  throw new Error(`Entity creation failed: ${response.status}`);
+                  oFileUploader.setValueState("Error");
                 }
               }
-              const metadataRes = await this.saveMetaData(csrf,json.metadata,oFile.name);
-              const oExtModel = this.base.getExtensionAPI().getModel();
-              await fetch(putUrl, {
-                method: "PUT",
-                headers: {
-                  "Content-Type": oFile.type,
-                  "Slug": encodeURIComponent(oFile.name),
-               "X-CSRF-Token": csrf
-                },
-                credentials: "include",
-                body: oFile
-              });
-              oExtModel.refresh();
-              oFileUploader.setValue("");
-            } else {
-              oFileUploader.setValueState("Error");
+
+              // const oExtModel = this.base.getExtensionAPI().getModel();
+              // await fetch(putUrl, {
+              //   method: "PUT",
+              //   headers: {
+              //     "Content-Type": oFile.type,
+              //     // "Slug": encodeURIComponent(oFile.name),
+              //     "X-CSRF-Token": csrf
+              //   },
+              //   credentials: "include",
+              //   body: oFile
+              // });
+              // oExtModel.refresh();
+              //   oFileUploader.setValue("");
+              // } else {
+              //   oFileUploader.setValueState("Error");
+              // }
+              // }
             }
-            }
-           
-            // const oExtModel = this.base.getExtensionAPI().getModel();
-            // await fetch(putUrl, {
-            //   method: "PUT",
-            //   headers: {
-            //     "Content-Type": oFile.type,
-            //     // "Slug": encodeURIComponent(oFile.name),
-            //     "X-CSRF-Token": csrf
-            //   },
-            //   credentials: "include",
-            //   body: oFile
-            // });
-            // oExtModel.refresh();
-            //   oFileUploader.setValue("");
-            // } else {
-            //   oFileUploader.setValueState("Error");
-            // }
-            // }
-          }
 
           } catch (error) {
             console.error(error);
@@ -428,8 +430,7 @@ sap.ui.define(
             }
           });
         },
-        saveMetaData: function(csrf,json,fileName)
-        {
+        saveMetaData: function (csrf, json, fileName) {
           const contentUrlmet = sap.ui.require.toUrl('com/scb/treasury/contentingestion') + "/odata/v4/catalog/MetaDataForFiles";
           const response = fetch(contentUrlmet, {
             method: "POST",
@@ -438,15 +439,15 @@ sap.ui.define(
               "X-CSRF-Token": csrf
             },
             credentials: "include",
-            body: JSON.stringify( {
+            body: JSON.stringify({
               "fileName": fileName,
-              "metaData": JSON.stringify({json})
-                          })
+              "metaData": JSON.stringify({ json })
+            })
           });
 
           return response;
         }
-        
+
       }
     );
   }
