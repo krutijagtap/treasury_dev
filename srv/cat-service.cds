@@ -5,8 +5,7 @@ service CatalogService {
     entity Books            as projection on treasury.Books;
 
     type ReturnType : {
-        status       : String(20);
-        errorMessage : String;
+        message: String;
     };
 
             // @odata.draft.enabled
@@ -30,7 +29,7 @@ service CatalogService {
 
             @cds.odata.bindingparameter.name  : '_it'
             @sap.fe.core.RefreshAfterExecution: true
-            action deleteContent()  returns Content;
+            action deleteContent()  returns ReturnType;
 
             @cds.odata.bindingparameter.name  : '_it'
             @sap.fe.core.RefreshAfterExecution: true

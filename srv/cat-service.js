@@ -1,7 +1,13 @@
 const cds = require("@sap/cds");
 const { executeHttpRequest } = require('@sap-cloud-sdk/http-client');
-const treasuryAPI = "Treasurybackend";
+const { getDestination } = require('@sap-cloud-sdk/connectivity');
+const { response } = require("express");
 const sapCfAxios = require("sap-cf-axios").default;
+const axios = require("axios");
+const FormData = require("form-data");
+const { Readable } = require('stream');
+const fetch = require("node-fetch");
+const { isOriginOptions } = require("@sap-cloud-sdk/http-client/dist/http-client-types");
 
 module.exports = cds.service.impl(async function () {
   const { Content, SummaryFiles, ActionVisibility } = this.entities;
@@ -88,45 +94,83 @@ module.exports = cds.service.impl(async function () {
   //     message: `${payloadArray.length} records inserted.`,
   //   };
   // });
+  function streamToBuffer(stream) {
+    return new Promise((resolve, reject) => {
+      const chunks = [];
+      stream.on('data', chunk => chunks.push(chunk));
+      stream.on('end', () => resolve(Buffer.concat(chunks)));
+      stream.on('error', reject);
+    });
+  }
 
   this.on("approveContent", async (req) => {
-    const ID = req.params[0];
-    //Call API to create Embeddings
-    // const embeddingService = await cds.connect.to("TestSbcDest");
-    // const tx = embeddingService.tx(req);
+    const ID = req.params[0].ID;
+    const destination = await getDestination({ destinationName: 'Treasurybackend' });
+    const oneFile = await SELECT.one
+      .from(Content)
+      .columns('fileName', 'mediaType', 'content')
+      .where({ ID });
+    //check user role - checker can approve any file
+    // if user is maker - he can't approve his own file
+    const ownFile = oneFile.createdBy === req.user.id;
+    if(ownFile.length){
+      req.reject(400, 'You cannot approve files that are created by you');
+    }
+    //check if file content exists
+    if (!oneFile?.content) {
+      return req.reject(404, 'File content not found.');
+    }
 
-    // try {
-    //   //check for approved-file-upload
-    //   const responseFileUpload = await executeHttpRequest(
-    //     { destinationName: 'Treasurybackend' },
-    //     {
-    //       method: 'POST',
-    //       headers: {
-    //         'Content-Type': 'application/json'
-    //       },
-    //       url: '/api/approved-file-upload',
-    //       data: { "filename": fileName }
-    //     }
-    //   );
-    //   //generate embeddings if approved-file-upload returns true
-    //   const responseEmbeddings = await executeHttpRequest(
-    //     { destinationName: 'Treasurybackend' },
-    //     {
-    //       method: 'POST',
-    //       headers: {
-    //         'Content-Type': 'application/json'
-    //       },
-    //       url: '/api/generate-embeddings',
-    //       data: { "filename": fileName }
-    //     }
-    //   );
-    // } catch (error) {
-    //   console.log("Failed in getting embeddings due to: " + error);
-    // }
-    await UPDATE(Content, ID).with({
-      status: "COMPLETED"
+    const buffer = await streamToBuffer(oneFile.content);
+    // Create a buffer for form-data
+    const formData = new FormData();
+    formData.append("file", buffer, {
+      filename: oneFile.fileName,
+      contentType: oneFile.mediaType
     });
-    return await SELECT.one.from(Content).where({ ID });
+    console.log("form Data", formData)
+
+    //Call API to create Embeddings
+    try {
+      //check for approved-file-upload
+      const responseFileUpload = await axios.post(`${destination.url}/api/approved-file-upload`, formData, {
+        headers: {
+          ...formData.getHeaders(),
+          Authorization: `Bearer ${destination.authTokens?.[0]?.value}`
+        }
+      });
+      console.log("upload response:", responseFileUpload)
+
+      if (responseFileUpload.status == 200) {
+        if (responseFileUpload.data.success) {
+          const responseEmbeddings = await axios.post(
+            `${destination.url}/api/generate-embeddings`,
+            { filename: oneFile.fileName },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${destination.authTokens?.[0]?.value}`
+              }
+            }
+          );
+          console.log("Embeddings Response:", responseEmbeddings)
+          if (responseEmbeddings.data.success) {
+            await UPDATE(Content, ID).with({
+              status: "COMPLETED"
+            });
+            console.log("Embeddings generated successfully")
+            return await SELECT.one.from(Content).where({ ID });
+            // return ("Embeddings generated successfully");
+          }
+          else
+            throw new Error(`Embedding API failed with status ${responseFileUpload.status}`)
+        }
+      } else {
+        throw new Error(`Embedding API failed with status ${responseFileUpload.status}`)
+      }
+    } catch (error) {
+      console.log("Failed in getting embeddings due to: " + error);
+    }
   });
 
 
@@ -142,21 +186,19 @@ module.exports = cds.service.impl(async function () {
 
 
   this.on("deleteContent", async (req) => {
-    const ID = req.params[0];
+    const ID = req.params[0].ID;
     try {
       const file = await cds.run(
-        SELECT.from(Content).where({ ID: ID })
+        SELECT.one.from(Content).where({ ID: ID })
       );
-      const othersFiles = file[0].createdBy !== req.user.id;
-      const approvedFiles = file[0].status === 'Approved';
-      const fileName = file[0].fileName;
-      if (approvedFiles.length > 0) {
-        req.reject(400, 'You cannot delete files that are already Approved.');
-      }
-      else if (othersFiles.length > 0) {
+      //check the role - if maker -> createdby and logged in user should be Same
+      //if checker can delete any file
+      const ownFiles = file.createdBy === req.user.id; // only owner can delete its own file
+      const fileName = file.fileName;
+      if(req.user?.roles?.ContentMaker === 1){
+      if (!ownFiles) {
         req.reject(400, 'You cannot delete files that are not created by you');
-
-      }
+      }}
       const response = await executeHttpRequest(
         { destinationName: 'Treasurybackend' },
         {
@@ -168,10 +210,10 @@ module.exports = cds.service.impl(async function () {
           data: { "filename": fileName }
         }
       );
-      // if (response.success) {
-      await DELETE.from(Content).where({ ID: ID });
-      // }
-      return await SELECT.from(Content);
+      if (response.data.success) {
+        await DELETE.from(Content).where({ ID: ID });
+      }
+      return { message: 'File deleted successfully' };
     } catch (error) {
       console.log("Failed in getting embeddings due to: " + error);
     }
