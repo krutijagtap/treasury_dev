@@ -108,7 +108,7 @@ module.exports = cds.service.impl(async function () {
     const destination = await getDestination({ destinationName: 'Treasurybackend' });
     const oneFile = await SELECT.one
       .from(Content)
-      .columns('fileName', 'mediaType', 'content')
+      .columns('fileName', 'mediaType', 'content','createdBy')
       .where({ ID });
     //check user role - checker can approve any file
     // if user is maker - he can't approve his own file
@@ -195,10 +195,11 @@ module.exports = cds.service.impl(async function () {
       //if checker can delete any file
       const ownFiles = file.createdBy === req.user.id; // only owner can delete its own file
       const fileName = file.fileName;
-      if(req.user?.roles?.ContentMaker === 1){
+      if(req.user.roles.ContentMaker === 1){
       if (!ownFiles) {
         req.reject(400, 'You cannot delete files that are not created by you');
-      }}
+      }
+    }
       const response = await executeHttpRequest(
         { destinationName: 'Treasurybackend' },
         {

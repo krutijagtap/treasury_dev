@@ -6,7 +6,7 @@
             expanded="false"
             itemSelect="onItemSelect">
            	<tnt:NavigationList id="mainList" class="navListIcon">
-				<tnt:NavigationListItem id="chat" text="Ask Treasury" tooltip="Ask Treasury" icon="sap-icon://bbyd-dashboard" key="home"/>
+				<tnt:NavigationListItem id="chat" text="Ask FinSight" tooltip="Ask FinSight" icon="sap-icon://bbyd-dashboard" key="home"/>
 				<!-- <tnt:NavigationListItem id="contentingestion" text="content ingestion" tooltip="{i18n>analysis}" icon="sap-icon://employee-lookup" key="ContentIngestionView" /> -->
 				<tnt:NavigationListItem id="Content" text="Content Ingestion" tooltip="Content Ingestion" icon="sap-icon://manager-insight" key="ContentIngestionView" /> 
 

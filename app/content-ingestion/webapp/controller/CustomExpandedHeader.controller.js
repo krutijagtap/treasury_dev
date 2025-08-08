@@ -260,7 +260,7 @@ sap.ui.define(
                     body: JSON.stringify({
                       "ID": `${fileHash}`,
                       fileName: oFile.name,
-                      "url": "/odata/v4/catalog/Content/" + fileHash + "/content",
+                      "url": putUrl,
                       status: "SUBMITTED",
                       metaData: JSON.stringify({ metadata })
                     })

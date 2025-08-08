@@ -2,8 +2,9 @@ using CatalogService as service from '../../srv/cat-service';
 
 annotate service.Content with @UI.LineItem: [
     {
-        $Type                : 'UI.DataField',
+        $Type                : 'UI.DataFieldWithUrl',
         Label                : 'File Name',
+        Url                  : url,
         Value                : fileName,
         ![@HTML5.CssDefaults]: {width: 'auto', }
     },
@@ -35,7 +36,8 @@ annotate service.Content with @UI.LineItem: [
         $Type                : 'UI.DataField',
         Label                : 'Content',
         Value                : content,
-        ![@HTML5.CssDefaults]: {width: 'auto', }
+        ![@HTML5.CssDefaults]: {width: 'auto', },
+        ![@UI.Hidden]        : true
     },
     {
                 $Type: 'UI.DataField',
@@ -96,16 +98,15 @@ annotate service.Content with @UI.LineItem: [
         IconUrl              : 'sap-icon://delete',
         Inline               : true,
         ![@HTML5.CssDefaults]: {width: 'auto'},
-        // @UI.Hidden           : {$edmJson: {$Not: {$Eq: [
-        //     {$Path: 'status'},
-        //     'SUBMITTED'
-        // ]}}},
+        @UI.Hidden           : {$edmJson: [
+            {$Path: 'isChecker'}
+        ]},
         // ![@UI.Hidden]        : {$edmJson: {$Not: {$And: [
         //     {$Eq: [
         //         {$Path: 'status'},
         //         'SUBMITTED'
         //     ]},
-        //     {$Path: 'isChecker'}
+            // {$Path: 'isChecker'}
         // ]}}},
         InvocationGrouping   : #Isolated
     }
