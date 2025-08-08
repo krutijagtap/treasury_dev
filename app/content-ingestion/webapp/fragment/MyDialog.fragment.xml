@@ -1,40 +1,76 @@
 <core:FragmentDefinition
-        xmlns="sap.m"
-        xmlns:core="sap.ui.core">
-        <Dialog
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout">
+   
+    <Dialog
+      beforeOpen=".onBeforeOpen"
         id="myDialog"
-        title="My Dialog"
-         class="sapUiResponsivePadding--around"
-         draggable="true"
-         resizable="true">
-        <content>
-    <VBox>
-      <!-- <Text text="{i18n>processingStatus}" /> -->
-      <!-- <ProgressIndicator id="progressIndicator" percentValue="0" displayValue="0%" state="None" />
-      <List id="stepsList" items="{/steps}">
-        <StandardListItem title="{step}" icon="{icon}" info="{status}" />
-      </List> -->
-      <!-- <Text text="{/fileName}" />
-      <Text text="{i18n>waitMessage}" /> -->
-    </VBox>
-    <HBox id ="allSections" class="sectionContainer">
-      <VBox id="headerSection" class="sectionBox">
-        <Label id ="dublincore" text="DUBLIN CORE" class="sectionTitle"/>
-      </VBox>
-
-      <VBox id="technicalSection" class="sectionBox">
-        <Label id ="techDetails" text="TECHNICAL DETAILS" class="sectionTitle"/>
-      </VBox>
-
-      <VBox id="additionalSection" class="sectionBox">
-        <Label id ="addFields"  text="ADDITIONAL FIELDS" class="sectionTitle"/>
-      </VBox>
-    </HBox>
-    <Label id="decisionID" text="Decision: " design="Bold" class="sapUiTinyMarginTop"/>
-    <Text id="decisionText" text="{viewModel>/decision}" class="sapUiTinyMarginTop"/>
-    <HBox justifyContent="End">
-    <Button id="closeButton" text="Close" press="onCloseDialog"/>
-    </HBox>
-</content>
- </Dialog>
-    </core:FragmentDefinition>
+        title="Document Details"
+        class="sapUiResponsivePadding--around"
+        draggable="true"
+        resizable="true"
+        contentWidth="800px"
+        contentHeight="500px">
+ 
+        <VBox class="sapUiSmallMargin">
+            <layout:Grid defaultSpan="L4 M6 S12" hSpacing="2" vSpacing="2">
+ 
+                <!-- DUBLIN CORE -->
+                <VBox class="sapUiSmallMargin">
+                    <Title text="DUBLIN CORE" level="H4" />
+                    <Label text="Creator" />
+                    <Text text="{viewModel>/creator}" />
+                    <Label text="Contributor" />
+                    <Text text="{viewModel>/contributor}" />
+                    <Label text="Language" />
+                    <Text text="{viewModel>/language}" />
+                    <Label text="Publisher" />
+                    <Text text="{viewModel>/publisher}" />
+                </VBox>
+ 
+                <!-- TECHNICAL DETAILS -->
+                <VBox class="sapUiSmallMargin">
+                    <Title text="TECHNICAL DETAILS" level="H4" />
+                    <Label text="File Extension" />
+                    <Text text="{viewModel>/file_extension}" />
+                    <Label text="Format" />
+                    <Text text="{viewModel>/file_format}" />
+                    <Label text="MIME Type" />
+                    <Text text="{viewModel>/mime_type}" />
+                </VBox>
+ 
+                <!-- ADDITIONAL FIELDS -->
+                <VBox class="sapUiSmallMargin">
+                    <Title text="ADDITIONAL FIELDS" level="H4" />
+                    <Label text="Access Level" />
+                    <Text text="{viewModel>/access_level}" />
+                    <Label text="Document Date" />
+                    <Text text="{viewModel>/document_date}" />
+                    <Label text="Extraction Tool" />
+                    <Text text="{viewModel>/extraction_tool}" />
+ 
+                    <!-- Audit Trail -->
+                    <Label text="Audit Action" />
+                    <Text text="{viewModel>/audit_trail/0/action}" />
+                    <Label text="Audit Timestamp" />
+                    <Text text="{viewModel>/audit_trail/0/timestamp}" />
+                    <Label text="Audit User" />
+                    <Text text="{viewModel>/audit_trail/0/user}" />
+                </VBox>
+ 
+            </layout:Grid>
+ 
+            <!-- DECISION -->
+            <HBox justifyContent="Start" class="sapUiSmallMarginTop">
+                <Label text="Decision: " design="Bold" />
+                <Text text="{viewModel>/decision}" />
+            </HBox>
+ 
+            <!-- Footer -->
+            <HBox justifyContent="End" class="sapUiTinyMarginTop">
+                <Button text="Close" press="onCloseDialog" />
+            </HBox>
+        </VBox>
+    </Dialog>
+</core:FragmentDefinition>

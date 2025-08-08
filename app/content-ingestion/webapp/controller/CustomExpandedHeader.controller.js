@@ -58,34 +58,6 @@ sap.ui.define(
           return token;
         },
 
-        onfetchData: async function (oFile) {
-          //  const chatUrl = sap.ui.require.toUrl('com/scb/treasury/contentingestion') + "/api/upload";
-          const chatUrl = "/api/upload";
-          //  const baseUrl = sap.ui.require.toUrl('com/scb/treasury/contentingestion');
-          //  const csrf = await this.onfetchCSRF(baseUrl);
-          console.log(oFile);
-
-          let formData = new FormData();
-          formData.append("file", oFile);
-          try {
-            const response = await fetch(chatUrl, {
-              method: "POST",
-              headers: {
-                //     "X-CSRF-Token": csrf,
-              },
-              body: formData
-            });
-            if (!response.ok) {
-              sap.m.MessageToast.show(response.message);
-              return;
-            }
-            const json = await response.json();
-            return json;
-          }
-          catch (error) {
-            console.error("API Error:", error);
-          }
-        },
         /**
          * Get i18n text by key
          */
@@ -133,7 +105,6 @@ sap.ui.define(
             return;
           }
           const jsonResponse = {
-            header: {
               contributor: metaData.contributor,
               creator: metaData.creator,
               description: metaData.description,
@@ -141,38 +112,36 @@ sap.ui.define(
               publisher: metaData.publisher,
               rights: metaData.rights,
               subject: metaData.subject,
-              title: metaData.title
-            },
-            technical: {
+              title: metaData.title,
               fileExtension: metaData.file_extension,
               fileFormat: metaData.file_format,
-              mimeType: metaData.mime_type
-            },
-            additional: {
+              mimeType: metaData.mime_type,
               accessLevel: metaData.access_level,
               auditTrail: metaData.audit_trail[0],
               documentInfo: {
                 type: metaData.dc_type,
                 documentDate: metaData.document_date,
                 extractionTool: metaData.extraction_tool
-              }
-            }
+            },
+              decision : metaData.processing_decision
           };
-          this.iProgress = 0;
+
+          this.getView().getModel("viewModel").setData(metaData);
+          // this.iProgress = 0;
           if (!this._oDialog) {
             this._pDialog = Fragment.load({
-              id: this.getView().getId(),
+              id: this.getView().getId() + "--myDialog",
               name: "com.scb.treasury.contentingestion.fragment.MyDialog",
               controller: this
             }).then(function (oDialog) {
               that._oDialog = oDialog;
               that.getView().addDependent(oDialog);
-              that._populateJsonData(jsonResponse);
+              // that._populateJsonData(jsonResponse);
               that._oDialog.open();
             });
-          } else {
-            that._populateJsonData(jsonResponse);
-            this._oDialog.open();
+          } 
+          else{
+            that._oDialog.open();
           }
           return true;
         },
@@ -188,21 +157,12 @@ sap.ui.define(
             const oFile = oFileUploader.getDomRef("fu").files[0];
             const baseUrl = sap.ui.require.toUrl('com/scb/treasury/contentingestion');
 
-            const chatUrl =  baseUrl + "/api/upload";
+            const chatUrl = baseUrl + "/api/upload";
             const csrf = await this.onfetchCSRF(baseUrl);
             console.log(oFile);
             let formData = new FormData();
             formData.append("file", oFile);
 
-            const isQASelected = this.base.byId("__checkboxQA").getSelected();
-            const isSummarySelected = this.base
-              .byId("__checkboxSummary")
-              .getSelected();
-
-            // if (!isQASelected && !isSummarySelected) {
-            //   sap.m.MessageToast.show("Please select at least one checkbox.");
-            //   return;
-            // }
 
             if (!oFile) {
               sap.m.MessageToast.show("Please select a file to upload.");
@@ -230,10 +190,6 @@ sap.ui.define(
                 return;
               else {
                 const fileHash = await this.calculateFileHash(oFile);
-                const sFileName = oFile.name;
-                const sMimeType = oFile.type;
-                const sContentUrl = `/Content/${fileHash}/content`;
-                const oModel = this.getView().getModel();
 
                 const metadata = json.metadata;
 
@@ -241,13 +197,6 @@ sap.ui.define(
                   oFileUploader.setValueState("None");
                   const putUrl = baseUrl + "/odata/v4/catalog/Content/" + fileHash + "/content"; ///odata/v4/catalog
                   const contentUrl = baseUrl + "/odata/v4/catalog/Content";
-                  // const contentUrl = "/odata/v4/catalog/Content"; ///odata/v4/catalog
-                  // const response = await service.createContent(
-                  //   this.base,
-                  //   { initialData: JSON.stringify(aPayloads) },
-                  //   "CatalogService.EntityContainer/createContent",
-                  //   oModel
-                  // );
 
                   // create a record in Content Table
                   const response = await fetch(contentUrl, {
@@ -292,24 +241,6 @@ sap.ui.define(
                   oFileUploader.setValueState("Error");
                 }
               }
-
-              // const oExtModel = this.base.getExtensionAPI().getModel();
-              // await fetch(putUrl, {
-              //   method: "PUT",
-              //   headers: {
-              //     "Content-Type": oFile.type,
-              //     // "Slug": encodeURIComponent(oFile.name),
-              //     "X-CSRF-Token": csrf
-              //   },
-              //   credentials: "include",
-              //   body: oFile
-              // });
-              // oExtModel.refresh();
-              //   oFileUploader.setValue("");
-              // } else {
-              //   oFileUploader.setValueState("Error");
-              // }
-              // }
             }
 
           } catch (error) {
