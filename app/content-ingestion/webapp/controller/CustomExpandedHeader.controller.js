@@ -188,8 +188,8 @@ sap.ui.define(
             const oFile = oFileUploader.getDomRef("fu").files[0];
             const baseUrl = sap.ui.require.toUrl('com/scb/treasury/contentingestion');
 
-            const chatUrl =  "/api/upload";
-           // const csrf = await this.onfetchCSRF(baseUrl);
+            const chatUrl =  baseUrl + "/api/upload";
+            const csrf = await this.onfetchCSRF(baseUrl);
             console.log(oFile);
             let formData = new FormData();
             formData.append("file", oFile);
@@ -213,7 +213,7 @@ sap.ui.define(
             const responseAPI = await fetch(chatUrl, {
               method: "POST",
               headers: {
-           //     "X-CSRF-Token": csrf,
+              "X-CSRF-Token": csrf,
               },
               body: formData
             });
@@ -235,17 +235,7 @@ sap.ui.define(
                 const sContentUrl = `/Content/${fileHash}/content`;
                 const oModel = this.getView().getModel();
 
-                const aPayloads = [];
-
                 const metadata = json.metadata;
-                aPayloads.push({
-                  keyID: `${fileHash}`,
-                  fileName: sFileName,
-                  mediaType: sMimeType,
-                  status: "SUBMITTED",
-                  url: sContentUrl,
-                  metaData: JSON.stringify({ metadata })
-                });
 
                 if (oFileUploader.getValue()) {
                   oFileUploader.setValueState("None");
@@ -264,7 +254,7 @@ sap.ui.define(
                     method: "POST",
                     headers: {
                       "Content-Type": "application/json",
-                   //   "X-CSRF-Token": csrf
+                      "X-CSRF-Token": csrf
                     },
                     credentials: "include",
                     body: JSON.stringify({
@@ -291,7 +281,7 @@ sap.ui.define(
                     headers: {
                       "Content-Type": oFile.type,
                       "Slug": encodeURIComponent(oFile.name),
-                  //    "X-CSRF-Token": csrf
+                      "X-CSRF-Token": csrf
                     },
                     credentials: "include",
                     body: oFile
@@ -437,7 +427,7 @@ sap.ui.define(
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-          //    "X-CSRF-Token": csrf
+             "X-CSRF-Token": csrf
             },
             credentials: "include",
             body: JSON.stringify({

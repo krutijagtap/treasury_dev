@@ -176,7 +176,7 @@ module.exports = cds.service.impl(async function () {
 
 
   this.on("rejectContent", async (req) => {
-    const ID = req.params[0];
+    const ID = req.params[0].ID;
     await UPDATE(Content, ID).with({
       status: "REJECTED",
     });

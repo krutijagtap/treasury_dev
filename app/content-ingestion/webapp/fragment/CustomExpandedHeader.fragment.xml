@@ -20,7 +20,7 @@
                 width="300px"
                 tooltip="Choose file to be uploaded" 
                 change="onFileChange" 
-                fileType="pdf" 
+                fileType="pdf,docx,xlsx" 
                 maximumFileSize="5" 
                 class="sapUiSmallMarginBottom" />
 

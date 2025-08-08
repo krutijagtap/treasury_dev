@@ -5,7 +5,7 @@ service CatalogService {
     entity Books            as projection on treasury.Books;
 
     type ReturnType : {
-        message: String;
+        message : String;
     };
 
             // @odata.draft.enabled
@@ -13,11 +13,12 @@ service CatalogService {
             @UI.CreateHidden                  : true
             @UI.DeleteHidden                  : true
             @UI.UpdateHidden                  : true
-    entity Content          as projection on treasury.Content
-                               // select from treasury.Content {
-                               //     *,
-                               //     summaryFiles as summaryFiles
-                               // }
+    // entity Content          as projection on treasury.Content
+    entity Content          as
+        select from treasury.Content {
+            *,
+            metaData
+        }
         actions {
             @cds.odata.bindingparameter.name  : '_it'
             @sap.fe.core.RefreshAfterExecution: true
@@ -34,8 +35,8 @@ service CatalogService {
             @cds.odata.bindingparameter.name  : '_it'
             @sap.fe.core.RefreshAfterExecution: true
             action submit()         returns Content;
-            
-                  };
+
+        };
 
     entity SummaryFiles     as projection on treasury.SummaryFiles;
     entity ContentStatus    as projection on treasury.ContentStatus;
@@ -44,7 +45,7 @@ service CatalogService {
     entity ActionVisibility as projection on treasury.ActionVisibility;
     action createContent(initialData : String) returns String;
     action chatResponse(prompt : String)       returns String;
-    //action showMetaData() returns String;
- // action showMetaData() for MetaDataForFiles;
+//action showMetaData() returns String;
+// action showMetaData() for MetaDataForFiles;
 
 }

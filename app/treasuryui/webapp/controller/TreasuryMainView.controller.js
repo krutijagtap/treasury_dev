@@ -3,7 +3,10 @@ sap.ui.define([
   "sap/m/MessageBox",
   "sap/m/PDFViewer",
   "sap/m/BusyDialog",
-  "sap/m/MessageToast"
+  "sap/m/MessageToast",
+  "../lib/jspdf/jspdf.umd.min",
+  "../lib/dompurify/purify.min",
+  "../lib/html2canvas/html2canvas.min"
 ], (Controller, MessageBox, PDFViewer, BusyDialog, MessageToast) => {
   "use strict";
 
@@ -12,6 +15,127 @@ sap.ui.define([
       let oModel = new sap.ui.model.json.JSONModel();
       // this.getView().setModel(oModel);
       this.getView().setModel(oModel, "treasuryModel");
+    },
+    onChatCopy: function () {
+      const oChatBox = this.byId("ChatBotResult");
+      const domRef = oChatBox?.getDomRef();
+
+      if (!domRef) {
+        sap.m.MessageToast.show("Nothing to copy");
+        return;
+      }
+
+      const message = domRef.innerText;
+
+      if (navigator?.clipboard && message) {
+        navigator.clipboard
+          .writeText(message)
+          .then(() => {
+            sap.m.MessageToast.show("Text copied to clipboard");
+          })
+          .catch((err) => {
+            console.error("Copy failed", err);
+            sap.m.MessageToast.show("Failed to copy text.");
+          });
+      }
+    },
+    onChatExport: async function () {
+      if (!window.jspdf || !window.html2canvas) {
+        sap.m.MessageToast.show("Required libraries not loaded.");
+        return;
+      }
+
+      const { jsPDF } = window.jspdf;
+      const userInput = this.getView().getModel("chatModel").getProperty("/userMessage") || "";
+
+      const domRef = this.byId("ChatBotResult")?.getDomRef();
+      if (!domRef) {
+        sap.m.MessageToast.show("No content to export");
+        return;
+      }
+
+      // --- Create hidden container ---
+      const wrapper = document.createElement("div");
+      wrapper.style.width = "794px"; // A4 width in px at 96 DPI
+      wrapper.style.padding = "20px";
+      wrapper.style.background = "#fff";
+      wrapper.style.fontFamily = "Arial, sans-serif";
+      wrapper.style.position = "absolute";
+      wrapper.style.top = "0";
+      wrapper.style.left = "-9999px";
+      document.body.appendChild(wrapper);
+
+      // --- User Input Section ---
+      const userInputBox = document.createElement("div");
+      userInputBox.style.background = "linear-gradient(to right, #e8f0ff, #f2f6fd)";
+      userInputBox.style.padding = "16px 24px";
+      userInputBox.style.borderRadius = "8px";
+      userInputBox.style.marginBottom = "24px";
+      userInputBox.style.border = "1px solid #cdddfb";
+
+      const headerText = document.createElement("div");
+      headerText.textContent = "USER INPUT";
+      headerText.style.fontSize = "18px";
+      headerText.style.fontWeight = "bold";
+      headerText.style.color = "#1a73e8";
+      headerText.style.marginBottom = "8px";
+
+      const userInputText = document.createElement("div");
+      userInputText.textContent = userInput;
+      userInputText.style.fontSize = "14px";
+      userInputText.style.color = "#333";
+
+      userInputBox.appendChild(headerText);
+      userInputBox.appendChild(userInputText);
+      wrapper.appendChild(userInputBox);
+
+      // --- Clone Chat Response ---
+      const responseClone = domRef.cloneNode(true);
+      responseClone.style.margin = "0"; // prevent extra spacing
+      wrapper.appendChild(responseClone);
+
+      // --- Wait for DOM to layout ---
+      await new Promise(resolve => requestAnimationFrame(resolve));
+
+      try {
+        const canvas = await html2canvas(wrapper, {
+          scale: 2,
+          useCORS: true,
+          scrollY: 0,
+          windowWidth: wrapper.scrollWidth,
+          height: wrapper.scrollHeight
+        });
+
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jsPDF("p", "pt", "a4");
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+
+        const imgWidth = pdfWidth;
+        const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+
+        let heightLeft = imgHeight;
+        let position = 0;
+
+        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+        heightLeft -= pdfHeight;
+
+        while (heightLeft > 0) {
+          position -= pdfHeight;
+          pdf.addPage();
+          pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+          heightLeft -= pdfHeight;
+        }
+
+        pdf.save("Finsight_Chat_Export.pdf");
+        sap.m.MessageToast.show("PDF exported successfully");
+
+      } catch (err) {
+        console.error("PDF export failed", err);
+        sap.m.MessageToast.show("Failed to export PDF");
+      } finally {
+        document.body.removeChild(wrapper);
+      }
     },
     onfetchCSRF: async function (url) {
       const response = await fetch(url, {
@@ -128,9 +252,15 @@ sap.ui.define([
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-        const sResponse = data.FINAL_RESULT + "<h3>SQL Query Used:</h3>" +
-          "<pre style='font-family: monospace; white-space: pre-wrap;'>" +
-          data.SQL_QUERY + "</pre>";
+        var sResponse;
+        if (isIntellibase) {
+          sResponse = data.FINAL_RESULT + "<h3>SQL Query Used:</h3>" +
+            "<pre style='font-family: monospace; white-space: pre-wrap;'>" +
+            data.SQL_QUERY + "</pre>";
+        }
+        else {
+          sResponse = data.FINAL_RESULT;
+        }
         const oHtml = new sap.m.FormattedText({
           htmlText: sResponse
         });

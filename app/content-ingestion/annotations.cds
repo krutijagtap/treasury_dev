@@ -13,31 +13,43 @@ annotate service.Content with @UI.LineItem: [
         Value                : mediaType,
         ![@HTML5.CssDefaults]: {width: 'auto', }
     },
-    {
-                $Type: 'UI.DataField',
-                Label: 'Tag Type',
-                Value: tagType,
-        ![@HTML5.CssDefaults]: {width: 'auto', }
-    },
+    // {
+    //             $Type: 'UI.DataField',
+    //             Label: 'Tag Type',
+    //             Value: tagType,
+    //     ![@HTML5.CssDefaults]: {width: 'auto', }
+    // },
     {
                 $Type: 'UI.DataField',
                 Label: 'Status Code',
                 Value: status,
         ![@HTML5.CssDefaults]: {width: 'auto', }
     },
-    {
-                $Type: 'UI.DataField',
-                Label: 'Embedding Status Code',
-                Value: embeddingStatus,
-        ![@HTML5.CssDefaults]: {width: 'auto', }
-    },
+    // {
+    //             $Type: 'UI.DataField',
+    //             Label: 'Embedding Status Code',
+    //             Value: embeddingStatus,
+    //     ![@HTML5.CssDefaults]: {width: 'auto', }
+    // },
     {
         $Type                : 'UI.DataField',
         Label                : 'Content',
         Value                : content,
         ![@HTML5.CssDefaults]: {width: 'auto', }
     },
-   
+    {
+                $Type: 'UI.DataField',
+                Label: 'Created By',
+                Value: createdBy,
+        ![@HTML5.CssDefaults]: {width: 'auto', }
+    },
+    {
+                $Type: 'UI.DataField',
+                Label: 'Changed By',
+                Value: modifiedBy,
+        ![@HTML5.CssDefaults]: {width: 'auto', }
+    },
+    // { $Type: 'UI.DataField', Value: metaData,  @UI.Hidden  : true },  
     {
         $Type                : 'UI.DataFieldForAction',
         Action               : 'CatalogService.approveContent',
@@ -84,10 +96,10 @@ annotate service.Content with @UI.LineItem: [
         IconUrl              : 'sap-icon://delete',
         Inline               : true,
         ![@HTML5.CssDefaults]: {width: 'auto'},
-        @UI.Hidden           : {$edmJson: {$Not: {$Eq: [
-            {$Path: 'status'},
-            'SUBMITTED'
-        ]}}},
+        // @UI.Hidden           : {$edmJson: {$Not: {$Eq: [
+        //     {$Path: 'status'},
+        //     'SUBMITTED'
+        // ]}}},
         // ![@UI.Hidden]        : {$edmJson: {$Not: {$And: [
         //     {$Eq: [
         //         {$Path: 'status'},
