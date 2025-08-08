@@ -167,11 +167,20 @@ sap.ui.define([
       const sInput = this.byId("chatFeedInput").getValue();
       var aSelectedItems = this.byId("multiCombo").getSelectedItems();
       const isIntellibase = sInput.toLowerCase().includes("intellibase");
+      const keywords = ["SELECT","INSERT", "UPDATE", "DELETE", "DROP", "UNION", "CREATE", "TRUNCATE"];
       const isValid = isIntellibase || aSelectedItems.length > 0;
+      const isMalicious = keywords.some(keyword => sInput.toUpperCase().includes(keyword));
       // Disable submit + hide previous result
       chatModel.setSubmit(false);
       chatModel.setvisibleResult(false);
-
+      if (!sInput || sInput.length < 3) {
+        MessageBox.information("Minimum 3 characters required to proceed");
+        return;
+      }
+      if(isMalicious){
+        MessageBox.error("The prompt contains a malicious word, please remove it and proceed");
+        return;
+      }
       // Create and show busy dialog
       const oBusyDialog = new sap.m.BusyDialog({
         title: "Busy Indicator",
