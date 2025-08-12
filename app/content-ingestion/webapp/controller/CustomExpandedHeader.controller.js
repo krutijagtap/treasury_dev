@@ -20,10 +20,12 @@ sap.ui.define(
       {
         override: {
           onInit() {
+             this.onfetchRoles();
             const oModel = new sap.ui.model.json.JSONModel();
             this.getView().setModel(oModel, "viewModel");
             this.getView().getModel("viewModel").setProperty("/decision");
           },
+
           onTableActionPress: function (oEvent) {
             debugger;
             console.log("Meta Data");
@@ -35,6 +37,41 @@ sap.ui.define(
         /**
          * Returns the base URL of the Component
          */
+    onfetchRoles: async function (params) {
+    //  const oComponent = this.getOwnerComponent();
+      const baseUrl = sap.ui.require.toUrl('com/scb/treasury/contentingestion');
+      const url = baseUrl + "/user-api/currentUser";
+  
+      try {
+          const response = await fetch(url, {
+              method: "GET",
+              headers: { "Content-Type": "application/json" }
+          });
+  
+          if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+  
+          const data = await response.json();
+          const roles = data.scopes;
+  
+          const hasScopeForChecker = roles.some(role => role.includes("ContentChecker"));
+          const hasScopeForMaker = roles.some(role => role.includes("ContentMaker"));
+ 
+          // Create a new authModel for this controller
+          const authModel = new sap.ui.model.json.JSONModel({
+              isAdmin: hasScopeForChecker,   // <-- simple boolean
+              isViewer: hasScopeForMaker     // (optional) if you also want view-only rights
+          });
+  
+          this.getView().setModel(authModel, "authModel");  // set the model with a named model
+  
+          console.log("Auth model created:", authModel.getData());
+  
+      } catch (error) {
+          console.error("API Error:", error);
+      }
+  },
         _getBaseURL: function () {
           const sComponentId = sap.ui.core.Component.getOwnerComponentFor(
             this.base.getView()

@@ -17,7 +17,14 @@ service CatalogService {
     entity Content          as
         select from treasury.Content {
             *,
-            metaData
+
+            metaData,
+            @UI.Hidden: true
+            @UI.HiddenFilter: true
+            virtual canApprove : Boolean @Core.Computed,
+            @UI.Hidden: true
+            @UI.HiddenFilter: true
+            virtual canDelete : Boolean @Core.Computed
         }
         actions {
             @cds.odata.bindingparameter.name  : '_it'

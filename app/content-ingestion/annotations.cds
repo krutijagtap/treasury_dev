@@ -58,18 +58,19 @@ annotate service.Content with @UI.LineItem: [
         Label                : 'Approve',
         Inline               : true,
         Criticality          : #Positive,
-        ![@HTML5.CssDefaults]: {width: 'auto'},
-        @UI.Hidden           : {$edmJson: {$Not: {$Eq: [
-            {$Path: 'status'},
-            'SUBMITTED'
-        ]}}},
-        // ![@UI.Hidden]        : {$edmJson: {$Not: {$And: [
-        //     {$Eq: [
-        //         {$Path: 'status'},
-        //         'SUBMITTED'
-        //     ]},
-        //     {$Path: 'isChecker'}
+        @HTML5.CssDefaults: {width: 'auto'},
+        // @UI.Hidden           : {$edmJson: {$Not: {$Eq: [
+        //     {$Path: 'status'},
+        //     'SUBMITTED'
         // ]}}},
+        ![@UI.Hidden]        : {$edmJson: {$Not: {$And: [
+            {$Eq: [
+                {$Path: 'status'},
+                'SUBMITTED'
+            ]},
+            {$Path: 'canApprove'}
+        ]}}},
+     
         InvocationGrouping   : #Isolated,
     },
     {
@@ -79,17 +80,17 @@ annotate service.Content with @UI.LineItem: [
         Inline               : true,
         Criticality          : #Negative,
         ![@HTML5.CssDefaults]: {width: 'auto'},
-        @UI.Hidden           : {$edmJson: {$Not: {$Eq: [
-            {$Path: 'status'},
-            'SUBMITTED'
-        ]}}},
-        // ![@UI.Hidden]        : {$edmJson: {$Not: {$And: [
-        //     {$Eq: [
-        //         {$Path: 'status'},
-        //         'SUBMITTED'
-        //     ]},
-        //     {$Path: 'isChecker'}
+        // @UI.Hidden           : {$edmJson: {$Not: {$Eq: [
+        //     {$Path: 'status'},
+        //     'SUBMITTED'
         // ]}}},
+        ![@UI.Hidden]        : {$edmJson: {$Not: {$And: [
+            {$Eq: [
+                {$Path: 'status'},
+                'SUBMITTED'
+            ]},
+            {$Path: 'canApprove'}
+        ]}}},
         InvocationGrouping   : #Isolated
     },
     {
@@ -98,9 +99,9 @@ annotate service.Content with @UI.LineItem: [
         IconUrl              : 'sap-icon://delete',
         Inline               : true,
         ![@HTML5.CssDefaults]: {width: 'auto'},
-        @UI.Hidden           : {$edmJson: [
-            {$Path: 'isChecker'}
-        ]},
+        ![@UI.Hidden]        : {$edmJson: {$Not:
+            {$Path: 'canDelete'}
+}},
         // ![@UI.Hidden]        : {$edmJson: {$Not: {$And: [
         //     {$Eq: [
         //         {$Path: 'status'},
@@ -419,8 +420,12 @@ annotate service.Content with @(
 
 annotate service.Content with {
     mediaType @Common.Label: 'Media Type'
+
+   
 };
 
 annotate service.Content with {
     status @Common.Label: 'Status Code'
 };
+
+

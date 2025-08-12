@@ -4,7 +4,7 @@
     xmlns:l="sap.ui.layout"
     xmlns:u="sap.ui.unified">
 
-    <VBox class="customUploadContainer sapUiSmallMargin" width="100%" height="100%">
+    <VBox class="customUploadContainer sapUiSmallMargin" width="100%" height="100%" visible="{=${authModel>/isViewer} }">
         <Title text="Upload Content" level="H4" class="sapUiSmallMarginBottom customTitle" />
 
         <VBox class="customCard sapUiSmallMarginBottom" width="100%">
@@ -20,7 +20,7 @@
                 width="300px"
                 tooltip="Choose file to be uploaded" 
                 change="onFileChange" 
-                fileType="pdf" 
+                fileType="pdf,docx,xlsx" 
                 maximumFileSize="5" 
                 class="sapUiSmallMarginBottom" />
 

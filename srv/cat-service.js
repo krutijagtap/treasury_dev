@@ -13,7 +13,10 @@ module.exports = cds.service.impl(async function () {
   const { Content, SummaryFiles, ActionVisibility } = this.entities;
 
   this.after("READ", "Content", (each, req) => {
+    each.canApprove = req.user.is('ContentChecker');
+    each.canDelete = req.user.is('ContentMaker');
     each.isChecker = req.user?.roles?.ContentChecker === 1;
+
   });
 
   //-------------------------------------------------------------
@@ -113,8 +116,9 @@ module.exports = cds.service.impl(async function () {
     //check user role - checker can approve any file
     // if user is maker - he can't approve his own file
     const ownFile = oneFile.createdBy === req.user.id;
-    if(ownFile.length){
-      req.reject(400, 'You cannot approve files that are created by you');
+  
+    if(ownFile){
+      req.reject(400, 'You cannot Approve files that are created by you');
     }
     //check if file content exists
     if (!oneFile?.content) {
@@ -177,6 +181,17 @@ module.exports = cds.service.impl(async function () {
 
   this.on("rejectContent", async (req) => {
     const ID = req.params[0].ID;
+        const oneFile = await SELECT.one
+      .from(Content)
+      .columns('fileName', 'mediaType', 'content','createdBy')
+      .where({ ID });
+    //check user role - checker can approve any file
+    // if user is maker - he can't approve his own file
+    const ownFile = oneFile.createdBy === req.user.id;
+  
+    if(ownFile){
+      req.reject(400, 'You cannot Reject files that are created by you');
+    }
     await UPDATE(Content, ID).with({
       status: "REJECTED",
     });
@@ -195,11 +210,11 @@ module.exports = cds.service.impl(async function () {
       //if checker can delete any file
       const ownFiles = file.createdBy === req.user.id; // only owner can delete its own file
       const fileName = file.fileName;
-      if(req.user.roles.ContentMaker === 1){
+      
       if (!ownFiles) {
         req.reject(400, 'You cannot delete files that are not created by you');
       }
-    }
+    
       const response = await executeHttpRequest(
         { destinationName: 'Treasurybackend' },
         {

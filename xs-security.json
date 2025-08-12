@@ -20,24 +20,15 @@
     }
   ],
   "role-templates": [
-    {
-      "name": "Token_Exchange",
-      "description": "UAA Token Exchange",
-      "scope-references": ["uaa.user"]
-    },
-    {
-      "name": "Workzone_EFDNA_GenAI_Treasury_Support",
-      "description": "Support",
-      "scope-references": ["$XSAPPNAME.Support"]
-    },
+
     {
       "name": "Workzone_EFDNA_GenAI_Treasury_Checker",
-      "description": "ContentChecker",
+      "description": "Workzone_EFDNA_GenAI_Treasury_Checker",
       "scope-references": ["$XSAPPNAME.ContentChecker"]
     },
     {
       "name": "Workzone_EFDNA_GenAI_Treasury_Maker",
-      "description": "ContentMaker",
+      "description": "Workzone_EFDNA_GenAI_Treasury_Maker",
       "scope-references": ["$XSAPPNAME.ContentMaker"]
     }
   ],
