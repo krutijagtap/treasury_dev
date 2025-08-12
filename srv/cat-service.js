@@ -229,7 +229,8 @@ module.exports = cds.service.impl(async function () {
       if (response.data.success) {
         await DELETE.from(Content).where({ ID: ID });
       }
-      return { message: 'File deleted successfully' };
+      const table = await SELECT.from(Content);
+      return table;
     } catch (error) {
       console.log("Failed in getting embeddings due to: " + error);
     }
