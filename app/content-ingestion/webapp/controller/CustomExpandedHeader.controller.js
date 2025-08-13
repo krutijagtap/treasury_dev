@@ -141,31 +141,11 @@ sap.ui.define(
        */
       onOpenDialog: function (response) {
         var that = this;
-        const metaData = response.metadata;
+        var metaData = response.metadata;
         if (!metaData) {
           return;
         }
-        const jsonResponse = {
-          contributor: metaData.contributor,
-          creator: metaData.creator,
-          description: metaData.description,
-          language: metaData.language,
-          publisher: metaData.publisher,
-          rights: metaData.rights,
-          subject: metaData.subject,
-          title: metaData.title,
-          fileExtension: metaData.file_extension,
-          fileFormat: metaData.file_format,
-          mimeType: metaData.mime_type,
-          accessLevel: metaData.access_level,
-          auditTrail: metaData.audit_trail[0],
-          documentInfo: {
-            type: metaData.dc_type,
-            documentDate: metaData.document_date,
-            extractionTool: metaData.extraction_tool
-          },
-          decision: metaData.processing_decision
-        };
+        metaData["filename"]=response.filename;
 
         this.getView().getModel("viewModel").setData(metaData);
         // this.iProgress = 0;
