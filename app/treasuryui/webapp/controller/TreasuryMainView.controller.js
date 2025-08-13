@@ -15,6 +15,8 @@ sap.ui.define([
       let oModel = new sap.ui.model.json.JSONModel();
       // this.getView().setModel(oModel);
       this.getView().setModel(oModel, "treasuryModel");
+      this.getView().getModel("chatModel").refresh(true);
+      this.getView().getModel("treasuryModel").refresh(true);
     },
     onChatCopy: function () {
       const oChatBox = this.byId("ChatBotResult");
