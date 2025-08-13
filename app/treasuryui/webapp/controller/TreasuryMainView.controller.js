@@ -15,8 +15,11 @@ sap.ui.define([
       let oModel = new sap.ui.model.json.JSONModel();
       // this.getView().setModel(oModel);
       this.getView().setModel(oModel, "treasuryModel");
-      this.getView().getModel("chatModel").refresh(true);
-      this.getView().getModel("treasuryModel").refresh(true);
+      // this.getView().getModel("chatModel").refresh(true);
+      // this.getView().getModel("treasuryModel").refresh(true);
+    },
+    onBeforeShow: function () {
+      this.getView().getModel().refresh(true);
     },
     onChatCopy: function () {
       const oChatBox = this.byId("ChatBotResult");
@@ -169,7 +172,7 @@ sap.ui.define([
       const sInput = this.byId("chatFeedInput").getValue();
       var aSelectedItems = this.byId("multiCombo").getSelectedItems();
       const isIntellibase = sInput.toLowerCase().includes("intellibase");
-      const keywords = ["SELECT","INSERT", "UPDATE", "DELETE", "DROP", "UNION", "CREATE", "TRUNCATE"];
+      const keywords = ["SELECT", "INSERT", "UPDATE", "DELETE", "DROP", "UNION", "CREATE", "TRUNCATE"];
       const isValid = isIntellibase || aSelectedItems.length > 0;
       const isMalicious = keywords.some(keyword => sInput.toUpperCase().includes(keyword));
       // Disable submit + hide previous result
@@ -179,7 +182,7 @@ sap.ui.define([
         MessageBox.information("Minimum 3 characters required to proceed");
         return;
       }
-      if(isMalicious){
+      if (isMalicious) {
         MessageBox.error("The prompt contains a malicious word, please remove it and proceed");
         return;
       }

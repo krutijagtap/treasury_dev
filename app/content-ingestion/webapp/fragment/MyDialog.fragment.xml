@@ -49,6 +49,8 @@
                     <Text text="{viewModel>/document_date}" />
                     <Label text="Extraction Tool" />
                     <Text text="{viewModel>/extraction_tool}" />
+                    <Label text="DC Classification" />
+                    <Text text="{viewModel>/dc_primary_classification}" />
  
                     <!-- Audit Trail -->
                     <Label text="Audit Action" />
@@ -62,10 +64,16 @@
             </layout:Grid>
  
             <!-- DECISION -->
+            <VBox>
             <HBox justifyContent="Start" class="sapUiSmallMarginTop">
                 <Label text="Decision: " design="Bold" />
                 <Text text="{viewModel>/decision}" />
             </HBox>
+            <HBox justifyContent="Start" class="sapUiSmallMarginTop">
+                <Label text="Reasoning: " design="Bold" />
+                <Text text="{viewModel>/reasoning}" />
+            </HBox>
+            </VBox>
  
             <!-- Footer -->
             <HBox justifyContent="End" class="sapUiTinyMarginTop">
