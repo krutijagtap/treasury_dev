@@ -111,13 +111,13 @@ module.exports = cds.service.impl(async function () {
     const destination = await getDestination({ destinationName: 'Treasurybackend' });
     const oneFile = await SELECT.one
       .from(Content)
-      .columns('fileName', 'mediaType', 'content','createdBy')
+      .columns('fileName', 'mediaType', 'content', 'createdBy')
       .where({ ID });
     //check user role - checker can approve any file
     // if user is maker - he can't approve his own file
     const ownFile = oneFile.createdBy === req.user.id;
-  
-    if(ownFile){
+
+    if (ownFile) {
       req.reject(400, 'You cannot Approve files that are created by you');
     }
     //check if file content exists
@@ -163,6 +163,7 @@ module.exports = cds.service.impl(async function () {
               status: "COMPLETED"
             });
             console.log("Embeddings generated successfully")
+            req.info(responseEmbeddings.data.message);
             return await SELECT.one.from(Content).where({ ID });
             // return ("Embeddings generated successfully");
           }
@@ -181,20 +182,21 @@ module.exports = cds.service.impl(async function () {
 
   this.on("rejectContent", async (req) => {
     const ID = req.params[0].ID;
-        const oneFile = await SELECT.one
+    const oneFile = await SELECT.one
       .from(Content)
-      .columns('fileName', 'mediaType', 'content','createdBy')
+      .columns('fileName', 'mediaType', 'content', 'createdBy')
       .where({ ID });
     //check user role - checker can approve any file
     // if user is maker - he can't approve his own file
     const ownFile = oneFile.createdBy === req.user.id;
-  
-    if(ownFile){
+
+    if (ownFile) {
       req.reject(400, 'You cannot Reject files that are created by you');
     }
     await UPDATE(Content, ID).with({
       status: "REJECTED",
     });
+    req.info("The file " + oneFile.fileName +" has been REJECTED");
     return await SELECT.one.from(Content).where({ ID });
   });
 
@@ -210,11 +212,11 @@ module.exports = cds.service.impl(async function () {
       //if checker can delete any file
       const ownFiles = file.createdBy === req.user.id; // only owner can delete its own file
       const fileName = file.fileName;
-      
+
       if (!ownFiles) {
         req.reject(400, 'You cannot delete files that are not created by you');
       }
-    
+
       const response = await executeHttpRequest(
         { destinationName: 'Treasurybackend' },
         {
@@ -226,11 +228,13 @@ module.exports = cds.service.impl(async function () {
           data: { "filename": fileName }
         }
       );
-      if (response.data.success) {
-        await DELETE.from(Content).where({ ID: ID });
+      if (!response.data.success) {
+        req.reject(response.data.message);
       }
-      const table = await SELECT.from(Content);
-      return table;
+      await DELETE.from(Content).where({ ID: ID });
+        // const table = await SELECT.from(Content);
+        req.info(response.data.message);
+        return true;
     } catch (error) {
       console.log("Failed in getting embeddings due to: " + error);
     }

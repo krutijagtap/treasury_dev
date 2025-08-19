@@ -22,7 +22,8 @@
                 maximumFileSize='50' 
                 fileType="pdf, docs, xlsx"
                 class="sapUiSmallMarginBottom" 
-                change = ".extension.com.scb.treasury.contentingestion.controller.CustomExpandedHeader.onFileChange"/>
+                change = ".extension.com.scb.treasury.contentingestion.controller.CustomExpandedHeader.onFileChange"
+                typeMissmatch=".extension.com.scb.treasury.contentingestion.controller.CustomExpandedHeader.onTypeMismatch"/>
 
             <HBox alignItems="Center" class="sapUiSmallMarginBottom sapUiTinyMarginTop">
                 <Label text="To be used in:" class="sapUiSmallMarginEnd customLabel" visible="false"/>

@@ -34,6 +34,36 @@ sap.ui.define(
           }
         }
         ,
+        onTypeMismatch:function(){
+          MessageBox.error("Only pdf, docx, xlsx files are allowed");
+        },
+        onBeforeActionExecution: function (oEvent) {
+    const sAction = oEvent.getParameter("action");
+
+    if (sAction === "CatalogService.approveContent" || 
+        sAction === "CatalogService.rejectContent") {
+
+        return new Promise((resolve, reject) => {
+            sap.m.MessageBox.warning(
+                "Are you sure you want to " + (sAction.includes("approve") ? "approve" : "reject") + " this content?",
+                {
+                    title: "Confirm Action",
+                    actions: [sap.m.MessageBox.Action.OK, sap.m.MessageBox.Action.CANCEL],
+                    emphasizedAction: sap.m.MessageBox.Action.OK,
+                    onClose: function (sDecision) {
+                        if (sDecision === sap.m.MessageBox.Action.OK) {
+                            resolve();   // allow action
+                        } else {
+                            reject();    // cancel action
+                        }
+                    }
+                }
+            );
+        });
+    }
+
+    // for other actions, no confirmation needed
+},
         /**
          * Returns the base URL of the Component
          */

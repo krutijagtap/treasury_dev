@@ -23,6 +23,7 @@ sap.ui.define([
       const oContext = oEvent.getSource().getBindingContext();
       if (!oContext) return;
       const metaDataValue = await oContext.requestProperty("metaData");
+      const decision = await oContext.requestProperty('status');
       try {
         // const metaDataValue = await oContext.requestObject("metaData");
         if (!metaDataValue) {
@@ -36,6 +37,7 @@ sap.ui.define([
 
         const oView = this.editFlow.getView();
         oView.getModel("viewModel").setData(metaData);
+        oView.getModel("viewModel").setProperty("/decision", decision);
 
         if (!this._oDialog) {
           this._oDialog = await Fragment.load({

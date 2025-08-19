@@ -13,25 +13,37 @@ entity Books {
 }
 
 entity Content : managed {
+      @UI.AdaptationHidden: true
   key ID              : String;
       fileName        : String;
       mediaType       : String;
+
+      @UI.AdaptationHidden: true
       tagType         : String;
       //Association to TagTypes;
       status          : String;
+
       //Association to ContentStatus;
+      @UI.AdaptationHidden: true
       embeddingStatus : String;
+
       //Association to EmbeddingStatus;
+      @UI.AdaptationHidden: true
       url             : String;
 
-      @Core.MediaType: mediaType
+      @Core.MediaType     : mediaType
       content         : LargeBinary;
+
+      @UI.AdaptationHidden: true
       summaryFiles    : Composition of many SummaryFiles
                           on summaryFiles.content = $self;
-     metaData        : LargeString;
-      isChecker       : Boolean;    
 
-     
+      @UI.AdaptationHidden: true
+      metaData        : LargeString;
+
+      @UI.AdaptationHidden: true
+      isChecker       : Boolean;
+
 }
 
 entity SummaryFiles : cuid, managed {
@@ -58,8 +70,6 @@ entity EmbeddingStatus : CodeList {
 
 @odata.singleton
 entity ActionVisibility : cuid, {
-  isChkr : Boolean default false;
-  isMaker   : Boolean default false;
+  isChkr  : Boolean default false;
+  isMaker : Boolean default false;
 }
-
-

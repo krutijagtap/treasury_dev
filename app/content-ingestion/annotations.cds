@@ -1,37 +1,42 @@
 using CatalogService as service from '../../srv/cat-service';
 
+
 annotate service.Content with @UI.LineItem: [
     {
         $Type                : 'UI.DataFieldWithUrl',
         Label                : 'File Name',
         Url                  : url,
         Value                : fileName,
-        ![@HTML5.CssDefaults]: {width: 'auto', }
+        ![@HTML5.CssDefaults]: {width: 'auto', },
+        Target               : '_blank',
     },
     {
         $Type                : 'UI.DataField',
         Label                : 'Media Type',
         Value                : mediaType,
+        visibleInAdvancedArea: false,
         ![@HTML5.CssDefaults]: {width: 'auto', }
     },
-    // {
-    //             $Type: 'UI.DataField',
-    //             Label: 'Tag Type',
-    //             Value: tagType,
-    //     ![@HTML5.CssDefaults]: {width: 'auto', }
-    // },
     {
-                $Type: 'UI.DataField',
-                Label: 'Status Code',
-                Value: status,
+        $Type                : 'UI.DataField',
+        Label                : 'Tag Type',
+        Value                : tagType,
+        ![@HTML5.CssDefaults]: {width: 'auto', },
+        @UI.Hidden           : true
+    },
+    {
+        $Type                : 'UI.DataField',
+        Label                : 'Status Code',
+        Value                : status,
         ![@HTML5.CssDefaults]: {width: 'auto', }
     },
-    // {
-    //             $Type: 'UI.DataField',
-    //             Label: 'Embedding Status Code',
-    //             Value: embeddingStatus,
-    //     ![@HTML5.CssDefaults]: {width: 'auto', }
-    // },
+    {
+        $Type                : 'UI.DataField',
+        Label                : 'Embedding Status Code',
+        Value                : embeddingStatus,
+        ![@HTML5.CssDefaults]: {width: 'auto', },
+        @UI.Hidden           : true
+    },
     {
         $Type                : 'UI.DataField',
         Label                : 'Content',
@@ -40,38 +45,59 @@ annotate service.Content with @UI.LineItem: [
         ![@UI.Hidden]        : true
     },
     {
-                $Type: 'UI.DataField',
-                Label: 'Created By',
-                Value: createdBy,
+        $Type                : 'UI.DataField',
+        Label                : 'Created By',
+        Value                : createdBy,
         ![@HTML5.CssDefaults]: {width: 'auto', }
     },
     {
-                $Type: 'UI.DataField',
-                Label: 'Changed By',
-                Value: modifiedBy,
+        $Type                : 'UI.DataField',
+        Label                : 'Changed By',
+        Value                : modifiedBy,
         ![@HTML5.CssDefaults]: {width: 'auto', }
     },
-    // { $Type: 'UI.DataField', Value: metaData,  @UI.Hidden  : true },  
     {
-        $Type                : 'UI.DataFieldForAction',
-        Action               : 'CatalogService.approveContent',
-        Label                : 'Approve',
-        Inline               : true,
-        Criticality          : #Positive,
+        $Type     : 'UI.DataField',
+        Value     : metaData,
+        @UI.Hidden: true
+    },
+    {
+        $Type     : 'UI.DataField',
+        Value     : url,
+        @UI.Hidden: true
+    },
+    {
+        $Type     : 'UI.DataField',
+        Value     : ID,
+        @UI.Hidden: true
+    },
+    {
+        $Type     : 'UI.DataField',
+        Value     : isChecker,
+        @UI.Hidden: true
+    },
+    {
+        $Type             : 'UI.DataFieldForAction',
+        Action            : 'CatalogService.approveContent',
+        Label             : 'Approve',
+        Inline            : true,
+        Criticality       : #Positive,
+        Determining : true,
+        
         @HTML5.CssDefaults: {width: 'auto'},
         // @UI.Hidden           : {$edmJson: {$Not: {$Eq: [
         //     {$Path: 'status'},
         //     'SUBMITTED'
         // ]}}},
-        ![@UI.Hidden]        : {$edmJson: {$Not: {$And: [
+        ![@UI.Hidden]     : {$edmJson: {$Not: {$And: [
             {$Eq: [
                 {$Path: 'status'},
                 'SUBMITTED'
             ]},
             {$Path: 'canApprove'}
         ]}}},
-     
-        InvocationGrouping   : #Isolated,
+
+        InvocationGrouping: #Isolated,
     },
     {
         $Type                : 'UI.DataFieldForAction',
@@ -99,15 +125,13 @@ annotate service.Content with @UI.LineItem: [
         IconUrl              : 'sap-icon://delete',
         Inline               : true,
         ![@HTML5.CssDefaults]: {width: 'auto'},
-        ![@UI.Hidden]        : {$edmJson: {$Not:
-            {$Path: 'canDelete'}
-}},
+        ![@UI.Hidden]        : {$edmJson: {$Not: {$Path: 'canDelete'}}},
         // ![@UI.Hidden]        : {$edmJson: {$Not: {$And: [
         //     {$Eq: [
         //         {$Path: 'status'},
         //         'SUBMITTED'
         //     ]},
-            // {$Path: 'isChecker'}
+        // {$Path: 'isChecker'}
         // ]}}},
         InvocationGrouping   : #Isolated
     }
@@ -419,13 +443,10 @@ annotate service.Content with @(
 );
 
 annotate service.Content with {
-    mediaType @Common.Label: 'Media Type'
-
-   
+    mediaType @Common.Label: 'Media Type';
+    fileName @Common.Label: 'File Name';
 };
 
 annotate service.Content with {
     status @Common.Label: 'Status Code'
 };
-
-
