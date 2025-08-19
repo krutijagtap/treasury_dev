@@ -25,6 +25,8 @@ sap.ui.define([
 
             //set chat model
             this.setModel(new chatModel(), "chatModel");
+
+            this.getModel().refresh();
         }
     });
 });

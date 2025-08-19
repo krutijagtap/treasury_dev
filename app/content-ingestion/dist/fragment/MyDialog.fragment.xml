@@ -23,6 +23,10 @@
                     <Text text="{viewModel>/creator}" />
                     <Label text="Contributor" />
                     <Text text="{viewModel>/contributor}" />
+                    <Label text="Copyright Holder" />
+                    <Text text="{viewModel>/copyright_holder}" />
+                    <Label text="Copyright Status" />
+                    <Text text="{viewModel>/copyright_status}" />
                     <Label text="Language" />
                     <Text text="{viewModel>/language}" />
                     <Label text="Publisher" />
@@ -32,12 +36,16 @@
                 <!-- TECHNICAL DETAILS -->
                 <VBox class="sapUiSmallMargin">
                     <Title text="TECHNICAL DETAILS" level="H4" />
+                    <Label text="File Name" />
+                    <Text text="{viewModel>/filename}" />
                     <Label text="File Extension" />
                     <Text text="{viewModel>/file_extension}" />
                     <Label text="Format" />
                     <Text text="{viewModel>/file_format}" />
                     <Label text="MIME Type" />
                     <Text text="{viewModel>/mime_type}" />
+                    <Label text="License Type" />
+                    <Text text="{viewModel>/license_type}" />
                 </VBox>
  
                 <!-- ADDITIONAL FIELDS -->
@@ -49,6 +57,8 @@
                     <Text text="{viewModel>/document_date}" />
                     <Label text="Extraction Tool" />
                     <Text text="{viewModel>/extraction_tool}" />
+                    <Label text="DC Classification" />
+                    <Text text="{viewModel>/dc_primary_classification}" />
  
                     <!-- Audit Trail -->
                     <Label text="Audit Action" />
@@ -62,10 +72,16 @@
             </layout:Grid>
  
             <!-- DECISION -->
+            <VBox>
             <HBox justifyContent="Start" class="sapUiSmallMarginTop">
                 <Label text="Decision: " design="Bold" />
                 <Text text="{viewModel>/decision}" />
             </HBox>
+            <HBox justifyContent="Start" class="sapUiSmallMarginTop">
+                <Label text="Reasoning: " design="Bold" />
+                <Text text="{viewModel>/reasoning}" />
+            </HBox>
+            </VBox>
  
             <!-- Footer -->
             <HBox justifyContent="End" class="sapUiTinyMarginTop">

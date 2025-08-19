@@ -141,10 +141,6 @@
 
       ],
       "targets": {
-        "TargetTreasuryMainView": {
-          "id": "TreasuryMainView",
-          "name": "TreasuryMainView"
-        },
         "HomeView": {
           "id": "TreasuryMainView",
           "name": "TreasuryMainView"

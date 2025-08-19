@@ -15,6 +15,11 @@ sap.ui.define([
       let oModel = new sap.ui.model.json.JSONModel();
       // this.getView().setModel(oModel);
       this.getView().setModel(oModel, "treasuryModel");
+      // this.getView().getModel("chatModel").refresh(true);
+      // this.getView().getModel("treasuryModel").refresh(true);
+    },
+    onBeforeShow: function () {
+      this.getView().getModel().refresh(true);
     },
     onChatCopy: function () {
       const oChatBox = this.byId("ChatBotResult");
@@ -161,15 +166,36 @@ sap.ui.define([
       this.byId("chatFeedInput").setValue(sFormattedPrompt);
     },
 
+    // userlivechange: function(){
+    //   const sInput = this.byId("chatFeedInput").getValue();
+    //   var aSelectedItems = this.byId("multiCombo").getSelectedItems();
+    //   const isIntellibase = sInput.toLowerCase().includes("intellibase");
+    //   if(!sInput.includes("File:") && !isIntellibase){
+    //     if(aSelectedItems.length)
+    //     this.byId("multiCombo").setSelectedKeys();
+    //     this.byId("chatFeedInput").setValue("");
+    //     MessageBox.error("Please select a file or Ask Intellibase");
+    //   }
+    // },
     onUserChat: async function () {
       const chatModel = this.getOwnerComponent().getModel("chatModel");
       const oView = this.getView();
       const sInput = this.byId("chatFeedInput").getValue();
       var aSelectedItems = this.byId("multiCombo").getSelectedItems();
       const isIntellibase = sInput.toLowerCase().includes("intellibase");
-      const keywords = ["SELECT","INSERT", "UPDATE", "DELETE", "DROP", "UNION", "CREATE", "TRUNCATE"];
+      const keywords = ["SELECT", "INSERT", "UPDATE", "DELETE", "DROP", "UNION", "CREATE", "TRUNCATE"];
       const isValid = isIntellibase || aSelectedItems.length > 0;
       const isMalicious = keywords.some(keyword => sInput.toUpperCase().includes(keyword));
+      const isRightPrompt = sInput.includes("File:") && (sInput.includes(".pdf") || sInput.includes(".xlsx") || sInput.includes(".docx"))
+      this.byId("buttonCopy").setVisible(true);
+      this.byId("buttonExport").setVisible(true);
+      if(!isRightPrompt && !isIntellibase){
+        if(aSelectedItems.length)
+        this.byId("multiCombo").setSelectedKeys();
+        this.byId("chatFeedInput").setValue("");
+        MessageBox.error("Please select a file or Ask Intellibase");
+        return;
+      }
       // Disable submit + hide previous result
       chatModel.setSubmit(false);
       chatModel.setvisibleResult(false);
@@ -177,7 +203,7 @@ sap.ui.define([
         MessageBox.information("Minimum 3 characters required to proceed");
         return;
       }
-      if(isMalicious){
+      if (isMalicious) {
         MessageBox.error("The prompt contains a malicious word, please remove it and proceed");
         return;
       }
@@ -240,7 +266,10 @@ sap.ui.define([
         MessageBox.error("Please select a file or Ask Intellibase");
         return;
       }
-      if (isIntellibase) { payload = { "message": "user_id:" + bankId + ":" + sInput }; }
+      if (isIntellibase) { 
+        this.byId("multiCombo").setSelectedKeys();
+        payload = { "message": "user_id:" + bankId + ":" + sInput }; 
+      }
       else {
         payload = { "message": sInput };
       }
@@ -286,6 +315,8 @@ sap.ui.define([
     onGenerateSummary: async function (oEvent) {
       var aMultiBoxSelectedItems = this.byId("multiCombo").getSelectedItems();
       var textArea = this.byId("chatFeedInput");
+      this.byId("buttonCopy").setVisible(false);
+      this.byId("buttonExport").setVisible(false);
       if (aMultiBoxSelectedItems.length > 1 || aMultiBoxSelectedItems.length == 0) {
         MessageBox.error("Please select a single file to Generate Summary.");
         return;
