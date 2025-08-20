@@ -175,6 +175,19 @@ module.exports = cds.service.impl(async function () {
       }
     } catch (error) {
       console.log("Failed in getting embeddings due to: " + error);
+    } finally {
+      console.log("Calling delete doc API")
+      const responseDelDoc = await axios.post(
+        `${destination.url}/api/delete-document`,
+        { filename: oneFile.fileName },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${destination.authTokens?.[0]?.value}`
+          }
+        }
+      );
+      console.log("Delect Document API Response: ", responseDelDoc.data)
     }
   });
 
@@ -232,9 +245,9 @@ module.exports = cds.service.impl(async function () {
         req.reject(response.data.message);
       }
       await DELETE.from(Content).where({ ID: ID });
-        // const table = await SELECT.from(Content);
-        req.info(response.data.message);
-        return true;
+      // const table = await SELECT.from(Content);
+      req.info(response.data.message);
+      return true;
     } catch (error) {
       console.log("Failed in getting embeddings due to: " + error);
     }

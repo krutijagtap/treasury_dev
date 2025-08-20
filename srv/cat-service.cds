@@ -29,14 +29,17 @@ service CatalogService {
         actions {
             @cds.odata.bindingparameter.name  : '_it'
             @sap.fe.core.RefreshAfterExecution: true
+            @Common.IsActionCritical : true
             action approveContent() returns Content;
 
             @cds.odata.bindingparameter.name  : '_it'
             @sap.fe.core.RefreshAfterExecution: true
+            @Common.IsActionCritical : true
             action rejectContent()  returns Content;
 
             @cds.odata.bindingparameter.name  : '_it'
             @sap.fe.core.RefreshAfterExecution: true
+            @Common.IsActionCritical : true
             action deleteContent()  returns Boolean;
 
             @cds.odata.bindingparameter.name  : '_it'

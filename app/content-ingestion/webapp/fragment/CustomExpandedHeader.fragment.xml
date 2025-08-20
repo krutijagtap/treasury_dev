@@ -20,7 +20,7 @@
                 width="300px"
                 tooltip="Choose file to be uploaded"
                 maximumFileSize='50' 
-                fileType="pdf, docs, xlsx"
+                fileType="pdf,docx,xlsx"
                 class="sapUiSmallMarginBottom" 
                 change = ".extension.com.scb.treasury.contentingestion.controller.CustomExpandedHeader.onFileChange"
                 typeMissmatch=".extension.com.scb.treasury.contentingestion.controller.CustomExpandedHeader.onTypeMismatch"/>

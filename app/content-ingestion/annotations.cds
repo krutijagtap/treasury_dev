@@ -7,8 +7,7 @@ annotate service.Content with @UI.LineItem: [
         Label                : 'File Name',
         Url                  : url,
         Value                : fileName,
-        ![@HTML5.CssDefaults]: {width: 'auto', },
-        Target               : '_blank',
+        ![@HTML5.CssDefaults]: {width: 'auto', }
     },
     {
         $Type                : 'UI.DataField',
@@ -80,6 +79,7 @@ annotate service.Content with @UI.LineItem: [
         $Type             : 'UI.DataFieldForAction',
         Action            : 'CatalogService.approveContent',
         Label             : 'Approve',
+        IconUrl           : 'sap-icon://accept',
         Inline            : true,
         Criticality       : #Positive,
         Determining : true,
@@ -103,6 +103,7 @@ annotate service.Content with @UI.LineItem: [
         $Type                : 'UI.DataFieldForAction',
         Action               : 'CatalogService.rejectContent',
         Label                : 'Reject',
+        IconUrl              : 'sap-icon://decline',
         Inline               : true,
         Criticality          : #Negative,
         ![@HTML5.CssDefaults]: {width: 'auto'},
@@ -124,6 +125,7 @@ annotate service.Content with @UI.LineItem: [
         Action               : 'CatalogService.deleteContent',
         IconUrl              : 'sap-icon://delete',
         Inline               : true,
+        Label                : 'Delete',
         ![@HTML5.CssDefaults]: {width: 'auto'},
         ![@UI.Hidden]        : {$edmJson: {$Not: {$Path: 'canDelete'}}},
         // ![@UI.Hidden]        : {$edmJson: {$Not: {$And: [

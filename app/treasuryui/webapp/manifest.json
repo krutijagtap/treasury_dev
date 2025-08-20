@@ -23,9 +23,9 @@
           "annotations": [],
           "odataVersion": "4.0"
         }
-      },     
+      },    
       "Treasurybackend": {
-        "uri": "/Treasurybackend/",           
+        "uri": "/Treasurybackend/",          
         "type": "http"
       }
     },
@@ -137,8 +137,8 @@
           "name": "ContentIngestionView",
           "target": "ContentIngestionView"
         }
-        
-
+       
+ 
       ],
       "targets": {
         "HomeView": {
@@ -164,6 +164,6 @@
   },
   "sap.cloud": {
     "public": true,
-    "service": "TreasuryUI"
+    "service": "Treasury"
   }
 }
