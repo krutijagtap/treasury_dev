@@ -25,11 +25,12 @@ sap.ui.define(
             this.getView().setModel(oModel, "viewModel");
             this.getView().getModel("viewModel").setProperty("/decision");
           },
-
-        }
-        ,
+        },
         onTypeMismatch: function () {
           MessageBox.error("Only pdf, docx, xlsx files are allowed");
+        },
+        onSizeExceed: function(){
+          MessageBox.error("File too large. Maximum size is 20MB");
         },
         /**
          * Returns the base URL of the Component
@@ -208,8 +209,6 @@ sap.ui.define(
               if (flag)
                 return;
             }
-
-            sap.m.MessageToast.show("opening dialog box");
             // get the API response
             const responseAPI = await fetch(chatUrl, {
               method: "POST",
@@ -219,10 +218,12 @@ sap.ui.define(
               body: formData
             });
             if (!responseAPI.ok) {
-              sap.m.MessageToast.show(responseAPI.message);
+              const res = await responseAPI.json();
+              sap.m.MessageToast.show(res.message);
               return;
             }
             const json = await responseAPI.json();
+            sap.m.MessageToast.show("opening dialog box");
             const dialog = await this.onOpenDialog(json);
             const decision = json.metadata.processing_decision;
             this.getView().getModel("viewModel").setProperty("/decision", decision)

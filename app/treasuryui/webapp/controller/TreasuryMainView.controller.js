@@ -387,10 +387,10 @@ sap.ui.define([
       const oContainer = this.byId("pdfContainer");
       oContainer.removeAllItems();
 
-      filesArray.forEach(file => {
-        const oPdfViewer = this._createPdfViewer(file.data, file.filename);
+      // filesArray.forEach(file => {
+        const oPdfViewer = this._createPdfViewer(filesArray[2].data, filesArray[2].filename);
         oContainer.addItem(oPdfViewer);
-      });
+      // });
       return oContainer;
     },
 

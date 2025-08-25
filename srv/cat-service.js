@@ -116,6 +116,9 @@ module.exports = cds.service.impl(async function () {
     //check user role - checker can approve any file
     // if user is maker - he can't approve his own file
     const ownFile = oneFile.createdBy === req.user.id;
+    const timeout = setTimeout(() => {
+        controller.abort(); // Aborts the request after 90s
+      }, 90000);
 
     if (ownFile) {
       req.reject(400, 'You cannot Approve files that are created by you');
@@ -140,9 +143,10 @@ module.exports = cds.service.impl(async function () {
       const responseFileUpload = await axios.post(`${destination.url}/api/approved-file-upload`, formData, {
         headers: {
           ...formData.getHeaders(),
-          Authorization: `Bearer ${destination.authTokens?.[0]?.value}`
+          Authorization: `Bearer ${destination.authTokens?.[0]?.value}`,
         }
       });
+      clearTimeout(timeout);
       console.log("upload response:", responseFileUpload)
 
       if (responseFileUpload.status == 200) {
@@ -157,6 +161,7 @@ module.exports = cds.service.impl(async function () {
               }
             }
           );
+          clearTimeout(timeout);
           console.log("Embeddings Response:", responseEmbeddings)
           if (responseEmbeddings.data.success) {
             await UPDATE(Content, ID).with({
@@ -177,17 +182,22 @@ module.exports = cds.service.impl(async function () {
       console.log("Failed in getting embeddings due to: " + error);
     } finally {
       console.log("Calling delete doc API")
-      const responseDelDoc = await axios.post(
-        `${destination.url}/api/delete-document`,
-        { filename: oneFile.fileName },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${destination.authTokens?.[0]?.value}`
+      try {
+        const responseDelDoc = await axios.post(
+          `${destination.url}/api/delete-document`,
+          { filename: oneFile.fileName },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${destination.authTokens?.[0]?.value}`
+            }
           }
-        }
-      );
-      console.log("Delect Document API Response: ", responseDelDoc.data)
+        );
+        console.log("Delect Document API Response: ", responseDelDoc.data)
+      }
+      catch (err) {
+        console.log(err);
+      }
     }
   });
 
@@ -209,7 +219,7 @@ module.exports = cds.service.impl(async function () {
     await UPDATE(Content, ID).with({
       status: "REJECTED",
     });
-    req.info("The file " + oneFile.fileName +" has been REJECTED");
+    req.info("The file " + oneFile.fileName + " has been REJECTED");
     return await SELECT.one.from(Content).where({ ID });
   });
 

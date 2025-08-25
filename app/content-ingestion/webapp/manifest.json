@@ -153,8 +153,8 @@
                     "CustomColumn": {
                       "header": "MetaData",
                       "position": {
-                        "anchor": "DataField::content",
-                        "placement": "Before"
+                        "anchor": "DataField::isChecker",
+                        "placement": "After"
                       },
                       "template": "com.scb.treasury.contentingestion.ext.fragment.CustomColumn"
                     }
