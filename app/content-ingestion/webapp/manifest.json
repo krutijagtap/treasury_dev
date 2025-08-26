@@ -151,12 +151,20 @@
                 "@com.sap.vocabularies.UI.v1.LineItem": {
                   "columns": {
                     "CustomColumn": {
-                      "header": "MetaData",
                       "position": {
-                        "anchor": "DataField::content",
+                        "anchor": "DataField::isChecker",
+                        "placement": "After"
+                      },
+                      "template": "com.scb.treasury.contentingestion.ext.fragment.CustomColumn",
+                      "width":"5rem"
+                    },
+                    "FileDownload": {
+                      "header": "File Name",
+                      "position": {
+                        "anchor": "DataField::mediaType",
                         "placement": "Before"
                       },
-                      "template": "com.scb.treasury.contentingestion.ext.fragment.CustomColumn"
+                      "template": "com.scb.treasury.contentingestion.ext.fragment.FileDownload"
                     }
                   }
                 }

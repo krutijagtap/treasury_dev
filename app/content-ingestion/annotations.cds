@@ -3,14 +3,6 @@ using CatalogService as service from '../../srv/cat-service';
 
 annotate service.Content with @UI.LineItem: [
     {
-        $Type                : 'UI.DataFieldWithUrl',
-        Label                : 'File Name',
-        Url                  : url,
-        Value                : fileName,
-        Target               : `_blank`,
-        ![@HTML5.CssDefaults]: {width: 'auto', }
-    },
-    {
         $Type                : 'UI.DataField',
         Label                : 'Media Type',
         Value                : mediaType,
@@ -85,11 +77,7 @@ annotate service.Content with @UI.LineItem: [
         Criticality       : #Positive,
         Determining       : true,
         @title: 'Approve',
-        @HTML5.CssDefaults: {width: 'auto'},
-        // @UI.Hidden           : {$edmJson: {$Not: {$Eq: [
-        //     {$Path: 'status'},
-        //     'SUBMITTED'
-        // ]}}},
+        @HTML5.CssDefaults: {width: '5rem'},
         ![@UI.Hidden]     : {$edmJson: {$Not: {$And: [
             {$Eq: [
                 {$Path: 'status'},
@@ -97,8 +85,7 @@ annotate service.Content with @UI.LineItem: [
             ]},
             {$Path: 'canApprove'}
         ]}}},
-
-        InvocationGrouping: #Isolated,
+        InvocationGrouping: #Isolated
     },
     {
         $Type             : 'UI.DataFieldForAction',
@@ -107,7 +94,7 @@ annotate service.Content with @UI.LineItem: [
         IconUrl           : 'sap-icon://decline',
         Inline            : true,
         Criticality       : #Negative,
-        @HTML5.CssDefaults: {width: 'auto'},
+        @HTML5.CssDefaults: {width: '5rem'},
         // @UI.Hidden           : {$edmJson: {$Not: {$Eq: [
         //     {$Path: 'status'},
         //     'SUBMITTED'
@@ -120,7 +107,6 @@ annotate service.Content with @UI.LineItem: [
             {$Path: 'canApprove'}
         ]}}},
         InvocationGrouping: #Isolated,
-
     },
     {
         $Type                : 'UI.DataFieldForAction',
@@ -128,7 +114,7 @@ annotate service.Content with @UI.LineItem: [
         IconUrl              : 'sap-icon://delete',
         Inline               : true,
         Label                : 'Delete',
-        ![@HTML5.CssDefaults]: {width: 'auto'},
+        @HTML5.CssDefaults: {width: '5rem'},
         ![@UI.Hidden]        : {$edmJson: {$Not: {$Path: 'canDelete'}}},
         // ![@UI.Hidden]        : {$edmJson: {$Not: {$And: [
         //     {$Eq: [
@@ -229,7 +215,6 @@ annotate service.Content with @(
 
 annotate service.Content with {
     mediaType @Common.Label: 'Media Type';
-    fileName  @Common.Label: 'File Name';
 };
 
 annotate service.Content with {
