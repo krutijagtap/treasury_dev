@@ -27,9 +27,9 @@
     },
     "crossNavigation": {
       "inbounds": {
-        "content-display": {
-          "semanticObject": "content",
-          "action": "display",
+        "embedding-upload": {
+          "semanticObject": "embedding",
+          "action": "upload",
           "title": "Content Ingestion",
           "signature": {
             "parameters": {},
@@ -153,8 +153,8 @@
                     "CustomColumn": {
                       "header": "MetaData",
                       "position": {
-                        "anchor": "DataField::isChecker",
-                        "placement": "After"
+                        "anchor": "DataField::content",
+                        "placement": "Before"
                       },
                       "template": "com.scb.treasury.contentingestion.ext.fragment.CustomColumn"
                     }
