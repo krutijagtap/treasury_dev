@@ -276,7 +276,7 @@ sap.ui.define(
                   await fetch(putUrl, {
                     method: "PUT",
                     headers: {
-                      "Content-Type": fileType,
+                      "Content-Type": oFile.type,
                       "Slug": encodeURIComponent(oFile.name),
                       "X-CSRF-Token": csrf
                     },
