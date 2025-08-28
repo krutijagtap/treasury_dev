@@ -19,11 +19,12 @@
                 id="__fileUploader" 
                 width="300px"
                 tooltip="Choose file to be uploaded"
-                maximumFileSize='50' 
+                maximumFileSize='20' 
                 fileType="pdf,docx,xlsx"
                 class="sapUiSmallMarginBottom" 
                 change = ".extension.com.scb.treasury.contentingestion.controller.CustomExpandedHeader.onFileChange"
-                typeMissmatch=".extension.com.scb.treasury.contentingestion.controller.CustomExpandedHeader.onTypeMismatch"/>
+                typeMissmatch=".extension.com.scb.treasury.contentingestion.controller.CustomExpandedHeader.onTypeMismatch"
+                fileSizeExceed=".extension.com.scb.treasury.contentingestion.controller.CustomExpandedHeader.onSizeExceed"/>
 
             <HBox alignItems="Center" class="sapUiSmallMarginBottom sapUiTinyMarginTop">
                 <Label text="To be used in:" class="sapUiSmallMarginEnd customLabel" visible="false"/>

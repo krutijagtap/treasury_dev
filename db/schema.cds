@@ -15,6 +15,7 @@ entity Books {
 entity Content : managed {
       @UI.AdaptationHidden: true
   key ID              : String;
+
       @UI.AdaptationHidden: true
       fileName        : String;
       mediaType       : String;
@@ -44,7 +45,6 @@ entity Content : managed {
 
       @UI.AdaptationHidden: true
       isChecker       : Boolean;
-
 }
 
 entity SummaryFiles : cuid, managed {

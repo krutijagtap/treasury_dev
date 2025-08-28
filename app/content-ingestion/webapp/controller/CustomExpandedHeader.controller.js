@@ -187,6 +187,7 @@ sap.ui.define(
               sap.m.MessageToast.show("Please select a file to upload.");
               return;
             }
+            const fileHash = await this.calculateFileHash(oFile);
 
             //check for duplicate file
             const resDuplicate = await fetch(contentUrl, {
@@ -201,8 +202,8 @@ sap.ui.define(
             var flag;
             if (dupl.value && dupl.value.length > 0) {
               dupl.value.forEach(record => {
-                if (record.fileName == oFile.name) {
-                  MessageBox.warning(`File '${oFile.name}' already exists!`);
+                if (record.ID == fileHash) {
+                  MessageBox.warning(`File already exists!`);
                   flag = true;
                 }
               })
@@ -231,7 +232,6 @@ sap.ui.define(
               if (decision == "REJECTED")
                 return;
               else {
-                const fileHash = await this.calculateFileHash(oFile);
                 const putUrl = baseUrl + "/odata/v4/catalog/Content/" + fileHash + "/content"; ///odata/v4/catalog
 
                 const metadata = json.metadata;

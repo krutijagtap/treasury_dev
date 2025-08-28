@@ -27,9 +27,9 @@
     },
     "crossNavigation": {
       "inbounds": {
-        "content-display": {
-          "semanticObject": "content",
-          "action": "display",
+        "embedding-upload": {
+          "semanticObject": "embedding",
+          "action": "upload",
           "title": "Content Ingestion",
           "signature": {
             "parameters": {},
@@ -151,12 +151,21 @@
                 "@com.sap.vocabularies.UI.v1.LineItem": {
                   "columns": {
                     "CustomColumn": {
-                      "header": "MetaData",
+                      "Label":"Metadata",
                       "position": {
-                        "anchor": "DataField::content",
+                        "anchor": "DataField::isChecker",
+                        "placement": "After"
+                      },
+                      "template": "com.scb.treasury.contentingestion.ext.fragment.CustomColumn",
+                      "width": "5rem"
+                    },
+                    "FileDownload": {
+                      "header": "File Name",
+                      "position": {
+                        "anchor": "DataField::fileType",
                         "placement": "Before"
                       },
-                      "template": "com.scb.treasury.contentingestion.ext.fragment.CustomColumn"
+                      "template": "com.scb.treasury.contentingestion.ext.fragment.FileDownload"
                     }
                   }
                 }

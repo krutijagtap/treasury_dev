@@ -5,7 +5,7 @@ annotate service.Content with @UI.LineItem: [
     {
         $Type                : 'UI.DataField',
         Label                : 'Media Type',
-        Value                : mediaType,
+        Value                : fileType,
         visibleInAdvancedArea: false,
         ![@HTML5.CssDefaults]: {width: 'auto', }
     },
@@ -55,6 +55,16 @@ annotate service.Content with @UI.LineItem: [
     },
     {
         $Type     : 'UI.DataField',
+        Value     : fileName,
+        @UI.Hidden: true
+    },
+    {
+        $Type     : 'UI.DataField',
+        Value     : mediaType,
+        @UI.Hidden: true
+    },
+    {
+        $Type     : 'UI.DataField',
         Value     : url,
         @UI.Hidden: true
     },
@@ -76,7 +86,7 @@ annotate service.Content with @UI.LineItem: [
         Inline            : true,
         Criticality       : #Positive,
         Determining       : true,
-        @title: 'Approve',
+        @title            : 'Approve',
         @HTML5.CssDefaults: {width: '5rem'},
         ![@UI.Hidden]     : {$edmJson: {$Not: {$And: [
             {$Eq: [
@@ -109,21 +119,15 @@ annotate service.Content with @UI.LineItem: [
         InvocationGrouping: #Isolated,
     },
     {
-        $Type                : 'UI.DataFieldForAction',
-        Action               : 'CatalogService.deleteContent',
-        IconUrl              : 'sap-icon://delete',
-        Inline               : true,
-        Label                : 'Delete',
-        @HTML5.CssDefaults: {width: '5rem'},
-        ![@UI.Hidden]        : {$edmJson: {$Not: {$Path: 'canDelete'}}},
-        // ![@UI.Hidden]        : {$edmJson: {$Not: {$And: [
-        //     {$Eq: [
-        //         {$Path: 'status'},
-        //         'SUBMITTED'
-        //     ]},
-        // {$Path: 'isChecker'}
-        // ]}}},
-        InvocationGrouping   : #Isolated
+        $Type                          : 'UI.DataFieldForAction',
+        Action                         : 'CatalogService.deleteContent',
+        IconUrl                        : 'sap-icon://delete',
+        Inline                         : true,
+        Label                          : 'Delete',
+        @HTML5.CssDefaults             : {width: '5rem'},
+        ![@UI.Hidden]                  : {$edmJson: {$Not: {$Path: 'canDelete'}}},
+        InvocationGrouping             : #Isolated,
+        ![@UI.RefreshOnActionExecution]: true
     }
 ];
 
@@ -214,7 +218,7 @@ annotate service.Content with @(
 );
 
 annotate service.Content with {
-    mediaType @Common.Label: 'Media Type';
+    fileType @Common.Label: 'Media Type';
 };
 
 annotate service.Content with {

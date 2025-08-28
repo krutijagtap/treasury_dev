@@ -14,9 +14,10 @@
                                             <Button id="buttonExport" icon="sap-icon://download" type="Transparent" press="onChatExport" tooltip="{i18n>export}" app:message="chatModel>/result" visible="false"/>
                                             </HBox>
                             </FlexBox>
-                            <FlexBox class="responseTextBox response-content" >
+                            <FlexBox class="responseTextBox response-content" fitContainer="true" height="100%" wrap="NoWrap" >
+                            <FormattedText id="textID" htmlText="{chatModel>/result}" class="response-content" visible="false"/>
                           <!-- <core:HTML content="{chatModel>/result}"  class="response-content"></core:HTML> -->
-                          <VBox id="pdfContainer" renderType="Bare" class="stretchBox"/>
+                          <VBox id="pdfContainer" renderType="Bare" class="stretchBox" />
                           <!-- <FormattedText id="pdfContainer" htmlText="{chatModel>/result}" class="response-content" /> -->
 
                              </FlexBox>

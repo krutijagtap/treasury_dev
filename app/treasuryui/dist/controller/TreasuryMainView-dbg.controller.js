@@ -51,7 +51,8 @@ sap.ui.define([
       }
 
       const { jsPDF } = window.jspdf;
-      const userInput = this.getView().getModel("chatModel").getProperty("/userMessage") || "";
+      const userInput =
+        this.getView().getModel("chatModel").getProperty("/userMessage") || "";
 
       const domRef = this.byId("ChatBotResult")?.getDomRef();
       if (!domRef) {
@@ -94,13 +95,24 @@ sap.ui.define([
       userInputBox.appendChild(userInputText);
       wrapper.appendChild(userInputBox);
 
-      // --- Clone Chat Response ---
-      const responseClone = domRef.cloneNode(true);
-      responseClone.style.margin = "0"; // prevent extra spacing
+      // --- Clone Chat Response (unwrap scroll children) ---
+      const responseClone = document.createElement("div");
+      responseClone.style.margin = "0";
+      responseClone.style.width = "100%";
+
+      const children = Array.from(domRef.children);
+      children.forEach((child) => {
+        const cloneChild = child.cloneNode(true);
+        // force expanded content
+        cloneChild.style.maxHeight = "none";
+        cloneChild.style.overflow = "visible";
+        responseClone.appendChild(cloneChild);
+      });
+
       wrapper.appendChild(responseClone);
 
       // --- Wait for DOM to layout ---
-      await new Promise(resolve => requestAnimationFrame(resolve));
+      await new Promise((resolve) => requestAnimationFrame(resolve));
 
       try {
         const canvas = await html2canvas(wrapper, {
@@ -108,7 +120,7 @@ sap.ui.define([
           useCORS: true,
           scrollY: 0,
           windowWidth: wrapper.scrollWidth,
-          height: wrapper.scrollHeight
+          windowHeight: wrapper.scrollHeight,
         });
 
         const imgData = canvas.toDataURL("image/png");
@@ -134,7 +146,6 @@ sap.ui.define([
 
         pdf.save("Finsight_Chat_Export.pdf");
         sap.m.MessageToast.show("PDF exported successfully");
-
       } catch (err) {
         console.error("PDF export failed", err);
         sap.m.MessageToast.show("Failed to export PDF");
@@ -189,9 +200,9 @@ sap.ui.define([
       const isRightPrompt = sInput.includes("File:") && (sInput.includes(".pdf") || sInput.includes(".xlsx") || sInput.includes(".docx"))
       this.byId("buttonCopy").setVisible(true);
       this.byId("buttonExport").setVisible(true);
-      if(!isRightPrompt && !isIntellibase){
-        if(aSelectedItems.length)
-        this.byId("multiCombo").setSelectedKeys();
+      if (!isRightPrompt && !isIntellibase) {
+        if (aSelectedItems.length)
+          this.byId("multiCombo").setSelectedKeys();
         this.byId("chatFeedInput").setValue("");
         MessageBox.error("Please select a file or Ask Intellibase");
         return;
@@ -266,9 +277,9 @@ sap.ui.define([
         MessageBox.error("Please select a file or Ask Intellibase");
         return;
       }
-      if (isIntellibase) { 
+      if (isIntellibase) {
         this.byId("multiCombo").setSelectedKeys();
-        payload = { "message": "user_id:" + bankId + ":" + sInput }; 
+        payload = { "message": "user_id:" + bankId + ":" + sInput };
       }
       else {
         payload = { "message": sInput };
@@ -317,6 +328,8 @@ sap.ui.define([
       var textArea = this.byId("chatFeedInput");
       this.byId("buttonCopy").setVisible(false);
       this.byId("buttonExport").setVisible(false);
+      // this.getView().byId("textID").setVisible(false);
+      // this.getView().byId("pdfContainer").setVisible(true);
       if (aMultiBoxSelectedItems.length > 1 || aMultiBoxSelectedItems.length == 0) {
         MessageBox.error("Please select a single file to Generate Summary.");
         return;
@@ -387,10 +400,10 @@ sap.ui.define([
       const oContainer = this.byId("pdfContainer");
       oContainer.removeAllItems();
 
-      filesArray.forEach(file => {
-        const oPdfViewer = this._createPdfViewer(file.data, file.filename);
-        oContainer.addItem(oPdfViewer);
-      });
+      // filesArray.forEach(file => {
+      const oPdfViewer = this._createPdfViewer(filesArray[2].data, filesArray[2].filename);
+      oContainer.addItem(oPdfViewer);
+      // });
       return oContainer;
     },
 

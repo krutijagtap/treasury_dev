@@ -25,11 +25,12 @@ sap.ui.define(
             this.getView().setModel(oModel, "viewModel");
             this.getView().getModel("viewModel").setProperty("/decision");
           },
-
-        }
-        ,
+        },
         onTypeMismatch: function () {
           MessageBox.error("Only pdf, docx, xlsx files are allowed");
+        },
+        onSizeExceed: function(){
+          MessageBox.error("File too large. Maximum size is 20MB");
         },
         /**
          * Returns the base URL of the Component
@@ -186,6 +187,7 @@ sap.ui.define(
               sap.m.MessageToast.show("Please select a file to upload.");
               return;
             }
+            const fileHash = await this.calculateFileHash(oFile);
 
             //check for duplicate file
             const resDuplicate = await fetch(contentUrl, {
@@ -200,16 +202,14 @@ sap.ui.define(
             var flag;
             if (dupl.value && dupl.value.length > 0) {
               dupl.value.forEach(record => {
-                if (record.fileName == oFile.name) {
-                  MessageBox.warning(`File '${oFile.name}' already exists!`);
+                if (record.ID == fileHash) {
+                  MessageBox.warning(`File already exists!`);
                   flag = true;
                 }
               })
               if (flag)
                 return;
             }
-
-            sap.m.MessageToast.show("opening dialog box");
             // get the API response
             const responseAPI = await fetch(chatUrl, {
               method: "POST",
@@ -219,10 +219,12 @@ sap.ui.define(
               body: formData
             });
             if (!responseAPI.ok) {
-              sap.m.MessageToast.show(responseAPI.message);
+              const res = await responseAPI.json();
+              sap.m.MessageToast.show(res.message);
               return;
             }
             const json = await responseAPI.json();
+            sap.m.MessageToast.show("opening dialog box");
             const dialog = await this.onOpenDialog(json);
             const decision = json.metadata.processing_decision;
             this.getView().getModel("viewModel").setProperty("/decision", decision)
@@ -230,7 +232,6 @@ sap.ui.define(
               if (decision == "REJECTED")
                 return;
               else {
-                const fileHash = await this.calculateFileHash(oFile);
                 const putUrl = baseUrl + "/odata/v4/catalog/Content/" + fileHash + "/content"; ///odata/v4/catalog
 
                 const metadata = json.metadata;
@@ -275,7 +276,7 @@ sap.ui.define(
                   await fetch(putUrl, {
                     method: "PUT",
                     headers: {
-                      "Content-Type": fileType,
+                      "Content-Type": oFile.type,
                       "Slug": encodeURIComponent(oFile.name),
                       "X-CSRF-Token": csrf
                     },

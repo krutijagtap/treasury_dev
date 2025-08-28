@@ -19,28 +19,29 @@ service CatalogService {
             *,
 
             metaData,
-            @UI.Hidden: true
+            @UI.Hidden      : true
             @UI.HiddenFilter: true
             virtual canApprove : Boolean @Core.Computed,
-            @UI.Hidden: true
+            @UI.Hidden      : true
             @UI.HiddenFilter: true
-            virtual canDelete : Boolean @Core.Computed
+            virtual canDelete  : Boolean @Core.Computed,
+            virtual fileType : String @Core.Computed
         }
         actions {
             @cds.odata.bindingparameter.name  : '_it'
             @sap.fe.core.RefreshAfterExecution: true
-            @Common.IsActionCritical : true
+            @Common.IsActionCritical          : true
             action approveContent() returns Content;
 
             @cds.odata.bindingparameter.name  : '_it'
             @sap.fe.core.RefreshAfterExecution: true
-            @Common.IsActionCritical : true
+            @Common.IsActionCritical          : true
             action rejectContent()  returns Content;
 
             @cds.odata.bindingparameter.name  : '_it'
             @sap.fe.core.RefreshAfterExecution: true
-            @Common.IsActionCritical : true
-            action deleteContent()  returns Boolean;
+            @Common.IsActionCritical          : true
+            action deleteContent()  returns Content;
 
             @cds.odata.bindingparameter.name  : '_it'
             @sap.fe.core.RefreshAfterExecution: true
@@ -53,8 +54,8 @@ service CatalogService {
     entity EmbeddingStatus  as projection on treasury.EmbeddingStatus;
     entity TagTypes         as projection on treasury.TagTypes;
     entity ActionVisibility as projection on treasury.ActionVisibility;
-    action createContent(initialData : String) returns String;
-    action chatResponse(prompt : String)       returns String;
+    action createContent(initialData: String) returns String;
+    action chatResponse(prompt: String)       returns String;
 //action showMetaData() returns String;
 // action showMetaData() for MetaDataForFiles;
 

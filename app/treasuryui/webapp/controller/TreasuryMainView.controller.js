@@ -49,7 +49,10 @@ sap.ui.define([
         sap.m.MessageToast.show("Required libraries not loaded.");
         return;
       }
+
       const { jsPDF } = window.jspdf;
+      const userInput =
+        this.getView().getModel("chatModel").getProperty("/userMessage") || "";
 
       const domRef = this.byId("ChatBotResult")?.getDomRef();
       if (!domRef) {
@@ -57,25 +60,59 @@ sap.ui.define([
         return;
       }
 
-      // Build an export root off-screen (so layout == natural, no app constraints)
+      // --- Create hidden container ---
       const wrapper = document.createElement("div");
-      wrapper.className = "pdf-export-root";
-      wrapper.style.width = "794px";          // ~A4 width @ 96dpi
+      wrapper.style.width = "794px"; // A4 width in px at 96 DPI
       wrapper.style.padding = "20px";
       wrapper.style.background = "#fff";
       wrapper.style.fontFamily = "Arial, sans-serif";
       wrapper.style.position = "absolute";
       wrapper.style.top = "0";
-      wrapper.style.left = "-99999px";
-
-      // (Optional) prepend your "USER INPUT" header here as you had before…
-      // Then append a deep clone of the card/body
-      const contentClone = domRef.cloneNode(true);
-      wrapper.appendChild(contentClone);
+      wrapper.style.left = "-9999px";
       document.body.appendChild(wrapper);
 
-      // Wait one frame for layout
-      await new Promise(r => requestAnimationFrame(r));
+      // --- User Input Section ---
+      const userInputBox = document.createElement("div");
+      userInputBox.style.background = "linear-gradient(to right, #e8f0ff, #f2f6fd)";
+      userInputBox.style.padding = "16px 24px";
+      userInputBox.style.borderRadius = "8px";
+      userInputBox.style.marginBottom = "24px";
+      userInputBox.style.border = "1px solid #cdddfb";
+
+      const headerText = document.createElement("div");
+      headerText.textContent = "USER INPUT";
+      headerText.style.fontSize = "18px";
+      headerText.style.fontWeight = "bold";
+      headerText.style.color = "#1a73e8";
+      headerText.style.marginBottom = "8px";
+
+      const userInputText = document.createElement("div");
+      userInputText.textContent = userInput;
+      userInputText.style.fontSize = "14px";
+      userInputText.style.color = "#333";
+
+      userInputBox.appendChild(headerText);
+      userInputBox.appendChild(userInputText);
+      wrapper.appendChild(userInputBox);
+
+      // --- Clone Chat Response (unwrap scroll children) ---
+      const responseClone = document.createElement("div");
+      responseClone.style.margin = "0";
+      responseClone.style.width = "100%";
+
+      const children = Array.from(domRef.children);
+      children.forEach((child) => {
+        const cloneChild = child.cloneNode(true);
+        // force expanded content
+        cloneChild.style.maxHeight = "none";
+        cloneChild.style.overflow = "visible";
+        responseClone.appendChild(cloneChild);
+      });
+
+      wrapper.appendChild(responseClone);
+
+      // --- Wait for DOM to layout ---
+      await new Promise((resolve) => requestAnimationFrame(resolve));
 
       try {
         const canvas = await html2canvas(wrapper, {
@@ -83,68 +120,34 @@ sap.ui.define([
           useCORS: true,
           scrollY: 0,
           windowWidth: wrapper.scrollWidth,
-
-          // <-- The important part: expand any scrollable areas in the cloned DOM
-          onclone: (clonedDoc) => {
-            const root = clonedDoc.querySelector(".pdf-export-root");
-            if (!root) return;
-
-            // Remove clipping/scrolling/transform/sticky which cause partial rendering
-            const v = clonedDoc.defaultView;
-            root.querySelectorAll("*").forEach(el => {
-              const cs = v.getComputedStyle(el);
-
-              // Expand scrollers & clipped boxes
-              if (/(auto|scroll|hidden)/.test(cs.overflow) || /(auto|scroll|hidden)/.test(cs.overflowY)) {
-                el.style.overflow = "visible";
-                el.style.overflowY = "visible";
-                el.style.overflowX = "visible";
-                el.style.maxHeight = "none";
-                el.style.height = "auto";
-                el.style.maxWidth = cs.maxWidth === "none" ? "none" : cs.maxWidth;
-              }
-
-              // Avoid sticky headers or fixed toolbars pinning over content
-              if (cs.position === "sticky" || cs.position === "fixed") {
-                el.style.position = "static";
-                el.style.top = "auto";
-              }
-
-              // CSS transforms can change painting bounds (crop). Neutralize.
-              if (cs.transform !== "none") {
-                el.style.transform = "none";
-              }
-
-              // Make sure hidden details are expanded if your UI uses collapsers
-              if (cs.display === "none" && el.childElementCount > 0) {
-                el.style.display = "block";
-              }
-            });
-          }
+          windowHeight: wrapper.scrollHeight,
         });
 
         const imgData = canvas.toDataURL("image/png");
         const pdf = new jsPDF("p", "pt", "a4");
-        const pdfW = pdf.internal.pageSize.getWidth();
-        const pdfH = pdf.internal.pageSize.getHeight();
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
 
-        const imgW = pdfW;
-        const imgH = canvas.height * (pdfW / canvas.width);
+        const imgWidth = pdfWidth;
+        const imgHeight = (canvas.height * pdfWidth) / canvas.width;
 
-        // Slice the tall image across pages by shifting Y upwards
-        let yShift = 0;
-        pdf.addImage(imgData, "PNG", 0, -yShift, imgW, imgH);
+        let heightLeft = imgHeight;
+        let position = 0;
 
-        while (yShift + pdfH < imgH - 1) {
-          yShift += pdfH;
+        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+        heightLeft -= pdfHeight;
+
+        while (heightLeft > 0) {
+          position -= pdfHeight;
           pdf.addPage();
-          pdf.addImage(imgData, "PNG", 0, -yShift, imgW, imgH);
+          pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+          heightLeft -= pdfHeight;
         }
 
         pdf.save("Finsight_Chat_Export.pdf");
         sap.m.MessageToast.show("PDF exported successfully");
-      } catch (e) {
-        console.error("PDF export failed", e);
+      } catch (err) {
+        console.error("PDF export failed", err);
         sap.m.MessageToast.show("Failed to export PDF");
       } finally {
         document.body.removeChild(wrapper);
@@ -325,6 +328,8 @@ sap.ui.define([
       var textArea = this.byId("chatFeedInput");
       this.byId("buttonCopy").setVisible(false);
       this.byId("buttonExport").setVisible(false);
+      // this.getView().byId("textID").setVisible(false);
+      // this.getView().byId("pdfContainer").setVisible(true);
       if (aMultiBoxSelectedItems.length > 1 || aMultiBoxSelectedItems.length == 0) {
         MessageBox.error("Please select a single file to Generate Summary.");
         return;

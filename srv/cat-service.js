@@ -19,6 +19,32 @@ module.exports = cds.service.impl(async function () {
 
   });
 
+  this.on("READ", "Content", async (req, next) => {
+    const result = await next();
+
+    // Ensure mediaType is fetched even if frontend didn’t request
+    const ids = result.map(r => r.ID);
+    if (ids.length) {
+      const mediaTypes = await SELECT.from(Content)
+        .columns("ID", "mediaType")
+        .where({ ID: { in: ids } });
+
+      const lookup = Object.fromEntries(mediaTypes.map(r => [r.ID, r.mediaType]));
+
+      result.forEach(r => {
+        const mt = lookup[r.ID];
+        if (mt) {
+          if (mt.includes("pdf")) r.fileType = "PDF";
+          else if (mt.includes("sheet") || mt.includes("excel")) r.fileType = "Excel";
+          else if (mt.includes("word")) r.fileType = "Document/Word";
+          else r.fileType = "Other";
+        }
+      });
+    }
+    return result;
+  });
+
+
   //-------------------------------------------------------------
   //    Authorization check based on user logged in
   //-------------------------------------------------------------
@@ -117,8 +143,8 @@ module.exports = cds.service.impl(async function () {
     // if user is maker - he can't approve his own file
     const ownFile = oneFile.createdBy === req.user.id;
     const timeout = setTimeout(() => {
-        controller.abort(); // Aborts the request after 90s
-      }, 90000);
+      controller.abort(); // Aborts the request after 90s
+    }, 90000);
 
     if (ownFile) {
       req.reject(400, 'You cannot Approve files that are created by you');
@@ -226,7 +252,7 @@ module.exports = cds.service.impl(async function () {
 
 
   this.on("deleteContent", async (req) => {
-    const ID = req.params[0].ID;
+    const { ID } = req.params[0];
     try {
       const file = await cds.run(
         SELECT.one.from(Content).where({ ID: ID })
@@ -257,9 +283,9 @@ module.exports = cds.service.impl(async function () {
       await DELETE.from(Content).where({ ID: ID });
       // const table = await SELECT.from(Content);
       req.info(response.data.message);
-      return true;
+      return { ID };
     } catch (error) {
-      console.log("Failed in getting embeddings due to: " + error);
+      console.log("Error in delete files API: " + error);
     }
   });
 

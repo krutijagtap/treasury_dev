@@ -10,7 +10,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function (JSONModel) {
     userMessage : "",
     placeHolder : "Get Started by choosing your file or entering a query to Intellibase",
     busyText:"",
-    result:      "",
+    result:"",
     maker: true,
     checker: true,
   

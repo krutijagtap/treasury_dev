@@ -58,7 +58,6 @@
             "joe": {
               "roles": [
                 "ContentMaker",
-                "ContentChecker",
                 "Viewer"
               ]
             },
