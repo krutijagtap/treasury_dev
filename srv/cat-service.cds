@@ -24,8 +24,7 @@ service CatalogService {
             virtual canApprove : Boolean @Core.Computed,
             @UI.Hidden      : true
             @UI.HiddenFilter: true
-            virtual canDelete  : Boolean @Core.Computed,
-            virtual fileType : String @Core.Computed
+            virtual canDelete  : Boolean @Core.Computed
         }
         actions {
             @cds.odata.bindingparameter.name  : '_it'

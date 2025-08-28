@@ -5,7 +5,7 @@ annotate service.Content with @UI.LineItem: [
     {
         $Type                : 'UI.DataField',
         Label                : 'Media Type',
-        Value                : fileType,
+        Value                : mediaType,
         visibleInAdvancedArea: false,
         ![@HTML5.CssDefaults]: {width: 'auto', }
     },
@@ -56,11 +56,6 @@ annotate service.Content with @UI.LineItem: [
     {
         $Type     : 'UI.DataField',
         Value     : fileName,
-        @UI.Hidden: true
-    },
-    {
-        $Type     : 'UI.DataField',
-        Value     : mediaType,
         @UI.Hidden: true
     },
     {
@@ -218,7 +213,7 @@ annotate service.Content with @(
 );
 
 annotate service.Content with {
-    fileType @Common.Label: 'Media Type';
+    mediaType @Common.Label: 'Media Type';
 };
 
 annotate service.Content with {

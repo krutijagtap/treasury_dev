@@ -19,30 +19,30 @@ module.exports = cds.service.impl(async function () {
 
   });
 
-  this.on("READ", "Content", async (req, next) => {
-    const result = await next();
+  // this.on("READ", "Content", async (req, next) => {
+  //   const result = await next();
 
-    // Ensure mediaType is fetched even if frontend didn’t request
-    const ids = result.map(r => r.ID);
-    if (ids.length) {
-      const mediaTypes = await SELECT.from(Content)
-        .columns("ID", "mediaType")
-        .where({ ID: { in: ids } });
+  //   // Ensure mediaType is fetched even if frontend didn’t request
+  //   const ids = result.map(r => r.ID);
+  //   if (ids.length) {
+  //     const mediaTypes = await SELECT.from(Content)
+  //       .columns("ID", "mediaType")
+  //       .where({ ID: { in: ids } });
 
-      const lookup = Object.fromEntries(mediaTypes.map(r => [r.ID, r.mediaType]));
+  //     const lookup = Object.fromEntries(mediaTypes.map(r => [r.ID, r.mediaType]));
 
-      result.forEach(r => {
-        const mt = lookup[r.ID];
-        if (mt) {
-          if (mt.includes("pdf")) r.fileType = "PDF";
-          else if (mt.includes("sheet") || mt.includes("excel")) r.fileType = "Excel";
-          else if (mt.includes("word")) r.fileType = "Document/Word";
-          else r.fileType = "Other";
-        }
-      });
-    }
-    return result;
-  });
+  //     result.forEach(r => {
+  //       const mt = lookup[r.ID];
+  //       if (mt) {
+  //         if (mt.includes("pdf")) r.fileType = "PDF";
+  //         else if (mt.includes("sheet") || mt.includes("excel")) r.fileType = "Excel";
+  //         else if (mt.includes("word")) r.fileType = "Document/Word";
+  //         else r.fileType = "Other";
+  //       }
+  //     });
+  //   }
+  //   return result;
+  // });
 
 
   //-------------------------------------------------------------

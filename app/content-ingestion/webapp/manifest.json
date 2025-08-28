@@ -151,7 +151,7 @@
                 "@com.sap.vocabularies.UI.v1.LineItem": {
                   "columns": {
                     "CustomColumn": {
-                      "Label":"Metadata",
+                      "Label": "Metadata",
                       "position": {
                         "anchor": "DataField::isChecker",
                         "placement": "After"
@@ -162,7 +162,7 @@
                     "FileDownload": {
                       "header": "File Name",
                       "position": {
-                        "anchor": "DataField::fileType",
+                        "anchor": "DataField::mediaType",
                         "placement": "Before"
                       },
                       "template": "com.scb.treasury.contentingestion.ext.fragment.FileDownload"
