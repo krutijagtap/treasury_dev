@@ -229,6 +229,9 @@ sap.ui.define([
       oView.setBusy(true);
 
       await Promise.resolve();
+      this.getView().getModel("chatModel").setProperty("/result", "");
+      this.getView().byId("htmlContent").setVisible(true);
+      this.getView().byId("pdfContainer").setVisible(false);
 
       try {
         const resp = await this.onfetchData(sInput, isValid, isIntellibase);
@@ -301,22 +304,31 @@ sap.ui.define([
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-        var sResponse;
+        // var sResponse;
         if (isIntellibase) {
-          sResponse = data.FINAL_RESULT + "<h3>SQL Query Used:</h3>" +
-            "<pre style='font-family: monospace; white-space: pre-wrap;'>" +
-            data.SQL_QUERY + "</pre>";
+          var sCombinedHtml =
+            data.FINAL_RESULT +
+            "<div style='margin-top:1rem; font-family: monospace; white-space: pre-wrap;'>" +
+            "<strong>SQL Query:</strong><br/>" +
+            data.SQL_QUERY +
+            "</div>";
+          return sCombinedHtml;
         }
-        else {
-          sResponse = data.FINAL_RESULT;
-        }
-        const oHtml = new sap.m.FormattedText({
-          htmlText: sResponse
-        });
-        oContainer.addItem(oHtml);
-        // oContainer.addItem(sResponseQuery);
-        console.log("API Response:", sResponse);
-        return oContainer;
+        //   sResponse = data.FINAL_RESULT + "<h3>SQL Query Used:</h3>" +
+        //     "<pre style='font-family: monospace; white-space: pre-wrap;'>" +
+        //     data.SQL_QUERY + "</pre>";
+        // }
+        // else {
+        //   sResponse = data.FINAL_RESULT;
+        // }
+        // const oHtml = new sap.m.FormattedText({
+        //   htmlText: sResponse
+        // });
+        // oContainer.addItem(oHtml);
+        // // oContainer.addItem(sResponseQuery);
+        // console.log("API Response:", sResponse);
+        else
+        return data.FINAL_RESULT;
       } catch (err) {
         console.log("inside catch of askFinsight", err);
       }
@@ -328,8 +340,6 @@ sap.ui.define([
       var textArea = this.byId("chatFeedInput");
       this.byId("buttonCopy").setVisible(false);
       this.byId("buttonExport").setVisible(false);
-      // this.getView().byId("textID").setVisible(false);
-      // this.getView().byId("pdfContainer").setVisible(true);
       if (aMultiBoxSelectedItems.length > 1 || aMultiBoxSelectedItems.length == 0) {
         MessageBox.error("Please select a single file to Generate Summary.");
         return;
@@ -337,6 +347,8 @@ sap.ui.define([
       var oSelectedFile = aMultiBoxSelectedItems[0].getText(); // or .getKey() depending on your binding
       // MessageBox.success("Proceeding with file: ", oSelectedFile);
       textArea.setValue(`Research Summary: ${oSelectedFile}`)
+      this.getView().byId("htmlContent").setVisible(false);
+      this.getView().byId("pdfContainer").setVisible(true);
       this._callSummaryApi("Research Summary: C-PressRelease-2Q25.pdf", oSelectedFile);
     },
     getBaseUrl: function () {

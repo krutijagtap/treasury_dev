@@ -16,8 +16,8 @@
                             </FlexBox>
                             <FlexBox class="responseTextBox response-content" fitContainer="true" height="100%" wrap="NoWrap" >
                             <FormattedText id="textID" htmlText="{chatModel>/result}" class="response-content" visible="false"/>
-                          <!-- <core:HTML content="{chatModel>/result}"  class="response-content"></core:HTML> -->
-                          <VBox id="pdfContainer" renderType="Bare" class="stretchBox" />
+                          <core:HTML id="htmlContent" content="{chatModel>/result}"  class="response-content" visible="false"></core:HTML>
+                          <VBox id="pdfContainer" renderType="Bare" class="stretchBox" visible="false"/>
                           <!-- <FormattedText id="pdfContainer" htmlText="{chatModel>/result}" class="response-content" /> -->
 
                              </FlexBox>

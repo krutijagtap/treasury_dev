@@ -11,7 +11,7 @@ sap.ui.define([
             const fileID = ctx.getProperty("ID");
 
             //  Confirmation before delete
-            MessageBox.confirm("Perform this action?", {
+            MessageBox.confirm("Do you want to delete this file?", {
                 actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
                 emphasizedAction: MessageBox.Action.OK,
                 onClose: async (sAction) => {
