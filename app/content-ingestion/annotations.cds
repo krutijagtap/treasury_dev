@@ -112,18 +112,18 @@ annotate service.Content with @UI.LineItem: [
             {$Path: 'canApprove'}
         ]}}},
         InvocationGrouping: #Isolated,
-    },
-    {
-        $Type                          : 'UI.DataFieldForAction',
-        Action                         : 'CatalogService.deleteContent',
-        IconUrl                        : 'sap-icon://delete',
-        Inline                         : true,
-        Label                          : 'Delete',
-        @HTML5.CssDefaults             : {width: '5rem'},
-        ![@UI.Hidden]                  : {$edmJson: {$Not: {$Path: 'canDelete'}}},
-        InvocationGrouping             : #Isolated,
-        ![@UI.RefreshOnActionExecution]: true
     }
+    // {
+    //     $Type                          : 'UI.DataFieldForAction',
+    //     Action                         : 'CatalogService.deleteContent',
+    //     IconUrl                        : 'sap-icon://delete',
+    //     Inline                         : true,
+    //     Label                          : 'Delete',
+    //     @HTML5.CssDefaults             : {width: '5rem'},
+    //     ![@UI.Hidden]                  : {$edmJson: {$Not: {$Path: 'canDelete'}}},
+    //     InvocationGrouping             : #Isolated,
+    //     ![@UI.RefreshOnActionExecution]: true
+    // }
 ];
 
 annotate service.Content with @(

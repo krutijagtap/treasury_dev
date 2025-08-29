@@ -203,7 +203,8 @@ sap.ui.define(
             if (dupl.value && dupl.value.length > 0) {
               dupl.value.forEach(record => {
                 if (record.ID == fileHash) {
-                  MessageBox.warning(`File already exists!`);
+                  MessageBox.error(`File already exists!`);
+                  oFileUploader.setValueState("None");
                   flag = true;
                 }
               })

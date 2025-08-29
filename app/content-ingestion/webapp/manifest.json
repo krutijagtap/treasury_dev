@@ -150,14 +150,15 @@
                 },
                 "@com.sap.vocabularies.UI.v1.LineItem": {
                   "columns": {
-                    "CustomColumn": {
+                    "Metadata": {
                       "Label": "Metadata",
                       "position": {
                         "anchor": "DataField::isChecker",
                         "placement": "After"
                       },
-                      "template": "com.scb.treasury.contentingestion.ext.fragment.CustomColumn",
-                      "width": "5rem"
+                      "template": "com.scb.treasury.contentingestion.ext.fragment.Metadata",
+                      "width": "5rem",
+                      "horizontalAlign": "Center"
                     },
                     "FileDownload": {
                       "header": "File Name",
@@ -166,6 +167,16 @@
                         "placement": "Before"
                       },
                       "template": "com.scb.treasury.contentingestion.ext.fragment.FileDownload"
+                    },
+                    "Delete": {
+                      "header": " ",
+                      "position": {
+                        "anchor": "DataFieldForAction::CatalogService.deleteContent",
+                        "placement": "After"
+                      },
+                      "template": "com.scb.treasury.contentingestion.ext.fragment.Delete",
+                      "width": "5rem",
+                      "horizontalAlign": "Center"
                     }
                   }
                 }
