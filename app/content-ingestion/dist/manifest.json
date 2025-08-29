@@ -151,7 +151,7 @@
                 "@com.sap.vocabularies.UI.v1.LineItem": {
                   "columns": {
                     "Metadata": {
-                      "Label": "Metadata",
+                      "label": "Metadata",
                       "position": {
                         "anchor": "DataField::isChecker",
                         "placement": "After"
@@ -162,14 +162,18 @@
                     },
                     "FileDownload": {
                       "header": "File Name",
+                      "label": "File Name",
                       "position": {
                         "anchor": "DataField::mediaType",
                         "placement": "Before"
                       },
-                      "template": "com.scb.treasury.contentingestion.ext.fragment.FileDownload"
+                      "template": "com.scb.treasury.contentingestion.ext.fragment.FileDownload",
+                      "properties": [
+                        "fileName"
+                      ]
                     },
                     "Delete": {
-                      "header": " ",
+                      "label": "Delete",
                       "position": {
                         "anchor": "DataFieldForAction::CatalogService.deleteContent",
                         "placement": "After"
