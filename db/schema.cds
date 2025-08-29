@@ -17,6 +17,7 @@ entity Content : managed {
   key ID              : String;
 
       @UI.AdaptationHidden: true
+      @Common.Label : 'File Name'
       fileName        : String;
       mediaType       : String;
 
