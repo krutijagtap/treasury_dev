@@ -194,7 +194,7 @@ module.exports = cds.service.impl(async function () {
               status: "COMPLETED"
             });
             console.log("Embeddings generated successfully")
-            req.info(responseEmbeddings.data.message);
+            req.info("File approved and available for QnA and Summarization");
             return await SELECT.one.from(Content).where({ ID });
             // return ("Embeddings generated successfully");
           }
