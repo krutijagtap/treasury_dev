@@ -229,7 +229,6 @@ sap.ui.define([
       oView.setBusy(true);
 
       await Promise.resolve();
-      this.getView().getModel("chatModel").setProperty("/result", "");
       this.getView().byId("htmlContent").setVisible(true);
       this.getView().byId("pdfContainer").setVisible(false);
 
