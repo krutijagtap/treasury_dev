@@ -177,17 +177,6 @@ sap.ui.define([
       this.byId("chatFeedInput").setValue(sFormattedPrompt);
     },
 
-    // userlivechange: function(){
-    //   const sInput = this.byId("chatFeedInput").getValue();
-    //   var aSelectedItems = this.byId("multiCombo").getSelectedItems();
-    //   const isIntellibase = sInput.toLowerCase().includes("intellibase");
-    //   if(!sInput.includes("File:") && !isIntellibase){
-    //     if(aSelectedItems.length)
-    //     this.byId("multiCombo").setSelectedKeys();
-    //     this.byId("chatFeedInput").setValue("");
-    //     MessageBox.error("Please select a file or Ask Intellibase");
-    //   }
-    // },
     onUserChat: async function () {
       const chatModel = this.getOwnerComponent().getModel("chatModel");
       const oView = this.getView();
@@ -303,35 +292,28 @@ sap.ui.define([
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-        // var sResponse;
+        const isHTMlString = data.FINAL_RESULT === "string" && /<[^>]+>/.test(data.FINAL_RESULT);
+        var finalres;
+        if (!isHTMlString) {
+          finalres = `<p style="color:red;">${data.FINAL_RESULT}</p>` 
+        }
+        else
+          finalres = data.FINAL_RESULT;
+
         if (isIntellibase) {
           var sCombinedHtml =
-            data.FINAL_RESULT +
+            finalres +
             "<div style='margin-top:1rem; font-family: monospace; white-space: pre-wrap;'>" +
             "<strong>SQL Query:</strong><br/>" +
             data.SQL_QUERY +
             "</div>";
           return sCombinedHtml;
         }
-        //   sResponse = data.FINAL_RESULT + "<h3>SQL Query Used:</h3>" +
-        //     "<pre style='font-family: monospace; white-space: pre-wrap;'>" +
-        //     data.SQL_QUERY + "</pre>";
-        // }
-        // else {
-        //   sResponse = data.FINAL_RESULT;
-        // }
-        // const oHtml = new sap.m.FormattedText({
-        //   htmlText: sResponse
-        // });
-        // oContainer.addItem(oHtml);
-        // // oContainer.addItem(sResponseQuery);
-        // console.log("API Response:", sResponse);
         else
-        return data.FINAL_RESULT;
+          return finalres;
       } catch (err) {
         console.log("inside catch of askFinsight", err);
       }
-
     },
 
     onGenerateSummary: async function (oEvent) {
@@ -348,7 +330,7 @@ sap.ui.define([
       textArea.setValue(`Research Summary: ${oSelectedFile}`)
       this.getView().byId("htmlContent").setVisible(false);
       this.getView().byId("pdfContainer").setVisible(true);
-      this._callSummaryApi("Research Summary: C-PressRelease-2Q25.pdf", oSelectedFile);
+      this._callSummaryApi(oSelectedFile);
     },
     getBaseUrl: function () {
       return sap.ui.require.toUrl('treasuryui');
@@ -365,7 +347,7 @@ sap.ui.define([
       const token = response.headers.get("X-CSRF-Token");
       return token;
     },
-    _callSummaryApi: async function (promptMessage, oSelectedFile) {
+    _callSummaryApi: async function (oSelectedFile) {
       const oBusy = new BusyDialog({ text: "Fetching summary..." });
       oBusy.open();
       // var url = "https://standard-chartered-bank-core-foundational-12982zqn-genai839893a.cfapps.ap11.hana.ondemand.com/api/chat"  
@@ -395,7 +377,6 @@ sap.ui.define([
         const json = await response.json();
         if (json.success && Array.isArray(json.summary_files)) {
           var res = this._displayPdfFiles(json.summary_files);
-          oBusy.close();
           chatModel.setResult(res);
           chatModel.setvisibleResult(true);
           return res;
@@ -404,6 +385,8 @@ sap.ui.define([
         }
       } catch (err) {
         console.log("inside catch of generate summary", err);
+      } finally {
+        oBusy.close();
       }
     },
 
@@ -412,7 +395,7 @@ sap.ui.define([
       oContainer.removeAllItems();
 
       // filesArray.forEach(file => {
-      const oPdfViewer = this._createPdfViewer(filesArray[2].data, filesArray[2].filename);
+      const oPdfViewer = this._createPdfViewer(filesArray[0].data, filesArray[0].filename);
       oContainer.addItem(oPdfViewer);
       // });
       return oContainer;

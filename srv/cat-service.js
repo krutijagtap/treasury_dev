@@ -132,101 +132,114 @@ module.exports = cds.service.impl(async function () {
     });
   }
 
+  // helper to enforce timeout
+  function withTimeout(promise, ms, msg = "Request timed out") {
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error(msg)), ms);
+      promise
+        .then((res) => {
+          clearTimeout(timer);
+          resolve(res);
+        })
+        .catch((err) => {
+          clearTimeout(timer);
+          reject(err);
+        });
+    });
+  }
+
   this.on("approveContent", async (req) => {
     const ID = req.params[0].ID;
-    const destination = await getDestination({ destinationName: 'Treasurybackend' });
+    const destination = await getDestination({ destinationName: "Treasurybackend" });
+
     const oneFile = await SELECT.one
       .from(Content)
-      .columns('fileName', 'mediaType', 'content', 'createdBy')
+      .columns("fileName", "mediaType", "content", "createdBy")
       .where({ ID });
-    //check user role - checker can approve any file
-    // if user is maker - he can't approve his own file
-    const ownFile = oneFile.createdBy === req.user.id;
-    const timeout = setTimeout(() => {
-      controller.abort(); // Aborts the request after 90s
-    }, 90000);
 
-    if (ownFile) {
-      req.reject(400, 'You cannot Approve files that are created by you');
+    // role check
+    if (oneFile.createdBy === req.user.id) {
+      return req.reject(400, "You cannot approve files that are created by you");
     }
-    //check if file content exists
+
     if (!oneFile?.content) {
-      return req.reject(404, 'File content not found.');
+      return req.reject(404, "File content not found.");
     }
 
     const buffer = await streamToBuffer(oneFile.content);
-    // Create a buffer for form-data
     const formData = new FormData();
     formData.append("file", buffer, {
       filename: oneFile.fileName,
-      contentType: oneFile.mediaType
+      contentType: oneFile.mediaType,
     });
-    console.log("form Data", formData)
 
-    //Call API to create Embeddings
     try {
-      //check for approved-file-upload
-      const responseFileUpload = await axios.post(`${destination.url}/api/approved-file-upload`, formData, {
-        headers: {
-          ...formData.getHeaders(),
-          Authorization: `Bearer ${destination.authTokens?.[0]?.value}`,
-        }
-      });
-      clearTimeout(timeout);
-      console.log("upload response:", responseFileUpload)
-
-      if (responseFileUpload.status == 200) {
-        if (responseFileUpload.data.success) {
-          const responseEmbeddings = await axios.post(
-            `${destination.url}/api/generate-embeddings`,
-            { filename: oneFile.fileName },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${destination.authTokens?.[0]?.value}`
-              }
+      // wrapping logic in timeout 90sec
+      return await withTimeout(
+        (async () => {
+          //check for approved-file-upload
+          const responseFileUpload = await axios.post(`${destination.url}/api/approved-file-upload`, formData, {
+            headers: {
+              ...formData.getHeaders(),
+              Authorization: `Bearer ${destination.authTokens?.[0]?.value}`,
             }
-          );
-          clearTimeout(timeout);
-          console.log("Embeddings Response:", responseEmbeddings)
-          if (responseEmbeddings.data.success) {
-            await UPDATE(Content, ID).with({
-              status: "COMPLETED"
-            });
-            console.log("Embeddings generated successfully")
-            req.info("File approved and available for QnA and Summarization");
-            return await SELECT.one.from(Content).where({ ID });
-            // return ("Embeddings generated successfully");
-          }
-          else
+          });
+          console.log("upload response:", responseFileUpload)
+
+          if (responseFileUpload.status == 200) {
+            if (responseFileUpload.data.success) {
+              const responseEmbeddings = await axios.post(
+                `${destination.url}/api/generate-embeddings`,
+                { filename: oneFile.fileName },
+                {
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${destination.authTokens?.[0]?.value}`
+                  }
+                }
+              );
+              console.log("Embeddings Response:", responseEmbeddings)
+              if (responseEmbeddings.data.success) {
+                await UPDATE(Content, ID).with({
+                  status: "COMPLETED"
+                });
+                console.log("Embeddings generated successfully")
+                req.info("File approved and available for QnA and Summarization");
+                return await SELECT.one.from(Content).where({ ID });
+                // return ("Embeddings generated successfully");
+              }
+              else
+                throw new Error(`Embedding API failed with status ${responseFileUpload.status}`)
+            }
+          } else {
             throw new Error(`Embedding API failed with status ${responseFileUpload.status}`)
-        }
-      } else {
-        throw new Error(`Embedding API failed with status ${responseFileUpload.status}`)
-      }
+          }
+        })(),
+        90000, // 90 seconds
+        "Approve action timed out after 90 seconds"
+      );
     } catch (error) {
-      console.log("Failed in getting embeddings due to: " + error);
+      console.error("Failed in approveContent:", error);
+      throw error;
     } finally {
-      console.log("Calling delete doc API")
+      // cleanup
       try {
         const responseDelDoc = await axios.post(
           `${destination.url}/api/delete-document`,
           { filename: oneFile.fileName },
           {
             headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${destination.authTokens?.[0]?.value}`
-            }
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${destination.authTokens?.[0]?.value}`,
+            },
           }
         );
-        console.log("Delect Document API Response: ", responseDelDoc.data)
-      }
-      catch (err) {
-        console.log(err);
+        console.log("Delete Document API Response:", responseDelDoc.data);
+      } catch (err) {
+        console.log("Delete API failed in finally block:", err);
       }
     }
   });
-
 
 
   this.on("rejectContent", async (req) => {
