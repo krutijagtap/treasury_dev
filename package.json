@@ -14,7 +14,6 @@
     "@sap/cds-compiler": "4.8.0",
     "@sap/cds-dk": "^9",
     "@sap/cds-odata-v2-adapter-proxy": "^1.9.21",
-    "@sap/hana-client": "^2.25.29",
     "@sap/xssec": "^4.8.0",
     "axios": "^1.11.0",
     "dompurify": "^3.2.6",

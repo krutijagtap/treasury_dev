@@ -4,51 +4,51 @@
     xmlns:u="sap.ui.unified"
     xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
 
- 
-  <VBox class="ChatBox dasTextAreaInput"  >
-      <FlexBox id="ChatBotresult" height="5rem" >
-
-        <TextArea id="chatFeedInput" width="96%" height="500px" class="chattextarea" liveChange="userlivechange"  value="{chatModel>/userMessage}" enabled="{= !${chatModel>/busyIndicator} }" rows="1" growingMaxLines="23" placeholder="{chatModel>/placeHolder}" growing="true" maxLength="1000" showExceededText="true">
-                <layoutData>
-                    <FlexItemData growFactor="1" />
-                </layoutData>
-            </TextArea>
-            <!-- <Button id="chatFeedSubmit" icon="sap-icon://paper-plane" type="Emphasized" press="onUserChat" class="dasChatInputSubmitButton sapUiTinyMargin"  enabled="{chatModel>/enableSubmit}" /> -->
-
+  <!-- VBox fills available space -->
+  <VBox class="ChatBox dasTextAreaInput" fitContainer="true">
+      
+      <!-- Top Section: TextArea + Busy Indicator -->
+      <VBox fitContainer="true">
+        <FlexBox id="ChatBotresult" direction="Column" fitContainer="true" class="chatInputBox">
+          <TextArea 
+              id="chatFeedInput"
+              width="100%"
+              rows="3"
+              growing="true"
+              growingMaxLines="10"
+              class="chattextarea"
+              liveChange="userlivechange"
+              value="{chatModel>/userMessage}"
+              enabled="{= !${chatModel>/busyIndicator} }"
+              placeholder="{chatModel>/placeHolder}"
+              maxLength="1000"
+              showExceededText="true">
+            <layoutData>
+              <FlexItemData growFactor="1" minHeight="5rem"/>
+            </layoutData>
+          </TextArea>
         </FlexBox>
-  
-              <FlexBox id="chatBusyIndicator1" visible="{chatModel>/busyIndicator}" justifyContent="Center" alignItems="Center" class="busyBox">
-                 
-            </FlexBox>
 
-                <FlexBox id="btncontrolls" justifyContent= "Start" alignItems="Start" class="busyBox">
-                <!-- <Button icon="sap-icon://upload" class="myMicrophoneIcon"  visible="{chatModel>/enableUpload}" ></Button> -->
-<!-- 
-                     <u:FileUploader id="fileUploader"
-                    
-                      buttonOnly = "true"
-                      iconOnly = "true"
-                      change="onFileUpload"
-                      uploadComplete="onUploadComplete"
-                      icon="sap-icon://upload"
-                      tooltip="Upload File"
-                      style="Emphasized"
-                       visible="{chatModel>/enableUpload}"/>  -->
+        <FlexBox id="chatBusyIndicator1"
+                 visible="{chatModel>/busyIndicator}"
+                 justifyContent="Center"
+                 alignItems="Center"
+                 class="busyBox"/> 
+      </VBox>
 
-
-                
-                 <!-- <Button text="Ask FinSight"  enabled="{chatModel>/enableSubmit}" visible="{chatModel>/enableQuery}" press="onUserChat" /> -->
-                  <Button text="Ask FinSight"   press="onUserChat" />
-                  <Button text="Summary"   press="onGenerateSummary" />
-
-
-            </FlexBox>
-  
+      <!-- Bottom Section: Buttons fixed to bottom -->
+      <HBox id="btncontrolls"
+            justifyContent="Start"
+            alignItems="Center"
+            class="buttonBox"
+            fitContainer="false">
+          <Button text="Ask FinSight"
+                  press="onUserChat"
+                  class="bigActionButton"/>
+          <Button text="Summary"
+                  press="onGenerateSummary"
+                  class="bigActionButton"/>
+      </HBox>
+ 
   </VBox>  
-
-
-
-
-
-
 </core:FragmentDefinition>

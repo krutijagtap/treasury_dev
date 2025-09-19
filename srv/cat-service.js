@@ -271,13 +271,13 @@ module.exports = cds.service.impl(async function () {
         SELECT.one.from(Content).where({ ID: ID })
       );
       //check the role - if maker -> createdby and logged in user should be Same
-      //if checker can delete any file
-      const ownFiles = file.createdBy === req.user.id; // only owner can delete its own file
+      //if checker can delete any file -- logic handled in controller
+      // const ownFiles = file.createdBy === req.user.id; // only owner can delete its own file
       const fileName = file.fileName;
 
-      if (!ownFiles) {
-        req.reject(400, 'You cannot delete files that are not created by you');
-      }
+      // if (!ownFiles) {
+      //   req.reject(400, 'You cannot delete files that are not created by you');
+      // }
 
       const response = await executeHttpRequest(
         { destinationName: 'Treasurybackend' },
