@@ -175,12 +175,22 @@
                     "Delete": {
                       "label": "Delete",
                       "position": {
-                        "anchor": "DataFieldForAction::CatalogService.deleteContent",
+                        "anchor": "DataFieldForAction::CatalogService.rejectContent",
                         "placement": "After"
                       },
                       "template": "com.scb.treasury.contentingestion.ext.fragment.Delete",
                       "width": "5rem",
                       "horizontalAlign": "Center"
+                    },
+                    "Approve": {
+                      "label": "Approve",
+                      "position": {
+                        "anchor": "Metadata",
+                        "placement": "After"
+                      },
+                      "template": "com.scb.treasury.contentingestion.ext.fragment.Approve",
+                      "horizontalAlign": "Center",
+                      "width": "5rem"
                     }
                   }
                 }

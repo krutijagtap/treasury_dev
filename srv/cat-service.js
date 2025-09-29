@@ -158,13 +158,13 @@ module.exports = cds.service.impl(async function () {
       .where({ ID });
 
     // role check
-    if (oneFile.createdBy === req.user.id) {
-      return req.reject(400, "You cannot approve files that are created by you");
-    }
+    // if (oneFile.createdBy === req.user.id) {
+    //   return req.reject(400, "You cannot approve files that are created by you");
+    // }
 
-    if (!oneFile?.content) {
-      return req.reject(404, "File content not found.");
-    }
+    // if (!oneFile?.content) {
+    //   return req.reject(404, "File content not found.");
+    // }
 
     const buffer = await streamToBuffer(oneFile.content);
     const formData = new FormData();
@@ -174,9 +174,6 @@ module.exports = cds.service.impl(async function () {
     });
 
     try {
-      // wrapping logic in timeout 90sec
-      return await withTimeout(
-        (async () => {
           //check for approved-file-upload
           const responseFileUpload = await axios.post(`${destination.url}/api/approved-file-upload`, formData, {
             headers: {
@@ -204,7 +201,7 @@ module.exports = cds.service.impl(async function () {
                   status: "COMPLETED"
                 });
                 console.log("Embeddings generated successfully")
-                req.info("File approved and available for QnA and Summarization");
+                // req.info("File approved and available for QnA and Summarization");
                 return await SELECT.one.from(Content).where({ ID });
                 // return ("Embeddings generated successfully");
               }
@@ -214,10 +211,6 @@ module.exports = cds.service.impl(async function () {
           } else {
             throw new Error(`Embedding API failed with status ${responseFileUpload.status}`)
           }
-        })(),
-        90000, // 90 seconds
-        "Approve action timed out after 90 seconds"
-      );
     } catch (error) {
       console.error("Failed in approveContent:", error);
       throw error;

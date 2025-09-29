@@ -73,25 +73,25 @@ annotate service.Content with @UI.LineItem: [
         Value     : isChecker,
         @UI.Hidden: true
     },
-    {
-        $Type             : 'UI.DataFieldForAction',
-        Action            : 'CatalogService.approveContent',
-        Label             : 'Approve',
-        IconUrl           : 'sap-icon://accept',
-        Inline            : true,
-        Criticality       : #Positive,
-        Determining       : true,
-        @title            : 'Approve',
-        @HTML5.CssDefaults: {width: '5rem'},
-        ![@UI.Hidden]     : {$edmJson: {$Not: {$And: [
-            {$Eq: [
-                {$Path: 'status'},
-                'SUBMITTED'
-            ]},
-            {$Path: 'canApprove'}
-        ]}}},
-        InvocationGrouping: #Isolated
-    },
+    // {
+    //     $Type             : 'UI.DataFieldForAction',
+    //     Action            : 'CatalogService.approveContent',
+    //     Label             : 'Approve',
+    //     IconUrl           : 'sap-icon://accept',
+    //     Inline            : true,
+    //     Criticality       : #Positive,
+    //     Determining       : true,
+    //     @title            : 'Approve',
+    //     @HTML5.CssDefaults: {width: '5rem'},
+    //     ![@UI.Hidden]     : {$edmJson: {$Not: {$And: [
+    //         {$Eq: [
+    //             {$Path: 'status'},
+    //             'SUBMITTED'
+    //         ]},
+    //         {$Path: 'canApprove'}
+    //     ]}}},
+    //     InvocationGrouping: #Isolated
+    // },
     {
         $Type             : 'UI.DataFieldForAction',
         Action            : 'CatalogService.rejectContent',
